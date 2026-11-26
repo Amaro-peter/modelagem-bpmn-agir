@@ -8,8 +8,8 @@
     "check": "node ferramentas/check.js",
     "lint": "bpmnlint",
     "editor": "node ferramentas/serve.js",
-    "registro-software": "bash processos/registro-software/scripts/gerar_tudo.sh",
-    "validar": "for f in processos/*/as-is/*.bpmn processos/*/macro/*.bpmn processos/*/etapas/*.bpmn; do bpmnlint \"$f\" || exit 1; done && for f in processos/*/fontes/*.json processos/*/fontes/etapas/*.json; do node ferramentas/check.js \"$f\" || exit 1; done"
+    "registro-software": "node processos/registro-software/scripts/gerar_tudo.js",
+    "validar": "node ferramentas/validar.js"
   },
   "type": "module",
   "dependencies": {
@@ -19,5 +19,8 @@
     "bpmnlint": "^12.2.0",
     "playwright-core": "^1.65.1"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
 }

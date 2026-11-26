@@ -11,18 +11,26 @@ const [, , input, outBase = input.replace(/\.bpmn$/, '')] = process.argv;
 const xml = fs.readFileSync(input, 'utf8');
 const dist = path.dirname(require.resolve('bpmn-js/dist/bpmn-viewer.production.min.js'));
 
-function findChromium() {
-  if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH;
+// Procura um navegador para renderizar, em qualquer sistema:
+// 1) CHROMIUM_PATH  2) Chromium do Playwright (npx playwright install chromium)
+// 3) Google Chrome ou Microsoft Edge instalados  4) qualquer Chromium já baixado pelo Playwright (Linux)
+async function launchBrowser() {
+  if (process.env.CHROMIUM_PATH) return chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
+  const attempts = [{}, { channel: 'chrome' }, { channel: 'msedge' }];
   const base = path.join(os.homedir(), '.cache/ms-playwright');
-  const dirs = fs.readdirSync(base).filter(d => d.startsWith('chromium-')).sort().reverse();
-  for (const d of dirs) {
-    const p = path.join(base, d, 'chrome-linux64/chrome');
-    if (fs.existsSync(p)) return p;
+  if (fs.existsSync(base)) {
+    for (const d of fs.readdirSync(base).filter(d => d.startsWith('chromium-')).sort().reverse()) {
+      const p = path.join(base, d, 'chrome-linux64/chrome');
+      if (fs.existsSync(p)) attempts.push({ executablePath: p });
+    }
   }
-  throw new Error('Chromium não encontrado; defina CHROMIUM_PATH');
+  for (const opts of attempts) {
+    try { return await chromium.launch(opts); } catch { /* tenta o próximo */ }
+  }
+  throw new Error('Nenhum navegador encontrado. Instale o Google Chrome ou rode: npx playwright install chromium (ou defina CHROMIUM_PATH).');
 }
 
-const browser = await chromium.launch({ executablePath: findChromium() });
+const browser = await launchBrowser();
 const page = await browser.newPage({ deviceScaleFactor: 2 });
 await page.setContent(`<html><head>
   <style>${fs.readFileSync(path.join(dist, 'assets/diagram-js.css'), 'utf8')}</style>
@@ -50,7 +58,13 @@ const { planes, warnings } = await page.evaluate(async (xml) => {
 if (warnings.length) console.warn('Avisos de importação:', warnings);
 
 const written = [];
-for (const { id, svg } of planes) {
+// O bpmn-js gera ids aleatórios para as pontas de seta; numeramos em ordem para saídas estáveis (diffs limpos no git).
+const stable = svg => {
+  const map = new Map();
+  return svg.replace(/(?<=id="|#)marker-[a-z0-9]+/g, m => (map.has(m) || map.set(m, `marker-${map.size + 1}`), map.get(m)));
+};
+for (const { id, svg: raw } of planes) {
+  const svg = stable(raw);
   const base = id ? `${outBase}-${id}` : outBase;
   fs.writeFileSync(`${base}.svg`, svg);
   await page.setContent(`<html><body style="margin:0;background:#fff">${svg}</body></html>`);

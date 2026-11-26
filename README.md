@@ -2,6 +2,66 @@
 
 Modelos de processo em **BPMN 2.0** da AGIR (Agência de Inovação da UFF), com a documentação de apoio da metodologia BPM e as ferramentas usadas para gerá-los.
 
+## Comece aqui: instalar, rodar e visualizar
+
+Funciona em **Windows, macOS e Linux**. Escolha o caminho que precisar.
+
+### 1. Só ver os diagramas (sem instalar nada)
+
+- **No navegador, pelo GitHub:** abra a pasta do [processo de registro de software](processos/registro-software/). O macroprocesso aparece na própria página, e cada etapa tem link para a imagem.
+- **Abrir um `.bpmn` de forma interativa:**
+  1. Neste repositório, abra o arquivo `.bpmn` desejado e clique em **Download raw file** (ícone de download).
+  2. Acesse **https://demo.bpmn.io**.
+  3. Arraste o arquivo baixado para a página. Dá para dar zoom, navegar e clicar nos elementos.
+- **Programa de computador:** instale o [Camunda Modeler](https://camunda.com/download/modeler/) (gratuito) e use **File → Open File** no `.bpmn`.
+
+### 2. Instalar a ferramenta deste repositório
+
+**Pré-requisitos** (instale uma vez):
+
+| Programa | Para quê | Onde baixar |
+|---|---|---|
+| **Node.js 18 ou mais novo** (versão LTS) | Editor, validação e geração dos modelos | https://nodejs.org |
+| **Git** | Baixar o repositório | https://git-scm.com/downloads |
+| Python 3 *(opcional)* | Só para regerar as etapas e a documentação | https://www.python.org/downloads |
+| Google Chrome *(opcional)* | Só para gerar as imagens `.png`/`.svg` | https://www.google.com/chrome |
+
+Para conferir a instalação, abra um terminal (no Windows, o **PowerShell**; no macOS, o **Terminal**) e rode `node --version` e `git --version`.
+
+**Baixar e instalar:**
+
+```bash
+git clone https://github.com/Amaro-peter/modelagem-bpmn-agir.git
+cd modelagem-bpmn-agir
+npm install
+```
+
+Sem Git, use **Code → Download ZIP** nesta página, descompacte, abra o terminal dentro da pasta e rode `npm install`.
+
+### 3. Rodar o editor e visualizar os BPMN
+
+```bash
+npm run editor
+```
+
+Deixe esse terminal aberto e abra no navegador:
+
+**http://localhost:8080/ferramentas/editor.html?file=processos/registro-software/macro/00-macro.bpmn**
+
+- **Abrir outro modelo:** troque o caminho depois de `file=`. Exemplos: `processos/registro-software/etapas/06-resultado.bpmn` ou `processos/registro-software/as-is/registro-software-asis.bpmn`. Também dá para usar o botão **Escolher arquivo** no topo do editor.
+- **Navegar no diagrama:** roda do mouse para zoom e arrastar o fundo para mover. Nos subprocessos, o ícone ↘ abre o detalhe.
+- **Editar:** use a paleta à esquerda. **Salvar no projeto** (ou **Ctrl+S**) grava no próprio arquivo, e **Baixar .bpmn** / **Baixar .svg** exportam cópias.
+- **Encerrar o editor:** **Ctrl+C** no terminal.
+
+### 4. Validar e regerar *(opcional)*
+
+```bash
+npm run validar             # confere todos os modelos (regras BPMN + consistência)
+npm run registro-software   # regera AS-IS, macro, etapas, imagens e documentação a partir das fontes JSON
+```
+
+O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Google Chrome ou o Microsoft Edge instalados. Se não houver nenhum dos dois, rode `npx playwright install chromium`.
+
 ## Processos
 
 | Processo | Situação | Conteúdo |
@@ -21,30 +81,6 @@ processos/
     └── scripts/    geração das etapas e da documentação deste processo
 ferramentas/        gerador, layout com raias, validação, renderização e editor
 ```
-
-## Como visualizar
-
-- **No GitHub:** as imagens `.png` ao lado de cada `.bpmn` mostram os diagramas.
-- **Para abrir ou editar:** carregue o `.bpmn` em [bpmn.io](https://demo.bpmn.io), no Camunda Modeler ou em qualquer ferramenta BPMN 2.0. As cores (atividade original ou nova) seguem o padrão *BPMN in Color*.
-- **No editor local deste repositório:**
-  ```bash
-  npm install
-  npm run editor
-  # abrir http://localhost:8080/ferramentas/editor.html?file=processos/registro-software/macro/00-macro.bpmn
-  ```
-  O botão **Salvar no projeto** (Ctrl+S) grava o arquivo de volta no próprio caminho.
-
-## Como regerar
-
-Os `.bpmn`, as imagens e o documento do macroprocesso são gerados a partir das fontes JSON:
-
-```bash
-npm install
-npm run registro-software   # regera AS-IS, macro, etapas, imagens e documentação
-npm run validar             # bpmnlint + checagem de consistência em todos os modelos
-```
-
-Para renderizar as imagens, é preciso ter um Chromium instalado pelo Playwright (`npx playwright install chromium`), ou indicar o executável em `CHROMIUM_PATH`.
 
 ## Ferramentas
 

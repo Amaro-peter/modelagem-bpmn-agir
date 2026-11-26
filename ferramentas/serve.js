@@ -3,8 +3,9 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');   // funciona em Windows, macOS e Linux
 const port = Number(process.argv[2] || 8080);
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.json': 'application/json', '.bpmn': 'application/xml', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.eot': 'application/vnd.ms-fontobject' };
@@ -29,4 +30,8 @@ http.createServer((req, res) => {
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404).end(); return; }
   res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
   fs.createReadStream(file).pipe(res);
-}).listen(port, () => console.log(`editor: http://localhost:${port}/ferramentas/editor.html`));
+}).listen(port, () => {
+  console.log(`Editor BPMN rodando. Abra no navegador:`);
+  console.log(`  http://localhost:${port}/ferramentas/editor.html?file=processos/registro-software/macro/00-macro.bpmn`);
+  console.log(`(Ctrl+C para encerrar)`);
+});

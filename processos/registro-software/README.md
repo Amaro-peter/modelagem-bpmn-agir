@@ -42,6 +42,7 @@ Modelagem **AS-IS** (estado atual) do registro de software conduzido pela AGIR j
 - `fontes/registro-software-asis.json` é a **fonte única** do processo.
 - `scripts/gerar_etapas.py` deriva dela as etapas e o macro (`fontes/etapas/`).
 - `scripts/gerar_doc.py` gera o documento do macroprocesso.
+- `scripts/gerar_tudo.js` roda tudo em sequência (é o que `npm run registro-software` chama).
 
 Para regerar tudo, rode na raiz do repositório:
 
