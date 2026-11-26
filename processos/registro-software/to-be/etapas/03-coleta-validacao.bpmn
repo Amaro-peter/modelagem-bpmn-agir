@@ -143,10 +143,6 @@
       <bpmn:text>Autores, titulares, datas, linguagens, campo de aplicação e tipo de programa</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="t_form_assoc" sourceRef="t_form" targetRef="t_form_note" />
-    <bpmn:textAnnotation id="t_valida_note">
-      <bpmn:text>O código-fonte não sai do computador do interessado</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="t_valida_assoc" sourceRef="t_valida" targetRef="t_valida_note" />
     <bpmn:textAnnotation id="t_aceite_note">
       <bpmn:text>Mesmos lembretes e prazo de inatividade do formulário</bpmn:text>
     </bpmn:textAnnotation>
@@ -155,7 +151,7 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_ToBe_Registro_Software_Etapa3">
     <bpmndi:BPMNPlane id="BPMNPlane_Collab_ToBe_Registro_Software_Etapa3" bpmnElement="Collab_ToBe_Registro_Software_Etapa3">
       <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
-        <dc:Bounds x="0" y="0" width="2012" height="889" />
+        <dc:Bounds x="0" y="0" width="2012" height="812" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="L_INT_di" bpmnElement="L_INT" isHorizontal="true">
         <dc:Bounds x="30" y="0" width="1982" height="282" />
@@ -164,10 +160,10 @@
         <dc:Bounds x="30" y="282" width="1982" height="190" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="L_PLAT_di" bpmnElement="L_PLAT" isHorizontal="true" bioc:stroke="#6a3d9a" bioc:fill="#f3eefa" color:background-color="#f3eefa" color:border-color="#6a3d9a">
-        <dc:Bounds x="30" y="472" width="1982" height="417" />
+        <dc:Bounds x="30" y="472" width="1982" height="340" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_lib_di" bpmnElement="t_lib" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="226" y="589" width="120" height="110" />
+        <dc:Bounds x="226" y="512" width="120" height="110" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="j_form_di" bpmnElement="j_form" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
         <dc:Bounds x="406" y="162" width="50" height="50" />
@@ -183,19 +179,12 @@
         <di:waypoint x="551" y="125" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="t_valida_di" bpmnElement="t_valida" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="696" y="582" width="120" height="125" />
+        <dc:Bounds x="696" y="505" width="120" height="125" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_valida_note_di" bpmnElement="t_valida_note">
-        <dc:Bounds x="701" y="482" width="150" height="57" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="t_valida_assoc_di" bpmnElement="t_valida_assoc">
-        <di:waypoint x="731" y="539" />
-        <di:waypoint x="731" y="582" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="g_valida_di" bpmnElement="g_valida" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="876" y="619" width="50" height="50" />
+        <dc:Bounds x="876" y="542" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="836" y="587" width="130" height="28" />
+          <dc:Bounds x="836" y="510" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_confere_di" bpmnElement="t_confere" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
@@ -208,7 +197,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_resumo_di" bpmnElement="t_resumo" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1276" y="582" width="120" height="125" />
+        <dc:Bounds x="1276" y="505" width="120" height="125" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_aceite_di" bpmnElement="t_aceite" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
         <dc:Bounds x="1456" y="132" width="120" height="110" />
@@ -227,7 +216,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_congela_di" bpmnElement="t_congela" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1746" y="589" width="120" height="110" />
+        <dc:Bounds x="1746" y="512" width="120" height="110" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="i3_lem_di" bpmnElement="i3_lem" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
         <dc:Bounds x="586" y="232" width="36" height="36" />
@@ -236,9 +225,9 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="i3_lem_fim_di" bpmnElement="i3_lem_fim" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="738" y="776" width="36" height="36" />
+        <dc:Bounds x="738" y="699" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="695" y="816" width="122" height="14" />
+          <dc:Bounds x="695" y="739" width="122" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="i3_30_di" bpmnElement="i3_30" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
@@ -257,30 +246,30 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="i3_fim_di" bpmnElement="i3_fim" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1028" y="626" width="36" height="36" />
+        <dc:Bounds x="1028" y="549" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="981" y="666" width="130" height="56" />
+          <dc:Bounds x="981" y="589" width="130" height="56" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ini_t_lib_e2_di" bpmnElement="ini_t_lib_e2">
-        <dc:Bounds x="130" y="626" width="36" height="36" />
+        <dc:Bounds x="130" y="549" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="83" y="666" width="130" height="42" />
+          <dc:Bounds x="83" y="589" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="fim_t_congela_e4_di" bpmnElement="fim_t_congela_e4">
-        <dc:Bounds x="1926" y="626" width="36" height="36" />
+        <dc:Bounds x="1926" y="549" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1879" y="666" width="130" height="28" />
+          <dc:Bounds x="1879" y="589" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f1_di" bpmnElement="ToBe_Registro_Software_Etapa3_f1">
-        <di:waypoint x="166" y="644" />
-        <di:waypoint x="226" y="644" />
+        <di:waypoint x="166" y="567" />
+        <di:waypoint x="226" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f2_di" bpmnElement="ToBe_Registro_Software_Etapa3_f2">
-        <di:waypoint x="346" y="644" />
-        <di:waypoint x="431" y="644" />
+        <di:waypoint x="346" y="567" />
+        <di:waypoint x="431" y="567" />
         <di:waypoint x="431" y="212" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f3_di" bpmnElement="ToBe_Registro_Software_Etapa3_f3">
@@ -290,23 +279,23 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f4_di" bpmnElement="ToBe_Registro_Software_Etapa3_f4">
         <di:waypoint x="636" y="187" />
         <di:waypoint x="661" y="187" />
-        <di:waypoint x="661" y="644" />
-        <di:waypoint x="696" y="644" />
+        <di:waypoint x="661" y="567" />
+        <di:waypoint x="696" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f5_di" bpmnElement="ToBe_Registro_Software_Etapa3_f5">
-        <di:waypoint x="816" y="644" />
-        <di:waypoint x="876" y="644" />
+        <di:waypoint x="816" y="567" />
+        <di:waypoint x="876" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f6_di" bpmnElement="ToBe_Registro_Software_Etapa3_f6">
-        <di:waypoint x="901" y="669" />
-        <di:waypoint x="901" y="724" />
-        <di:waypoint x="384" y="724" />
+        <di:waypoint x="901" y="592" />
+        <di:waypoint x="901" y="647" />
+        <di:waypoint x="384" y="647" />
         <di:waypoint x="384" y="187" />
         <di:waypoint x="406" y="187" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f7_di" bpmnElement="ToBe_Registro_Software_Etapa3_f7">
-        <di:waypoint x="926" y="644" />
-        <di:waypoint x="951" y="644" />
+        <di:waypoint x="926" y="567" />
+        <di:waypoint x="951" y="567" />
         <di:waypoint x="951" y="377" />
         <di:waypoint x="986" y="377" />
       </bpmndi:BPMNEdge>
@@ -322,11 +311,11 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f10_di" bpmnElement="ToBe_Registro_Software_Etapa3_f10">
         <di:waypoint x="1191" y="402" />
-        <di:waypoint x="1191" y="644" />
-        <di:waypoint x="1276" y="644" />
+        <di:waypoint x="1191" y="567" />
+        <di:waypoint x="1276" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f11_di" bpmnElement="ToBe_Registro_Software_Etapa3_f11">
-        <di:waypoint x="1336" y="582" />
+        <di:waypoint x="1336" y="505" />
         <di:waypoint x="1336" y="187" />
         <di:waypoint x="1456" y="187" />
       </bpmndi:BPMNEdge>
@@ -342,13 +331,13 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f14_di" bpmnElement="ToBe_Registro_Software_Etapa3_f14">
         <di:waypoint x="1661" y="212" />
-        <di:waypoint x="1661" y="644" />
-        <di:waypoint x="1746" y="644" />
+        <di:waypoint x="1661" y="567" />
+        <di:waypoint x="1746" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f15_di" bpmnElement="ToBe_Registro_Software_Etapa3_f15">
         <di:waypoint x="604" y="268" />
-        <di:waypoint x="604" y="794" />
-        <di:waypoint x="738" y="794" />
+        <di:waypoint x="604" y="717" />
+        <di:waypoint x="738" y="717" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f16_di" bpmnElement="ToBe_Registro_Software_Etapa3_f16">
         <di:waypoint x="560" y="268" />
@@ -362,8 +351,8 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f18_di" bpmnElement="ToBe_Registro_Software_Etapa3_f18">
         <di:waypoint x="926" y="377" />
         <di:waypoint x="978" y="377" />
-        <di:waypoint x="978" y="644" />
-        <di:waypoint x="1028" y="644" />
+        <di:waypoint x="978" y="567" />
+        <di:waypoint x="1028" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f19_di" bpmnElement="ToBe_Registro_Software_Etapa3_f19">
         <di:waypoint x="901" y="352" />
@@ -372,17 +361,17 @@
         <di:waypoint x="431" y="162" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa3_f20_di" bpmnElement="ToBe_Registro_Software_Etapa3_f20">
-        <di:waypoint x="1866" y="644" />
-        <di:waypoint x="1926" y="644" />
+        <di:waypoint x="1866" y="567" />
+        <di:waypoint x="1926" y="567" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Pool_SEI_di" bpmnElement="Pool_SEI" isHorizontal="true" bioc:stroke="#616161" bioc:fill="#f1f1f1" color:background-color="#f1f1f1" color:border-color="#616161">
-        <dc:Bounds x="0" y="949" width="2012" height="80" />
+        <dc:Bounds x="0" y="872" width="2012" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
-        <di:waypoint x="1316" y="707" />
-        <di:waypoint x="1316" y="949" />
+        <di:waypoint x="1316" y="630" />
+        <di:waypoint x="1316" y="872" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1322" y="915" width="110" height="28" />
+          <dc:Bounds x="1322" y="838" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

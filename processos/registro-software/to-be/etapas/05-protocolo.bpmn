@@ -81,7 +81,7 @@
     <bpmn:group id="G_REG_INPI" categoryValueRef="G_REG_INPI_cv" />
   </bpmn:process>
   <bpmn:category id="G_REG_INPI_cat">
-    <bpmn:categoryValue id="G_REG_INPI_cv" value="Realizar registro junto ao INPI" />
+    <bpmn:categoryValue id="G_REG_INPI_cv" value="" />
   </bpmn:category>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_ToBe_Registro_Software_Etapa5">
     <bpmndi:BPMNPlane id="BPMNPlane_Collab_ToBe_Registro_Software_Etapa5" bpmnElement="Collab_ToBe_Registro_Software_Etapa5">

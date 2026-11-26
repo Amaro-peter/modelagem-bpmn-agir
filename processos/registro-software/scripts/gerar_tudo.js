@@ -32,7 +32,10 @@ py('gerar_doc.py');                                       // docs/macroprocesso-
 const TB = path.join(P, 'to-be');
 execFileSync(python, ['-I', tool('dividir_etapas.py'), path.join(TB, 'fontes', 'registro-software-tobe.json'),
   path.join(TB, 'fontes', 'etapas')], { cwd: root, stdio: 'inherit' });
-node(tool('build.js'), path.join(TB, 'fontes', 'registro-software-tobe.json'), path.join(TB, 'registro-software-tobe.bpmn'));
+// O TO-BE completo tem ajustes de layout feitos à mão no editor: se já existe, não é reconstruído (só as imagens).
+// Para regerá-lo do zero: npm run build -- <fonte> <saida> (e reaplicar os ajustes no editor).
+const tobeCompleto = path.join(TB, 'registro-software-tobe.bpmn');
+if (!fs.existsSync(tobeCompleto)) node(tool('build.js'), path.join(TB, 'fontes', 'registro-software-tobe.json'), tobeCompleto);
 for (const f of fs.readdirSync(path.join(TB, 'fontes', 'etapas')).filter(f => f.endsWith('.json'))) {
   const dest = f.startsWith('00-') ? 'macro' : 'etapas';
   node(tool('build.js'), path.join(TB, 'fontes', 'etapas', f), path.join(TB, dest, f.replace(/\.json$/, '.bpmn')));

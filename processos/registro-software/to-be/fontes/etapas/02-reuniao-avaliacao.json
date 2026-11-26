@@ -43,8 +43,7 @@
           "type": "user",
           "lane": "L_INT",
           "name": "Escolher o horário da reunião no portal",
-          "status": "nova",
-          "note": "Mesma regra de inatividade do formulário (Etapa 3)"
+          "status": "nova"
         },
         {
           "id": "t_conf",

@@ -199,8 +199,7 @@
           "lane": "L_INT",
           "etapa": 2,
           "name": "Escolher o horário da reunião no portal",
-          "status": "nova",
-          "note": "Mesma regra de inatividade do formulário (Etapa 3)"
+          "status": "nova"
         },
         {
           "id": "t_conf",
@@ -311,8 +310,7 @@
           "lane": "L_PLAT",
           "etapa": 3,
           "name": "Calcular o hash SHA-512 no navegador e validar os dados",
-          "status": "nova",
-          "note": "O código-fonte não sai do computador do interessado"
+          "status": "nova"
         },
         {
           "id": "g_valida",
@@ -554,7 +552,7 @@
           "type": "catch",
           "lane": "L_PLAT",
           "etapa": 6,
-          "name": "10 dias sem novidade (15: escala)",
+          "name": "10 dias sem novidade",
           "status": "nova",
           "event": "timer"
         },
@@ -631,8 +629,7 @@
           "etapa": 6,
           "name": "Baixar e conferir o certificado com os dados aprovados",
           "status": "nova",
-          "papel": "bolsista confere; servidor valida",
-          "note": "A Plataforma compara automaticamente. Divergência: serviço 747 (erro da AGIR) ou Fale Conosco (erro do INPI)"
+          "papel": "bolsista confere; servidor valida"
         },
         {
           "id": "t_envcert",
@@ -985,7 +982,7 @@
       "groups": [
         {
           "id": "G_REG_INPI",
-          "name": "Realizar registro junto ao INPI",
+          "name": "",
           "nodes": [
             "t_dv",
             "t_fill",

@@ -50,4 +50,4 @@ Estado **futuro** do processo, redesenhado para resolver os sete gargalos levant
 - `ferramentas/dividir_etapas.py` gera as etapas e o macro (`fontes/etapas/`).
 - `scripts/gerar_doc.py` gera o documento.
 
-Tudo é regerado com `npm run registro-software`, na raiz do repositório.
+Tudo é regerado com `npm run registro-software`, na raiz do repositório. A exceção é o **TO-BE completo**, que teve ajustes de layout feitos à mão no editor: o gerador preserva esse arquivo e só atualiza as imagens dele.

@@ -62,7 +62,7 @@ w('Para manter o TO-BE enxuto, o diagrama **detalha só as melhorias prioritári
 w('- **Etapa 7** (registros internos, cotitularidade e encerramento) **não muda**. No TO-BE ela é uma *call activity* que chama o processo da [Etapa 7 do AS-IS](../../etapas/07-registros.bpmn).')
 w('- **Etapa 4** (pagamento), que não está entre os gargalos, aparece simplificada: emitir e pagar a GRU, e a Plataforma anexa o comprovante ao SEI. A nova tentativa automática quando o e-INPI está fora do ar e a espera pela compensação estão só no texto (seção 5).')
 w('- **Conferência do certificado** (3.7) é uma atividade única no diagrama. A comparação automática com os dados aprovados e a correção (serviço 747 ou Fale Conosco) estão descritas nas seções 2 e 5.')
-w('- **Exceções desenhadas uma vez:** a regra de inatividade do interessado aparece no formulário (Etapa 3); na escolha de horário e no aceite, ela vem indicada em anotação. A contingência do SEI aparece na Etapa 1 e vale para todas as inclusões no SEI.\n')
+w('- **Exceções desenhadas uma vez:** a regra de inatividade do interessado aparece no formulário (Etapa 3) e vale também para a escolha de horário e o aceite (no aceite há uma anotação lembrando a regra). A contingência do SEI aparece na Etapa 1 e vale para todas as inclusões no SEI.\n')
 
 w('## 2. Gargalos do AS-IS × melhorias do TO-BE\n')
 w('| Gargalo (AS-IS) | O que muda no TO-BE | Onde está no modelo |')
@@ -153,7 +153,7 @@ w('## 5. Tratamento de exceções\n')
 w('| Exceção | Mecanismo no modelo | Recuperação |')
 w('|---|---|---|')
 for x in [
-    ('Interessado não responde (horário, formulário, aceite)', 'Desenhado no formulário (Etapa 3): lembretes automáticos (5 e 10 dias úteis, borda não interruptiva) e "30 dias sem resposta" (borda interruptiva). Na escolha de horário e no aceite, a regra vem indicada em anotação', 'O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade)'),
+    ('Interessado não responde (horário, formulário, aceite)', 'Desenhado no formulário (Etapa 3): lembretes automáticos (5 e 10 dias úteis, borda não interruptiva) e "30 dias sem resposta" (borda interruptiva). A mesma regra vale para a escolha de horário e o aceite (no aceite, indicada em anotação)', 'O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade)'),
     ('Interessado não comparece à reunião', 'Gateway "Interessado compareceu?" + link "Oferecer novos horários"', 'Novos horários são oferecidos'),
     ('Documentação incompleta ou inconsistente', 'Validação automática ("Dados consistentes?") e conferência do bolsista ("Conferência ok?")', 'Pendências apontadas no portal e volta ao formulário'),
     ('Dados não confirmados pelo interessado', 'Gateway "Dados confirmados?"', 'Volta ao formulário para ajuste'),
@@ -161,7 +161,7 @@ for x in [
     ('SEI indisponível ou integração não aprovada', 'Evento de borda de erro "Falha na integração com o SEI" (Etapa 1); vale a mesma regra nas demais inclusões no SEI', 'Contingência: o bolsista lança no SEI e vincula o número na plataforma'),
     ('e-INPI indisponível', '**Só no documento** (Etapa 4 simplificada no diagrama)', 'A Plataforma agenda novas tentativas em intervalo parametrizável e avisa o bolsista'),
     ('Triagem atrasada', 'Evento de borda "Prazo de triagem vencido" (não interruptivo)', 'Alerta à equipe e ao servidor'),
-    ('INPI sem novidade no prazo', 'Timer "10 dias sem novidade (15: escala)" no gateway de eventos', 'Com 10 dias, consulta do bolsista no Busca Web; com 15 dias, escala ao servidor'),
+    ('INPI sem novidade no prazo', 'Timer "10 dias sem novidade" no gateway de eventos', 'Com 10 dias, consulta do bolsista no Busca Web; com 15 dias, escala ao servidor'),
     ('Pedido não conhecido (742)', 'Ramo "742" do gateway "Despacho"', 'Encerramento com despacho e comunicação ao interessado (conforme o AS-IS confirmado)'),
     ('Certificado com divergência', '**Só no documento**: a comparação automática faz parte de "Baixar e conferir o certificado com os dados aprovados"', 'Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido'),
 ]:

@@ -141,7 +141,7 @@
       "groups": [
         {
           "id": "G_REG_INPI",
-          "name": "Realizar registro junto ao INPI",
+          "name": "",
           "nodes": [
             "t_dv",
             "t_fill",

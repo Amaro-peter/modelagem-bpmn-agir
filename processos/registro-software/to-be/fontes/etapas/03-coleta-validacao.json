@@ -51,8 +51,7 @@
           "type": "service",
           "lane": "L_PLAT",
           "name": "Calcular o hash SHA-512 no navegador e validar os dados",
-          "status": "nova",
-          "note": "O código-fonte não sai do computador do interessado"
+          "status": "nova"
         },
         {
           "id": "g_valida",

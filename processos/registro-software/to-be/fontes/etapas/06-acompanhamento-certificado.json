@@ -55,7 +55,7 @@
           "id": "c_prazo",
           "type": "catch",
           "lane": "L_PLAT",
-          "name": "10 dias sem novidade (15: escala)",
+          "name": "10 dias sem novidade",
           "status": "nova",
           "event": "timer"
         },
@@ -122,8 +122,7 @@
           "lane": "L_AGIR",
           "name": "Baixar e conferir o certificado com os dados aprovados",
           "status": "nova",
-          "papel": "bolsista confere; servidor valida",
-          "note": "A Plataforma compara automaticamente. Divergência: serviço 747 (erro da AGIR) ou Fale Conosco (erro do INPI)"
+          "papel": "bolsista confere; servidor valida"
         },
         {
           "id": "t_envcert",
