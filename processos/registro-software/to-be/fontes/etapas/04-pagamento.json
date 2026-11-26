@@ -1,0 +1,163 @@
+{
+  "id": "ToBe_Registro_Software_Etapa4",
+  "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF – Etapa 4 – Pagamento da GRU",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 4 – Pagamento da GRU",
+      "processId": "ToBe_Registro_Software_Etapa4",
+      "lanes": [
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_BOLS",
+          "name": "AGIR – Bolsista"
+        },
+        {
+          "id": "L_PLAT",
+          "name": "Plataforma de Gestão de PI (sistema)",
+          "color": {
+            "fill": "#f3eefa",
+            "stroke": "#6a3d9a"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "j_gru",
+          "type": "xor",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_gru",
+          "type": "user",
+          "name": "Emitir a GRU 730 no e-INPI (cadastro da UFF)",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "g_einpi",
+          "type": "xor",
+          "name": "e-INPI disponível?",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "c_retry",
+          "type": "catch",
+          "name": "Nova tentativa (intervalo parametrizável)",
+          "lane": "L_BOLS",
+          "status": "nova",
+          "event": "timer"
+        },
+        {
+          "id": "t_pagar",
+          "type": "user",
+          "name": "Efetuar o pagamento da GRU",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "c_comp",
+          "type": "catch",
+          "name": "Compensação do pagamento (cerca de 24 h)",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "event": "timer"
+        },
+        {
+          "id": "t_comp",
+          "type": "service",
+          "name": "Registrar o pagamento e anexar o comprovante ao SEI (Web Service)",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "note": "Se o SEI estiver indisponível: contingência manual pelo bolsista, como nas Etapas 1 e 3"
+        },
+        {
+          "id": "ini_j_gru_e3",
+          "type": "start",
+          "name": "(Etapa 3 – Coleta estruturada e validação)",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "fim_t_comp_e5",
+          "type": "end",
+          "name": "→ Etapa 5 – Protocolo assistido no INPI",
+          "lane": "L_PLAT"
+        }
+      ],
+      "flows": [
+        [
+          "ini_j_gru_e3",
+          "j_gru"
+        ],
+        [
+          "j_gru",
+          "t_gru"
+        ],
+        [
+          "t_gru",
+          "g_einpi"
+        ],
+        [
+          "g_einpi",
+          "c_retry",
+          "Não"
+        ],
+        [
+          "c_retry",
+          "j_gru"
+        ],
+        [
+          "g_einpi",
+          "t_pagar",
+          "Sim"
+        ],
+        [
+          "t_pagar",
+          "c_comp"
+        ],
+        [
+          "c_comp",
+          "t_comp"
+        ],
+        [
+          "t_comp",
+          "fim_t_comp_e5"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "blackbox": true,
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    },
+    {
+      "id": "Pool_SEI",
+      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "blackbox": true,
+      "color": {
+        "fill": "#f1f1f1",
+        "stroke": "#616161"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "t_comp",
+      "Pool_SEI",
+      "Incluir comprovante"
+    ],
+    [
+      "t_gru",
+      "Pool_INPI",
+      "Emitir GRU"
+    ]
+  ]
+}

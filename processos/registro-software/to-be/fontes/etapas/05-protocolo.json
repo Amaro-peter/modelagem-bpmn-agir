@@ -1,0 +1,216 @@
+{
+  "id": "ToBe_Registro_Software_Etapa5",
+  "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF – Etapa 5 – Protocolo assistido no INPI",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 5 – Protocolo assistido no INPI",
+      "processId": "ToBe_Registro_Software_Etapa5",
+      "lanes": [
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_BOLS",
+          "name": "AGIR – Bolsista"
+        },
+        {
+          "id": "L_PLAT",
+          "name": "Plataforma de Gestão de PI (sistema)",
+          "color": {
+            "fill": "#f3eefa",
+            "stroke": "#6a3d9a"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "t_ficha",
+          "type": "service",
+          "name": "Gerar a ficha de preenchimento do e-Software (versão aprovada)",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_dv",
+          "type": "user",
+          "name": "Baixar a Declaração de Veracidade (DV) vinculada à GRU",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "t_dv_ass",
+          "type": "user",
+          "name": "Assinar a DV digitalmente (certificado ICP-Brasil)",
+          "lane": "L_SERV",
+          "note": "Representante da AGIR que utiliza e-CNPJ da UFF com procuração."
+        },
+        {
+          "id": "j_fill",
+          "type": "xor",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_fill",
+          "type": "user",
+          "name": "Preencher o e-Software pela ficha e conferir campo a campo (sem enviar)",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_valfinal",
+          "type": "user",
+          "name": "Validar o preenchimento final contra a ficha aprovada",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "g_valfinal",
+          "type": "xor",
+          "name": "Preenchimento correto?",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "t_envia",
+          "type": "send",
+          "name": "Enviar o pedido de registro ao INPI",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "t_recibo",
+          "type": "user",
+          "name": "Registrar o número do pedido e o recibo na plataforma",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_monit",
+          "type": "service",
+          "name": "Anexar o recibo ao SEI e iniciar o acompanhamento do pedido",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_not5",
+          "type": "send",
+          "name": "Notificar o interessado: pedido protocolado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "ini_t_ficha_e4",
+          "type": "start",
+          "name": "(Etapa 4 – Pagamento da GRU)",
+          "lane": "L_PLAT"
+        },
+        {
+          "id": "fim_t_not5_e6",
+          "type": "end",
+          "name": "→ Etapa 6 – Acompanhamento do INPI e conferência do certificado",
+          "lane": "L_PLAT"
+        }
+      ],
+      "flows": [
+        [
+          "ini_t_ficha_e4",
+          "t_ficha"
+        ],
+        [
+          "t_ficha",
+          "t_dv"
+        ],
+        [
+          "t_dv",
+          "t_dv_ass"
+        ],
+        [
+          "t_dv_ass",
+          "j_fill"
+        ],
+        [
+          "j_fill",
+          "t_fill"
+        ],
+        [
+          "t_fill",
+          "t_valfinal"
+        ],
+        [
+          "t_valfinal",
+          "g_valfinal"
+        ],
+        [
+          "g_valfinal",
+          "j_fill",
+          "Não, devolver com apontamentos"
+        ],
+        [
+          "g_valfinal",
+          "t_envia",
+          "Sim"
+        ],
+        [
+          "t_envia",
+          "t_recibo"
+        ],
+        [
+          "t_recibo",
+          "t_monit"
+        ],
+        [
+          "t_monit",
+          "t_not5"
+        ],
+        [
+          "t_not5",
+          "fim_t_not5_e6"
+        ]
+      ],
+      "groups": [
+        {
+          "id": "G_REG_INPI",
+          "name": "Realizar registro junto ao INPI",
+          "nodes": [
+            "t_dv",
+            "t_dv_ass",
+            "t_fill",
+            "t_valfinal",
+            "t_envia"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "blackbox": true,
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    },
+    {
+      "id": "Pool_SEI",
+      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "blackbox": true,
+      "color": {
+        "fill": "#f1f1f1",
+        "stroke": "#616161"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "t_monit",
+      "Pool_SEI",
+      "Incluir recibo"
+    ],
+    [
+      "t_envia",
+      "Pool_INPI",
+      "Pedido (e-Software)"
+    ]
+  ]
+}

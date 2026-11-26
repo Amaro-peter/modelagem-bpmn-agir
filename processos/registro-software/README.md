@@ -1,6 +1,9 @@
 # Registro de Programa de Computador (Software) – AGIR/UFF
 
-Modelagem **AS-IS** (estado atual) do registro de software conduzido pela AGIR junto ao INPI, do interesse inicial até os registros internos e o encerramento. Não há TO-BE nem propostas de melhoria.
+Modelagem do registro de software conduzido pela AGIR junto ao INPI, do interesse inicial até os registros internos e o encerramento:
+
+- **AS-IS** (estado atual): esta página.
+- **TO-BE** (estado futuro, com a Plataforma de Gestão de PI): **[to-be/](to-be/)**.
 
 - **Base:** recorte do modelo "PROPPI – Registro de Patentes, Marcas, Desenhos Industriais e Programas de Computador" (v08), complementado com as atividades da AGIR, do interessado e do INPI.
 - **Fontes:** normas oficiais do INPI e entrevista com o solicitante (25–26/11/2026).

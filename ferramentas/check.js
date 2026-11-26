@@ -18,9 +18,11 @@ function checkContainer(where, { nodes = [], flows = [], lanes }) {
     inc.set(b, inc.get(b) + 1);
   }
   const msgIn = new Set((def.messageFlows || []).map(m => m[1]));
+  const laneOf = n => n.type === 'boundary' ? (n.lane || nodes.find(h => h.id === n.attachedTo)?.lane) : n.lane;
   for (const n of nodes) {
-    if (lanes?.length && !lanes.some(l => l.id === n.lane)) problems.push(`${where}: ${n.id} sem raia válida`);
-    const isStart = n.type === 'start' || (n.type === 'catch' && n.event === 'link');
+    if (n.type === 'boundary' && !ids.has(n.attachedTo)) problems.push(`${where}: evento de borda ${n.id} preso a nó inexistente`);
+    if (lanes?.length && !lanes.some(l => l.id === laneOf(n))) problems.push(`${where}: ${n.id} sem raia válida`);
+    const isStart = n.type === 'start' || n.type === 'boundary' || (n.type === 'catch' && n.event === 'link');
     const isEnd = n.type === 'end' || (n.type === 'throw' && n.event === 'link');
     if (!isStart && inc.get(n.id) === 0 && !msgIn.has(n.id)) problems.push(`${where}: ${n.id} sem entrada`);
     if (!isEnd && out.get(n.id).length === 0) problems.push(`${where}: ${n.id} sem saída`);
@@ -30,7 +32,7 @@ function checkContainer(where, { nodes = [], flows = [], lanes }) {
     if (n.type === 'subprocess' && n.nodes?.length) checkContainer(`${where}/${n.id}`, n);
   }
   // todo início alcança um fim
-  const starts = nodes.filter(n => n.type === 'start' || (n.type === 'catch' && n.event === 'link'));
+  const starts = nodes.filter(n => n.type === 'start' || n.type === 'boundary' || (n.type === 'catch' && n.event === 'link'));
   for (const s of starts) {
     const seen = new Set([s.id]);
     const stack = [s.id];

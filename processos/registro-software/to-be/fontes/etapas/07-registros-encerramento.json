@@ -1,0 +1,232 @@
+{
+  "id": "ToBe_Registro_Software_Etapa7",
+  "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF – Etapa 7 – Registros internos, cotitularidade e encerramento",
+  "pools": [
+    {
+      "id": "Pool_COTIT",
+      "name": "Cotitulares externos",
+      "blackbox": true
+    },
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 7 – Registros internos, cotitularidade e encerramento",
+      "processId": "ToBe_Registro_Software_Etapa7",
+      "lanes": [
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_UFF",
+          "name": "Outras unidades da UFF"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "uff_registros",
+          "type": "task",
+          "name": "Realizar os registros patrimonial e contábil para devolver à AGIR",
+          "lane": "L_UFF"
+        },
+        {
+          "id": "a_gw_cotitular",
+          "type": "xor",
+          "name": "O ativo possui cotitularidade?",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_desp_enc_sem_cot",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_fim_sem_cot",
+          "type": "end",
+          "name": "Encerrado: registro concluído",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_minuta",
+          "type": "task",
+          "name": "Anexar minuta do Contrato de Ajuste de Propriedade Intelectual",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_desp_encam_proger",
+          "type": "task",
+          "name": "Elaborar despacho de encaminhamento",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "uff_parecer",
+          "type": "task",
+          "name": "Emitir parecer jurídico sobre o Contrato de Ajuste e devolver à AGIR",
+          "lane": "L_UFF"
+        },
+        {
+          "id": "a_contrato",
+          "type": "task",
+          "name": "Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_email_cadastro",
+          "type": "send",
+          "name": "Enviar e-mail com orientações sobre o cadastro de usuários externos",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_disp_contrato",
+          "type": "task",
+          "name": "Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_and_assinaturas",
+          "type": "and",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_assinar_contrato",
+          "type": "user",
+          "name": "Assinar o Contrato de Ajuste (AGIR)",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "uff_assinar_contrato",
+          "type": "user",
+          "name": "Assinar o Contrato de Ajuste (Reitoria)",
+          "lane": "L_UFF"
+        },
+        {
+          "id": "a_ass_externas",
+          "type": "catch",
+          "event": "message",
+          "name": "Assinaturas dos cotitulares externos concluídas",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_and_assinaturas_fim",
+          "type": "and",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_desp_enc_cot",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "a_fim_cot",
+          "type": "end",
+          "name": "Encerrado: contrato disponibilizado",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "ini_uff_registros_e6",
+          "type": "start",
+          "name": "(Etapa 6 – Acompanhamento do INPI e conferência do certificado)",
+          "lane": "L_UFF"
+        }
+      ],
+      "flows": [
+        [
+          "uff_registros",
+          "a_gw_cotitular"
+        ],
+        [
+          "a_gw_cotitular",
+          "a_desp_enc_sem_cot",
+          "Não"
+        ],
+        [
+          "a_desp_enc_sem_cot",
+          "a_fim_sem_cot"
+        ],
+        [
+          "a_gw_cotitular",
+          "a_minuta",
+          "Sim"
+        ],
+        [
+          "a_minuta",
+          "a_desp_encam_proger"
+        ],
+        [
+          "a_desp_encam_proger",
+          "uff_parecer"
+        ],
+        [
+          "uff_parecer",
+          "a_contrato"
+        ],
+        [
+          "a_contrato",
+          "a_email_cadastro"
+        ],
+        [
+          "a_email_cadastro",
+          "a_disp_contrato"
+        ],
+        [
+          "a_disp_contrato",
+          "a_and_assinaturas"
+        ],
+        [
+          "a_and_assinaturas",
+          "a_assinar_contrato"
+        ],
+        [
+          "a_and_assinaturas",
+          "uff_assinar_contrato"
+        ],
+        [
+          "a_and_assinaturas",
+          "a_ass_externas"
+        ],
+        [
+          "a_assinar_contrato",
+          "a_and_assinaturas_fim"
+        ],
+        [
+          "uff_assinar_contrato",
+          "a_and_assinaturas_fim"
+        ],
+        [
+          "a_ass_externas",
+          "a_and_assinaturas_fim"
+        ],
+        [
+          "a_and_assinaturas_fim",
+          "a_desp_enc_cot"
+        ],
+        [
+          "a_desp_enc_cot",
+          "a_fim_cot"
+        ],
+        [
+          "ini_uff_registros_e6",
+          "uff_registros"
+        ]
+      ]
+    }
+  ],
+  "messageFlows": [
+    [
+      "a_email_cadastro",
+      "Pool_COTIT",
+      "Orientações de cadastro no SEI"
+    ],
+    [
+      "a_disp_contrato",
+      "Pool_COTIT",
+      "Contrato para assinatura (SEI)"
+    ],
+    [
+      "Pool_COTIT",
+      "a_ass_externas",
+      "Contrato assinado"
+    ]
+  ]
+}

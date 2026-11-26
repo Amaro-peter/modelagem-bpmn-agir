@@ -212,17 +212,17 @@
         <dc:Bounds x="0" y="590" width="2100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
-        <di:waypoint x="1228" y="340" />
-        <di:waypoint x="1228" y="590" />
+        <di:waypoint x="1220" y="340" />
+        <di:waypoint x="1220" y="590" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1234" y="556" width="110" height="28" />
+          <dc:Bounds x="1226" y="556" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_2_di" bpmnElement="Msg_2">
-        <di:waypoint x="1432" y="590" />
-        <di:waypoint x="1432" y="340" />
+        <di:waypoint x="1440" y="590" />
+        <di:waypoint x="1440" y="340" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1438" y="556" width="110" height="28" />
+          <dc:Bounds x="1446" y="556" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

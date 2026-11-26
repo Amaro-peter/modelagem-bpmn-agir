@@ -1,0 +1,298 @@
+{
+  "id": "ToBe_Registro_Software_Macro",
+  "name": "Macroprocesso – TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF",
+  "pools": [
+    {
+      "id": "Pool_COTIT",
+      "name": "Cotitulares externos",
+      "blackbox": true
+    },
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – Registro de Programa de Computador (Software) – TO-BE",
+      "processId": "ToBe_Registro_Software_Macro",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO (portal)"
+        },
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_BOLS",
+          "name": "AGIR – Bolsista"
+        },
+        {
+          "id": "L_PLAT",
+          "name": "Plataforma de Gestão de PI (sistema)",
+          "color": {
+            "fill": "#f3eefa",
+            "stroke": "#6a3d9a"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "m_ini",
+          "type": "start",
+          "name": "Necessidade de registrar o software",
+          "lane": "L_INT"
+        },
+        {
+          "id": "m_e1",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa1",
+          "name": "Etapa 1 – Solicitação e triagem",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "m_gw1",
+          "type": "xor",
+          "name": "Resultado da Etapa 1",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "m_fim1_0",
+          "type": "end",
+          "name": "Encerrado na triagem",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "m_e2",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa2",
+          "name": "Etapa 2 – Reunião inicial e avaliação",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_gw2",
+          "type": "xor",
+          "name": "Resultado da Etapa 2",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_fim2_0",
+          "type": "end",
+          "name": "Arquivado por falta de resposta",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_fim2_1",
+          "type": "end",
+          "name": "Encerrado: avaliação negativa",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_e3",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa3",
+          "name": "Etapa 3 – Coleta estruturada e validação",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "m_gw3",
+          "type": "xor",
+          "name": "Resultado da Etapa 3",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "m_fim3_0",
+          "type": "end",
+          "name": "Arquivado por falta de resposta",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "m_e4",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa4",
+          "name": "Etapa 4 – Pagamento da GRU",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_e5",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa5",
+          "name": "Etapa 5 – Protocolo assistido no INPI",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_e6",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa6",
+          "name": "Etapa 6 – Acompanhamento do INPI e conferência do certificado",
+          "lane": "L_PLAT"
+        },
+        {
+          "id": "m_gw6",
+          "type": "xor",
+          "name": "Resultado da Etapa 6",
+          "lane": "L_PLAT"
+        },
+        {
+          "id": "m_fim6_0",
+          "type": "end",
+          "name": "Encerrado: pedido não conhecido",
+          "lane": "L_PLAT"
+        },
+        {
+          "id": "m_e7",
+          "type": "call",
+          "calls": "ToBe_Registro_Software_Etapa7",
+          "name": "Etapa 7 – Registros internos, cotitularidade e encerramento",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "m_fim",
+          "type": "end",
+          "name": "Processo concluído",
+          "lane": "L_SERV"
+        }
+      ],
+      "flows": [
+        [
+          "m_ini",
+          "m_e1"
+        ],
+        [
+          "m_e1",
+          "m_gw1"
+        ],
+        [
+          "m_gw1",
+          "m_fim1_0",
+          "Encerrado"
+        ],
+        [
+          "m_gw1",
+          "m_e2",
+          "Segue"
+        ],
+        [
+          "m_e2",
+          "m_gw2"
+        ],
+        [
+          "m_gw2",
+          "m_fim2_0",
+          "Arquivado"
+        ],
+        [
+          "m_gw2",
+          "m_fim2_1",
+          "Encerrado"
+        ],
+        [
+          "m_gw2",
+          "m_e3",
+          "Segue"
+        ],
+        [
+          "m_e3",
+          "m_gw3"
+        ],
+        [
+          "m_gw3",
+          "m_fim3_0",
+          "Arquivado"
+        ],
+        [
+          "m_gw3",
+          "m_e4",
+          "Segue"
+        ],
+        [
+          "m_e4",
+          "m_e5"
+        ],
+        [
+          "m_e5",
+          "m_e6"
+        ],
+        [
+          "m_e6",
+          "m_gw6"
+        ],
+        [
+          "m_gw6",
+          "m_fim6_0",
+          "Encerrado"
+        ],
+        [
+          "m_gw6",
+          "m_e7",
+          "Segue"
+        ],
+        [
+          "m_e7",
+          "m_fim"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "blackbox": true,
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    },
+    {
+      "id": "Pool_SEI",
+      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "blackbox": true,
+      "color": {
+        "fill": "#f1f1f1",
+        "stroke": "#616161"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "m_e7",
+      "Pool_COTIT"
+    ],
+    [
+      "Pool_COTIT",
+      "m_e7"
+    ],
+    [
+      "m_e1",
+      "Pool_SEI"
+    ],
+    [
+      "m_e3",
+      "Pool_SEI"
+    ],
+    [
+      "m_e4",
+      "Pool_SEI"
+    ],
+    [
+      "m_e5",
+      "Pool_SEI"
+    ],
+    [
+      "m_e6",
+      "Pool_SEI"
+    ],
+    [
+      "m_e4",
+      "Pool_INPI"
+    ],
+    [
+      "m_e5",
+      "Pool_INPI"
+    ],
+    [
+      "Pool_INPI",
+      "m_e6"
+    ],
+    [
+      "m_e6",
+      "Pool_INPI"
+    ]
+  ]
+}

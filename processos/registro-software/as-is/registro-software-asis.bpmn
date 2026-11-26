@@ -1348,17 +1348,17 @@
         <di:waypoint x="7000" y="1077" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_4_di" bpmnElement="Msg_4">
-        <di:waypoint x="9148" y="689" />
-        <di:waypoint x="9148" y="80" />
+        <di:waypoint x="9140" y="689" />
+        <di:waypoint x="9140" y="80" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="9154" y="86" width="110" height="28" />
+          <dc:Bounds x="9146" y="86" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_5_di" bpmnElement="Msg_5">
-        <di:waypoint x="9328" y="697" />
-        <di:waypoint x="9328" y="80" />
+        <di:waypoint x="9320" y="697" />
+        <di:waypoint x="9320" y="80" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="9334" y="86" width="110" height="28" />
+          <dc:Bounds x="9326" y="86" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_6_di" bpmnElement="Msg_6">

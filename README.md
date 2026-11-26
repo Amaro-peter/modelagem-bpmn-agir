@@ -48,7 +48,7 @@ Deixe esse terminal aberto e abra no navegador:
 
 **http://localhost:8080/ferramentas/editor.html?file=processos/registro-software/macro/00-macro.bpmn**
 
-- **Abrir outro modelo:** troque o caminho depois de `file=`. Exemplos: `processos/registro-software/etapas/06-resultado.bpmn` ou `processos/registro-software/as-is/registro-software-asis.bpmn`. Também dá para usar o botão **Escolher arquivo** no topo do editor.
+- **Abrir outro modelo:** troque o caminho depois de `file=`. Exemplos: `processos/registro-software/etapas/06-resultado.bpmn`, `processos/registro-software/as-is/registro-software-asis.bpmn` ou o TO-BE `processos/registro-software/to-be/macro/00-macro.bpmn`. Também dá para usar o botão **Escolher arquivo** no topo do editor.
 - **Navegar no diagrama:** roda do mouse para zoom e arrastar o fundo para mover. Nos subprocessos, o ícone ↘ abre o detalhe.
 - **Editar:** use a paleta à esquerda. **Salvar no projeto** (ou **Ctrl+S**) grava no próprio arquivo, e **Baixar .bpmn** / **Baixar .svg** exportam cópias.
 - **Encerrar o editor:** **Ctrl+C** no terminal.
@@ -66,7 +66,7 @@ O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Goog
 
 | Processo | Situação | Conteúdo |
 |---|---|---|
-| [Registro de Programa de Computador (Software)](processos/registro-software/) | AS-IS concluído | Modelo AS-IS completo, macroprocesso em 7 etapas, relatório AS-IS, arquitetura de processos, SIPOC e RACI |
+| [Registro de Programa de Computador (Software)](processos/registro-software/) | AS-IS e TO-BE concluídos | **AS-IS:** modelo completo, macroprocesso em 7 etapas, relatório, arquitetura de processos, SIPOC e RACI. **[TO-BE](processos/registro-software/to-be/):** processo futuro com a Plataforma de Gestão de PI (completo, macro e 7 etapas), gargalos × melhorias, sistemas, automações, exceções, aderência às restrições, KPIs e requisitos |
 
 ## Estrutura
 
@@ -78,8 +78,9 @@ processos/
     ├── etapas/     um diagrama por etapa (01 a 07)
     ├── docs/       relatório AS-IS e documento do macroprocesso (arquitetura, SIPOC, RACI)
     ├── fontes/     definições JSON das quais os .bpmn são gerados
-    └── scripts/    geração das etapas e da documentação deste processo
-ferramentas/        gerador, layout com raias, validação, renderização e editor
+    ├── scripts/    geração das etapas e da documentação deste processo
+    └── to-be/      estado futuro: completo, macro/, etapas/, docs/, fontes/, scripts/
+ferramentas/        gerador, layout com raias, divisão em etapas, validação, renderização e editor
 ```
 
 ## Ferramentas
@@ -93,6 +94,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npx bpmnlint <arquivo.bpmn>` | Valida as regras BPMN (configuração em `.bpmnlintrc`) |
 | `npm run render -- <arquivo.bpmn>` | Gera SVG e PNG, um por plano (inclusive drill-downs) |
 | `npm run editor` | Editor visual local com gravação no projeto |
+| `python3 -I ferramentas/dividir_etapas.py <fonte.json> <pasta>` | Gera os diagramas por etapa e o macroprocesso a partir de uma fonte com `"etapa"` em cada nó |
 
 ### Formato da definição (JSON)
 
@@ -120,6 +122,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 - **Marcação:** `"status"` pode ser `nova` (verde) ou `confirmar` (laranja). Sem status, a atividade é a original. `"note"` cria uma anotação ligada ao nó.
 - **Dicas de layout:** `"under": "<id>"` coloca o nó logo abaixo de outro; `"shift": n` empurra o nó n colunas para a direita.
 - **Subprocessos:** um `subprocess` com `nodes` vira etapa recolhida com drill-down; sem `nodes`, fica recolhido sem conteúdo.
-- **Pools:** `"blackbox": true` cria um participante sem processo (caixa-preta); `"color"` destaca a pool.
+- **Eventos de borda:** `{"type": "boundary", "attachedTo": "<id>", "event": "timer", "interrupting": false, "timer": "P5D"}` (prazos, lembretes e exceções).
+- **Pools e raias:** `"blackbox": true` cria um participante sem processo (caixa-preta); `"color"` destaca uma pool ou raia.
 - **Formato simples:** também é aceito o formato de uma pool só (`lanes`/`nodes`/`flows` no topo). Sem raias, o layout é feito pelo `bpmn-auto-layout`.
 - **Nomes:** todo elemento precisa de `name`, exceto os gateways de junção (regra `label-required` do bpmnlint).

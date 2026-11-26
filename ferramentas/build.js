@@ -13,7 +13,7 @@ const TYPES = {
   xor: 'bpmn:ExclusiveGateway', and: 'bpmn:ParallelGateway',
   or: 'bpmn:InclusiveGateway', event: 'bpmn:EventBasedGateway',
   catch: 'bpmn:IntermediateCatchEvent', throw: 'bpmn:IntermediateThrowEvent',
-  subprocess: 'bpmn:SubProcess', call: 'bpmn:CallActivity'
+  subprocess: 'bpmn:SubProcess', call: 'bpmn:CallActivity', boundary: 'bpmn:BoundaryEvent'
 };
 
 // Cores por status (original = sem cor). Gravadas em bioc: (bpmn.io) e color: (BPMN in Color).
@@ -47,7 +47,9 @@ function eventDefinitions(n) {
   const expr = body => moddle.create('bpmn:FormalExpression', { body });
   switch (kind) {
     case 'message': return [moddle.create('bpmn:MessageEventDefinition', { id: `${n.id}_ed` })];
-    case 'timer': return [moddle.create('bpmn:TimerEventDefinition', { id: `${n.id}_ed`, timeDuration: n.timer ? expr(n.timer) : undefined })];
+    case 'timer': return [moddle.create('bpmn:TimerEventDefinition', { id: `${n.id}_ed`,
+      timeDuration: n.timer ? expr(n.timer) : undefined, timeCycle: n.cycle ? expr(n.cycle) : undefined })];
+    case 'error': return [moddle.create('bpmn:ErrorEventDefinition', { id: `${n.id}_ed` })];
     case 'conditional': return [moddle.create('bpmn:ConditionalEventDefinition', { id: `${n.id}_ed`, condition: expr(n.condition || n.name) })];
     case 'link': return [moddle.create('bpmn:LinkEventDefinition', { id: `${n.id}_ed`, name: n.link || n.name })];
     case 'terminate': return [moddle.create('bpmn:TerminateEventDefinition', { id: `${n.id}_ed` })];
@@ -60,6 +62,9 @@ function eventDefinitions(n) {
 function fill(container, { nodes = [], flows = [], lanes = null } = {}) {
   container.flowElements = [];
   const byId = {};
+  // eventos de borda ficam na raia da atividade a que estão presos
+  const specById = Object.fromEntries(nodes.map(n => [n.id, n]));
+  for (const n of nodes) if (n.type === 'boundary' && !n.lane) n.lane = specById[n.attachedTo]?.lane;
   const artifacts = [];
   for (const n of nodes) {
     const type = TYPES[n.type];
@@ -81,6 +86,12 @@ function fill(container, { nodes = [], flows = [], lanes = null } = {}) {
       els[ann.id] = ann; els[asc.id] = asc;
       artifacts.push(ann, asc);
     }
+  }
+  for (const n of nodes.filter(n => n.type === 'boundary')) {
+    const host = byId[n.attachedTo];
+    if (!host) throw new Error(`Evento de borda ${n.id} preso a nó inexistente ${n.attachedTo}`);
+    byId[n.id].attachedToRef = host;
+    byId[n.id].cancelActivity = n.interrupting !== false;   // padrão BPMN: interruptivo
   }
   flows.forEach(([from, to, name], i) => {
     const s = byId[from], t = byId[to];
@@ -179,7 +190,14 @@ async function buildWithLanes() {
         }
         pe.push(ps);
       }
-      for (const l of p.lanes || []) pe.push(shape(l.id, els[l.id], L.lanes[l.id], { isHorizontal: true }));
+      for (const l of p.lanes || []) {
+        const ls = shape(l.id, els[l.id], L.lanes[l.id], { isHorizontal: true });
+        if (l.color) {   // destaque da raia (ex.: raia de sistema)
+          ls.set('bioc:fill', l.color.fill); ls.set('bioc:stroke', l.color.stroke);
+          ls.set('color:background-color', l.color.fill); ls.set('color:border-color', l.color.stroke);
+        }
+        pe.push(ls);
+      }
       for (const g of p.groups || []) pe.push(shape(g.id, els[g.id], L.groups[g.id]));
       for (const n of p.nodes || []) {
         if (n.type === 'subprocess' && n.expanded) throw new Error(`Subprocesso expandido (${n.id}) não suportado no modo com raias; use recolhido (drill-down).`);

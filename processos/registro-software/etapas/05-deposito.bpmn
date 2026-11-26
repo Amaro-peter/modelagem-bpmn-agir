@@ -157,10 +157,10 @@
         <dc:Bounds x="0" y="342" width="1740" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
-        <di:waypoint x="1228" y="235" />
-        <di:waypoint x="1228" y="342" />
+        <di:waypoint x="1220" y="235" />
+        <di:waypoint x="1220" y="342" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1234" y="308" width="110" height="28" />
+          <dc:Bounds x="1226" y="308" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

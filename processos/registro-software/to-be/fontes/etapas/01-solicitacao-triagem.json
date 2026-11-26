@@ -1,0 +1,253 @@
+{
+  "id": "ToBe_Registro_Software_Etapa1",
+  "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF – Etapa 1 – Solicitação e triagem",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 1 – Solicitação e triagem",
+      "processId": "ToBe_Registro_Software_Etapa1",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO (portal)"
+        },
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_BOLS",
+          "name": "AGIR – Bolsista"
+        },
+        {
+          "id": "L_PLAT",
+          "name": "Plataforma de Gestão de PI (sistema)",
+          "color": {
+            "fill": "#f3eefa",
+            "stroke": "#6a3d9a"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "e1_ini",
+          "type": "start",
+          "name": "Necessidade de registrar o software",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_sol",
+          "type": "user",
+          "name": "Preencher a solicitação inicial no portal (formulário estruturado)",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_reg",
+          "type": "service",
+          "name": "Registrar a solicitação e gerar o protocolo de acompanhamento",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_sei1",
+          "type": "service",
+          "name": "Abrir o processo no SEI e incluir o requerimento (Web Service)",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "note": "Integração pelos Web Services do SEI: depende de aprovação da STI/UFF"
+        },
+        {
+          "id": "g_sei1",
+          "type": "xor",
+          "name": "Integração com o SEI ok?",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_sei1m",
+          "type": "user",
+          "name": "Abrir o processo no SEI e vincular o número (contingência)",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "j_sei1",
+          "type": "xor",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_not1",
+          "type": "send",
+          "name": "Notificar o interessado: solicitação recebida",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_fila",
+          "type": "service",
+          "name": "Distribuir na fila de triagem e iniciar o prazo de atendimento",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_tri",
+          "type": "user",
+          "name": "Fazer a triagem da solicitação (requisitos iniciais)",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_tri_b",
+          "type": "boundary",
+          "attachedTo": "t_tri",
+          "event": "timer",
+          "interrupting": false,
+          "timer": "P2D",
+          "name": "Prazo de triagem vencido",
+          "status": "nova"
+        },
+        {
+          "id": "t_tri_alerta",
+          "type": "send",
+          "name": "Alertar a equipe e o servidor sobre a triagem atrasada",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_tri_alerta_fim",
+          "type": "end",
+          "name": "Alerta registrado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_req",
+          "type": "xor",
+          "name": "Atende aos requisitos iniciais?",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_enc1",
+          "type": "user",
+          "name": "Confirmar o encerramento e assinar o despacho (SEI)",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "t_not_enc1",
+          "type": "send",
+          "name": "Notificar o interessado com a justificativa",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "e1_fim",
+          "type": "end",
+          "name": "Encerrado na triagem",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "fim_g_req_e2",
+          "type": "end",
+          "name": "→ Etapa 2 – Reunião inicial e avaliação",
+          "lane": "L_BOLS"
+        }
+      ],
+      "flows": [
+        [
+          "e1_ini",
+          "t_sol"
+        ],
+        [
+          "t_sol",
+          "t_reg"
+        ],
+        [
+          "t_reg",
+          "t_sei1"
+        ],
+        [
+          "t_sei1",
+          "g_sei1"
+        ],
+        [
+          "g_sei1",
+          "j_sei1",
+          "Sim"
+        ],
+        [
+          "g_sei1",
+          "t_sei1m",
+          "Não"
+        ],
+        [
+          "t_sei1m",
+          "j_sei1"
+        ],
+        [
+          "j_sei1",
+          "t_not1"
+        ],
+        [
+          "t_not1",
+          "t_fila"
+        ],
+        [
+          "t_fila",
+          "t_tri"
+        ],
+        [
+          "t_tri",
+          "g_req"
+        ],
+        [
+          "t_tri_b",
+          "t_tri_alerta"
+        ],
+        [
+          "t_tri_alerta",
+          "t_tri_alerta_fim"
+        ],
+        [
+          "g_req",
+          "t_enc1",
+          "Não"
+        ],
+        [
+          "t_enc1",
+          "t_not_enc1"
+        ],
+        [
+          "t_not_enc1",
+          "e1_fim"
+        ],
+        [
+          "g_req",
+          "fim_g_req_e2",
+          "Sim"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_SEI",
+      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "blackbox": true,
+      "color": {
+        "fill": "#f1f1f1",
+        "stroke": "#616161"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "t_sei1",
+      "Pool_SEI",
+      "Gerar processo"
+    ]
+  ]
+}

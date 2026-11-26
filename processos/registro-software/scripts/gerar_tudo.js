@@ -27,4 +27,20 @@ for (const dir of ['as-is', 'macro', 'etapas']) {
   }
 }
 py('gerar_doc.py');                                       // docs/macroprocesso-registro-software.md
-console.log(`ok: artefatos regerados em ${path.relative(root, P)}`);
+
+// ---------------- TO-BE ----------------
+const TB = path.join(P, 'to-be');
+execFileSync(python, ['-I', tool('dividir_etapas.py'), path.join(TB, 'fontes', 'registro-software-tobe.json'),
+  path.join(TB, 'fontes', 'etapas')], { cwd: root, stdio: 'inherit' });
+node(tool('build.js'), path.join(TB, 'fontes', 'registro-software-tobe.json'), path.join(TB, 'registro-software-tobe.bpmn'));
+for (const f of fs.readdirSync(path.join(TB, 'fontes', 'etapas')).filter(f => f.endsWith('.json'))) {
+  const dest = f.startsWith('00-') ? 'macro' : 'etapas';
+  node(tool('build.js'), path.join(TB, 'fontes', 'etapas', f), path.join(TB, dest, f.replace(/\.json$/, '.bpmn')));
+}
+for (const dir of ['.', 'macro', 'etapas']) {
+  for (const f of fs.readdirSync(path.join(TB, dir)).filter(f => f.endsWith('.bpmn'))) {
+    execFileSync(process.execPath, [tool('render.js'), path.join(TB, dir, f)], { cwd: root, stdio: 'ignore' });
+  }
+}
+py(path.join('..', 'to-be', 'scripts', 'gerar_doc.py'));  // to-be/docs/to-be-registro-software.md
+console.log(`ok: artefatos regerados em ${path.relative(root, P)} (AS-IS e TO-BE)`);

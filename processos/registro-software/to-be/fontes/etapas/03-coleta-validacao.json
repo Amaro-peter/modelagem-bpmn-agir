@@ -1,0 +1,518 @@
+{
+  "id": "ToBe_Registro_Software_Etapa3",
+  "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF – Etapa 3 – Coleta estruturada e validação",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 3 – Coleta estruturada e validação",
+      "processId": "ToBe_Registro_Software_Etapa3",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO (portal)"
+        },
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_BOLS",
+          "name": "AGIR – Bolsista"
+        },
+        {
+          "id": "L_PLAT",
+          "name": "Plataforma de Gestão de PI (sistema)",
+          "color": {
+            "fill": "#f3eefa",
+            "stroke": "#6a3d9a"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "t_lib",
+          "type": "send",
+          "name": "Liberar o formulário de registro e notificar o interessado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "j_form",
+          "type": "xor",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_form",
+          "type": "user",
+          "name": "Preencher o formulário de registro e anexar os documentos",
+          "lane": "L_INT",
+          "status": "nova",
+          "note": "Autores, titulares, datas, linguagens, campo de aplicação e tipo de programa"
+        },
+        {
+          "id": "t_hash",
+          "type": "service",
+          "name": "Calcular o hash SHA-512 no navegador do interessado",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "note": "O código-fonte não sai do computador do interessado; a plataforma guarda só o hash"
+        },
+        {
+          "id": "t_valida",
+          "type": "service",
+          "name": "Validar campos, formatos, CPFs e coerência dos dados",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_valida",
+          "type": "xor",
+          "name": "Dados consistentes?",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_apont",
+          "type": "send",
+          "name": "Apontar as pendências ao interessado (portal e e-mail)",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_sei3",
+          "type": "service",
+          "name": "Incluir o formulário e os documentos no SEI (Web Service)",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_sei3",
+          "type": "xor",
+          "name": "Integração com o SEI ok?",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_sei3m",
+          "type": "user",
+          "name": "Incluir os documentos no SEI (contingência)",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "j_sei3",
+          "type": "xor",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_confere",
+          "type": "user",
+          "name": "Conferir o formulário com os documentos apresentados",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "g_confere",
+          "type": "xor",
+          "name": "Conferência ok?",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_corr",
+          "type": "send",
+          "name": "Enviar ao interessado o pedido de correção, com os pontos a ajustar",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_resumo",
+          "type": "service",
+          "name": "Gerar o resumo dos dados para confirmação",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "j_aceite",
+          "type": "xor",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_aceite",
+          "type": "user",
+          "name": "Revisar os dados e dar o aceite eletrônico",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "g_aceite",
+          "type": "xor",
+          "name": "Dados confirmados?",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_congela",
+          "type": "service",
+          "name": "Registrar a versão aprovada dos dados (base das conferências seguintes)",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_not3",
+          "type": "send",
+          "name": "Notificar o interessado e a equipe: dados aprovados",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3_b_lem",
+          "type": "boundary",
+          "attachedTo": "t_form",
+          "event": "timer",
+          "interrupting": false,
+          "timer": "P5D",
+          "name": "Lembretes: 5 e 10 dias úteis",
+          "status": "nova"
+        },
+        {
+          "id": "i3_lem",
+          "type": "send",
+          "name": "Enviar lembrete automático ao interessado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3_lem_fim",
+          "type": "end",
+          "name": "Lembrete enviado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3_b_30",
+          "type": "boundary",
+          "attachedTo": "t_form",
+          "event": "timer",
+          "interrupting": true,
+          "timer": "P30D",
+          "name": "30 dias sem resposta",
+          "status": "nova"
+        },
+        {
+          "id": "i3_dec",
+          "type": "user",
+          "name": "Decidir: arquivar ou prorrogar o prazo",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "i3_gw",
+          "type": "xor",
+          "name": "Arquivar?",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "i3_arq",
+          "type": "user",
+          "name": "Assinar despacho de arquivamento (SEI)",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "i3_not",
+          "type": "send",
+          "name": "Notificar o interessado do arquivamento",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3_fim",
+          "type": "end",
+          "name": "Arquivado por falta de resposta",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_b_lem",
+          "type": "boundary",
+          "attachedTo": "t_aceite",
+          "event": "timer",
+          "interrupting": false,
+          "timer": "P5D",
+          "name": "Lembretes: 5 e 10 dias úteis",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_lem",
+          "type": "send",
+          "name": "Enviar lembrete automático ao interessado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_lem_fim",
+          "type": "end",
+          "name": "Lembrete enviado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_b_30",
+          "type": "boundary",
+          "attachedTo": "t_aceite",
+          "event": "timer",
+          "interrupting": true,
+          "timer": "P30D",
+          "name": "30 dias sem resposta",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_dec",
+          "type": "user",
+          "name": "Decidir: arquivar ou prorrogar o prazo",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_gw",
+          "type": "xor",
+          "name": "Arquivar?",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_arq",
+          "type": "user",
+          "name": "Assinar despacho de arquivamento (SEI)",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_not",
+          "type": "send",
+          "name": "Notificar o interessado do arquivamento",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "i3b_fim",
+          "type": "end",
+          "name": "Arquivado por falta de resposta",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "ini_t_lib_e2",
+          "type": "start",
+          "name": "(Etapa 2 – Reunião inicial e avaliação)",
+          "lane": "L_PLAT"
+        },
+        {
+          "id": "fim_t_not3_e4",
+          "type": "end",
+          "name": "→ Etapa 4 – Pagamento da GRU",
+          "lane": "L_PLAT"
+        }
+      ],
+      "flows": [
+        [
+          "ini_t_lib_e2",
+          "t_lib"
+        ],
+        [
+          "t_lib",
+          "j_form"
+        ],
+        [
+          "j_form",
+          "t_form"
+        ],
+        [
+          "t_form",
+          "t_hash"
+        ],
+        [
+          "t_hash",
+          "t_valida"
+        ],
+        [
+          "t_valida",
+          "g_valida"
+        ],
+        [
+          "g_valida",
+          "t_apont",
+          "Não"
+        ],
+        [
+          "t_apont",
+          "j_form"
+        ],
+        [
+          "g_valida",
+          "t_sei3",
+          "Sim"
+        ],
+        [
+          "t_sei3",
+          "g_sei3"
+        ],
+        [
+          "g_sei3",
+          "j_sei3",
+          "Sim"
+        ],
+        [
+          "g_sei3",
+          "t_sei3m",
+          "Não"
+        ],
+        [
+          "t_sei3m",
+          "j_sei3"
+        ],
+        [
+          "j_sei3",
+          "t_confere"
+        ],
+        [
+          "t_confere",
+          "g_confere"
+        ],
+        [
+          "g_confere",
+          "t_corr",
+          "Não"
+        ],
+        [
+          "t_corr",
+          "j_form"
+        ],
+        [
+          "g_confere",
+          "t_resumo",
+          "Sim"
+        ],
+        [
+          "t_resumo",
+          "j_aceite"
+        ],
+        [
+          "j_aceite",
+          "t_aceite"
+        ],
+        [
+          "t_aceite",
+          "g_aceite"
+        ],
+        [
+          "g_aceite",
+          "j_form",
+          "Não, pedir ajuste"
+        ],
+        [
+          "g_aceite",
+          "t_congela",
+          "Sim"
+        ],
+        [
+          "t_congela",
+          "t_not3"
+        ],
+        [
+          "i3_b_lem",
+          "i3_lem"
+        ],
+        [
+          "i3_lem",
+          "i3_lem_fim"
+        ],
+        [
+          "i3_b_30",
+          "i3_dec"
+        ],
+        [
+          "i3_dec",
+          "i3_gw"
+        ],
+        [
+          "i3_gw",
+          "i3_arq",
+          "Sim"
+        ],
+        [
+          "i3_arq",
+          "i3_not"
+        ],
+        [
+          "i3_not",
+          "i3_fim"
+        ],
+        [
+          "i3_gw",
+          "j_form",
+          "Não, prorrogar"
+        ],
+        [
+          "i3b_b_lem",
+          "i3b_lem"
+        ],
+        [
+          "i3b_lem",
+          "i3b_lem_fim"
+        ],
+        [
+          "i3b_b_30",
+          "i3b_dec"
+        ],
+        [
+          "i3b_dec",
+          "i3b_gw"
+        ],
+        [
+          "i3b_gw",
+          "i3b_arq",
+          "Sim"
+        ],
+        [
+          "i3b_arq",
+          "i3b_not"
+        ],
+        [
+          "i3b_not",
+          "i3b_fim"
+        ],
+        [
+          "i3b_gw",
+          "j_aceite",
+          "Não, prorrogar"
+        ],
+        [
+          "t_not3",
+          "fim_t_not3_e4"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_SEI",
+      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "blackbox": true,
+      "color": {
+        "fill": "#f1f1f1",
+        "stroke": "#616161"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "t_sei3",
+      "Pool_SEI",
+      "Incluir documentos"
+    ]
+  ]
+}

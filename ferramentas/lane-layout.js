@@ -3,7 +3,7 @@
 // Saída: posições de pools, raias, nós, anotações, grupos e pontos das setas.
 
 const SIZES = {
-  start: [36, 36], end: [36, 36], catch: [36, 36], throw: [36, 36],
+  start: [36, 36], end: [36, 36], catch: [36, 36], throw: [36, 36], boundary: [36, 36],
   xor: [50, 50], and: [50, 50], or: [50, 50], event: [50, 50]
 };
 // Atividades: largura fixa; altura cresce com o texto (~13 caracteres por linha, 15 px por linha).
@@ -66,11 +66,16 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
   const allNodes = pools.flatMap(p => p.nodes || []);
   const byId = new Map(allNodes.map(n => [n.id, n]));
   const blackbox = new Set(pools.filter(p => p.blackbox).map(p => p.id));
+  // eventos de borda: ficam presos à atividade; para o cálculo de colunas, os fluxos que saem deles contam como saindo da atividade
+  const hostOf = new Map(allNodes.filter(n => n.type === 'boundary').map(n => [n.id, n.attachedTo]));
+  for (const [b, h] of hostOf) if (!byId.has(h)) throw new Error(`Evento de borda "${b}" preso a nó inexistente "${h}"`);
+  const viaHost = id => hostOf.get(id) || id;
   const allEdges = [
-    ...pools.flatMap(p => (p.flows || []).map(f => [f[0], f[1]])),
-    ...messageFlows.filter(f => !blackbox.has(f[0]) && !blackbox.has(f[1])).map(f => [f[0], f[1]])
+    ...pools.flatMap(p => (p.flows || []).map(f => [viaHost(f[0]), f[1]])),
+    ...messageFlows.filter(f => !blackbox.has(f[0]) && !blackbox.has(f[1])).map(f => [viaHost(f[0]), viaHost(f[1])])
   ];
-  const { col } = columns(allNodes, allEdges);
+  const { col } = columns(allNodes.filter(n => !hostOf.has(n.id)), allEdges);
+  for (const [b, h] of hostOf) col.set(b, col.get(h));
   // dica de posição: "under": "<id>" coloca o nó na mesma coluna, logo abaixo do nó indicado
   for (const n of allNodes) if (n.under) col.set(n.id, col.get(n.under));
   const nCols = Math.max(...allNodes.map(n => col.get(n.id))) + 1;
@@ -95,18 +100,19 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
     const hasLanes = !!p.lanes?.length;
     const band = p.band ?? poolBand;
     const laneList = hasLanes ? p.lanes : [{ id: `__${p.id}` }];
-    const laneOf = n => (hasLanes ? n.lane : `__${p.id}`);
+    const laneOf = n => (hasLanes ? (n.type === 'boundary' ? byId.get(n.attachedTo).lane : n.lane) : `__${p.id}`);
     for (const n of nodes) {
       if (!laneList.some(l => l.id === laneOf(n))) throw new Error(`Nó "${n.id}" sem raia válida (lane="${n.lane}")`);
     }
     const preds = new Map(nodes.map(n => [n.id, []]));
-    (p.flows || []).forEach(([a, b]) => preds.get(b).push(a));
+    (p.flows || []).forEach(([a, b]) => preds.get(b).push(viaHost(a)));
 
     // Linha dentro da raia: herda a linha do predecessor na mesma raia (mantém setas retas).
     const row = new Map();
     const taken = new Set();
     const order = [...nodes].sort((a, b) => col.get(a.id) - col.get(b.id) || (a.under ? 1 : 0) - (b.under ? 1 : 0));
     for (const n of order) {
+      if (hostOf.has(n.id)) continue;   // evento de borda: posicionado junto à atividade, mais abaixo
       const pr = preds.get(n.id).find(q => row.has(q) && laneOf(byId.get(q)) === laneOf(n));
       let r = n.under && row.has(n.under) ? row.get(n.under) + 1 : pr ? row.get(pr) : 0;
       while (taken.has(`${laneOf(n)}|${r}|${col.get(n.id)}`)) r++;
@@ -117,7 +123,7 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
     const left = (band ? BAND : 0) + (hasLanes ? BAND : 0);
     const poolTop = y;
     for (const l of laneList) {
-      const members = nodes.filter(n => laneOf(n) === l.id);
+      const members = nodes.filter(n => laneOf(n) === l.id && !hostOf.has(n.id));
       const rows = members.length ? Math.max(...members.map(n => row.get(n.id))) + 1 : 1;
       // faixa de anotações no topo da raia
       const noted = members.filter(n => n.note);
@@ -125,6 +131,7 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
       const h = strip + rows * ROW_H + 2 * LANE_PAD;
       if (hasLanes) lanes[l.id] = { x: band ? BAND : 0, y, width: width - (band ? BAND : 0), height: h };
       for (const n of members) {
+        if (hostOf.has(n.id)) continue;
         const [w, hh] = sizeOf(n);
         const cx = left + MARGIN + col.get(n.id) * COL_W + TASK_W / 2;
         const cy = y + strip + LANE_PAD + row.get(n.id) * ROW_H + ROW_H / 2;
@@ -137,6 +144,15 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
     }
     poolBounds[p.id] = { x: 0, y: poolTop, width, height: y - poolTop };
     y += POOL_GAP;
+  }
+
+  // eventos de borda: na borda inferior da atividade, da direita para a esquerda
+  const perHost = new Map();
+  for (const [b, h] of hostOf) {
+    const k = perHost.get(h) || 0; perHost.set(h, k + 1);
+    const hs = shapes[h];
+    shapes[b] = { x: hs.x + hs.width - 50 - k * 44, y: hs.y + hs.height - 18, width: 36, height: 36 };
+    byId.get(b).__boundaryIndex = k;   // 0 = mais à direita (rótulo à direita); demais, rótulo à esquerda
   }
 
   // grupos: caixa que envolve os membros
@@ -167,7 +183,8 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
       const yEl = below ? el.y + el.height : el.y, yPool = below ? pb.y : pb.y + pb.height;
       const cx = el.x + el.width / 2, cy = el.y + el.height / 2;
       const cands = [];
-      for (const dx of [toPool ? -12 : 12, toPool ? 12 : -12, 0, 25, -25]) cands.push([P(cx + dx, yEl), P(cx + dx, yPool)]);
+      const d = el.width > 60 ? 20 : 12;   // em atividades, afasta mais do centro (onde costumam passar as setas de sequência)
+      for (const dx of [toPool ? -d : d, toPool ? d : -d, 0, 25, -25]) cands.push([P(cx + dx, yEl), P(cx + dx, yPool)]);
       // corredor entre colunas (a meia coluna do centro do elemento), saindo pela lateral
       const off = toPool ? -14 : 14;
       for (const side of [1, -1]) for (const k of [0, 12, -12]) {
@@ -223,6 +240,20 @@ function route(a, b, byId, shapes, col) {
   const s = shapes[a], t = shapes[b];
   const sc = c(s), tc = c(t);
   const candidates = [];
+  if (byId.get(a).type === 'boundary') {
+    // sai sempre por baixo do evento de borda
+    const yb = s.y + s.height;
+    const enter = tc.x >= sc.x ? t.x : t.x + t.width;
+    if (tc.y > yb + 10) {
+      candidates.push([P(sc.x, yb), P(sc.x, tc.y), P(enter, tc.y)]);
+      candidates.push([P(sc.x, yb), P(sc.x, t.y - 20), P(tc.x, t.y - 20), P(tc.x, t.y)]);
+    }
+    for (const k of [25, 40, 55, 70]) {   // volta (ex.: prorrogar → mesma atividade): passa por baixo
+      const by = Math.max(yb, t.y + t.height) + k;
+      candidates.push([P(sc.x, yb), P(sc.x, by), P(tc.x, by), P(tc.x, t.y + t.height)]);
+    }
+    return candidates;
+  }
   if (col.get(b) === col.get(a) && Math.abs(sc.x - tc.x) < 1) {
     const up = tc.y < sc.y;
     candidates.push([P(sc.x, up ? s.y : s.y + s.height), P(tc.x, up ? t.y + t.height : t.y)]);
@@ -254,7 +285,15 @@ function route(a, b, byId, shapes, col) {
       candidates.push([P(sc.x, dy < 0 ? s.y : s.y + s.height), P(sc.x, yy), P(tc.x, yy), P(tc.x, dy < 0 ? t.y : t.y + t.height)]);
     }
   } else {
-    // retorno (loop): passa por baixo de tudo
+    // retorno (loop): primeiro tenta por cima dos dois elementos, depois por baixo; por último, por baixo de tudo
+    for (const k of [25, 40, 55]) {
+      const above = Math.min(s.y, t.y) - k;
+      candidates.push([P(sc.x, s.y), P(sc.x, above), P(tc.x, above), P(tc.x, t.y)]);
+    }
+    for (const k of [25, 40]) {
+      const below = Math.max(s.y + s.height, t.y + t.height) + k;
+      candidates.push([P(sc.x, s.y + s.height), P(sc.x, below), P(tc.x, below), P(tc.x, t.y + t.height)]);
+    }
     const bottom = Math.max(...Object.values(shapes).map(v => v.y + v.height)) + 25;
     candidates.push([P(sc.x, s.y + s.height), P(sc.x, bottom), P(tc.x, bottom), P(tc.x, t.y + t.height)]);
   }
@@ -325,6 +364,13 @@ export function placeLabels(nodes, shapes, allEdges) {
   const labels = {};
   const EXT = new Set(['start', 'end', 'catch', 'throw', 'xor', 'and', 'or', 'event']);
   for (const n of nodes) {
+    if (n.type === 'boundary' && n.name) {   // rótulo à direita do evento, abaixo da atividade
+      const s = shapes[n.id];
+      const w = Math.min(110, Math.max(50, n.name.length * 7 + 10));
+      const right = !n.__boundaryIndex;
+      labels[n.id] = { x: right ? s.x + s.width + 2 : s.x - w - 2, y: s.y + s.height - 4, width: w, height: Math.ceil((n.name.length * 7 + 10) / w) * 14 };
+      continue;
+    }
     if (!EXT.has(n.type) || !n.name) continue;
     const s = shapes[n.id];
     const cx = s.x + s.width / 2;

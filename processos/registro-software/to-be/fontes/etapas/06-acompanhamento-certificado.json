@@ -1,0 +1,466 @@
+{
+  "id": "ToBe_Registro_Software_Etapa6",
+  "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF – Etapa 6 – Acompanhamento do INPI e conferência do certificado",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 6 – Acompanhamento do INPI e conferência do certificado",
+      "processId": "ToBe_Registro_Software_Etapa6",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO (portal)"
+        },
+        {
+          "id": "L_SERV",
+          "name": "AGIR – Servidor administrativo"
+        },
+        {
+          "id": "L_BOLS",
+          "name": "AGIR – Bolsista"
+        },
+        {
+          "id": "L_PLAT",
+          "name": "Plataforma de Gestão de PI (sistema)",
+          "color": {
+            "fill": "#f3eefa",
+            "stroke": "#6a3d9a"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "j_mon",
+          "type": "xor",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_mon",
+          "type": "event",
+          "name": "Aguardar novidade do pedido",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "c_email",
+          "type": "catch",
+          "name": "E-mail \"Meus Pedidos\" do INPI recebido",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "event": "message"
+        },
+        {
+          "id": "c_rpi",
+          "type": "catch",
+          "name": "Terça-feira: nova RPI publicada",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "event": "timer",
+          "cycle": "R/P7D"
+        },
+        {
+          "id": "c_prazo",
+          "type": "catch",
+          "name": "Prazo de acompanhamento vencido (10 dias; 15 dias escala)",
+          "lane": "L_PLAT",
+          "status": "nova",
+          "event": "timer"
+        },
+        {
+          "id": "t_email",
+          "type": "service",
+          "name": "Interpretar o e-mail e registrar o despacho",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_rpi",
+          "type": "service",
+          "name": "Ler a RPI e procurar o número do pedido",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_alerta",
+          "type": "send",
+          "name": "Alertar o bolsista (10 dias) ou escalar ao servidor (15 dias)",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_consulta",
+          "type": "user",
+          "name": "Consultar o pedido no Busca Web do INPI e registrar o resultado",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "j_res",
+          "type": "xor",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_res",
+          "type": "xor",
+          "name": "Há despacho publicado?",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_desp",
+          "type": "xor",
+          "name": "Despacho",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_enc742",
+          "type": "user",
+          "name": "Assinar o despacho de encerramento: pedido não conhecido (SEI)",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "t_not742",
+          "type": "send",
+          "name": "Notificar o interessado: pedido não conhecido, com orientações",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_rec742",
+          "type": "user",
+          "name": "Receber a comunicação no portal e por e-mail",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "e6_742",
+          "type": "end",
+          "name": "Encerrado: pedido não conhecido",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_cert",
+          "type": "user",
+          "name": "Baixar o certificado de registro no portal do INPI",
+          "lane": "L_BOLS"
+        },
+        {
+          "id": "t_compara",
+          "type": "service",
+          "name": "Extrair os dados do certificado e comparar com a versão aprovada",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_div",
+          "type": "xor",
+          "name": "Há divergências?",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_origem",
+          "type": "user",
+          "name": "Classificar a origem da divergência",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "g_origem",
+          "type": "xor",
+          "name": "Origem do erro",
+          "lane": "L_BOLS",
+          "status": "nova"
+        },
+        {
+          "id": "t_747",
+          "type": "user",
+          "name": "Pedir a correção pelo serviço 747 do INPI (nova GRU)",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "t_fale",
+          "type": "user",
+          "name": "Solicitar a correção pelo Fale Conosco do INPI",
+          "lane": "L_BOLS",
+          "status": "nova",
+          "shift": 1
+        },
+        {
+          "id": "j_corr",
+          "type": "xor",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_notcorr",
+          "type": "send",
+          "name": "Notificar o interessado: correção do certificado em andamento",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_valcert",
+          "type": "user",
+          "name": "Validar o certificado (conferência final)",
+          "lane": "L_SERV",
+          "status": "nova"
+        },
+        {
+          "id": "t_envcert",
+          "type": "send",
+          "name": "Anexar o certificado ao SEI e enviá-lo ao interessado",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "g_par",
+          "type": "and",
+          "lane": "L_PLAT",
+          "status": "nova"
+        },
+        {
+          "id": "t_reccert",
+          "type": "user",
+          "name": "Receber o certificado no portal e por e-mail",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "e6_int",
+          "type": "end",
+          "name": "Interessado ciente do registro",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "t_desp_encam",
+          "type": "user",
+          "name": "Elaborar despacho de encaminhamento",
+          "lane": "L_SERV"
+        },
+        {
+          "id": "ini_j_mon_e5",
+          "type": "start",
+          "name": "(Etapa 5 – Protocolo assistido no INPI)",
+          "lane": "L_PLAT"
+        },
+        {
+          "id": "fim_t_desp_encam_e7",
+          "type": "end",
+          "name": "→ Etapa 7 – Registros internos, cotitularidade e encerramento",
+          "lane": "L_SERV"
+        }
+      ],
+      "flows": [
+        [
+          "ini_j_mon_e5",
+          "j_mon"
+        ],
+        [
+          "j_mon",
+          "g_mon"
+        ],
+        [
+          "g_mon",
+          "c_email"
+        ],
+        [
+          "c_email",
+          "t_email"
+        ],
+        [
+          "t_email",
+          "j_res"
+        ],
+        [
+          "g_mon",
+          "c_rpi"
+        ],
+        [
+          "c_rpi",
+          "t_rpi"
+        ],
+        [
+          "t_rpi",
+          "j_res"
+        ],
+        [
+          "g_mon",
+          "c_prazo"
+        ],
+        [
+          "c_prazo",
+          "t_alerta"
+        ],
+        [
+          "t_alerta",
+          "t_consulta"
+        ],
+        [
+          "t_consulta",
+          "j_res"
+        ],
+        [
+          "j_res",
+          "g_res"
+        ],
+        [
+          "g_res",
+          "j_mon",
+          "Não"
+        ],
+        [
+          "g_res",
+          "g_desp",
+          "Sim"
+        ],
+        [
+          "g_desp",
+          "t_enc742",
+          "742 – não conhecido"
+        ],
+        [
+          "t_enc742",
+          "t_not742"
+        ],
+        [
+          "t_not742",
+          "t_rec742"
+        ],
+        [
+          "t_rec742",
+          "e6_742"
+        ],
+        [
+          "g_desp",
+          "t_cert",
+          "730 – concedido"
+        ],
+        [
+          "t_cert",
+          "t_compara"
+        ],
+        [
+          "t_compara",
+          "g_div"
+        ],
+        [
+          "g_div",
+          "t_origem",
+          "Sim"
+        ],
+        [
+          "t_origem",
+          "g_origem"
+        ],
+        [
+          "g_origem",
+          "t_747",
+          "Dados enviados pela AGIR"
+        ],
+        [
+          "g_origem",
+          "t_fale",
+          "Erro do INPI"
+        ],
+        [
+          "t_747",
+          "j_corr"
+        ],
+        [
+          "t_fale",
+          "j_corr"
+        ],
+        [
+          "j_corr",
+          "t_notcorr"
+        ],
+        [
+          "t_notcorr",
+          "j_mon"
+        ],
+        [
+          "g_div",
+          "t_valcert",
+          "Não"
+        ],
+        [
+          "t_valcert",
+          "t_envcert"
+        ],
+        [
+          "t_envcert",
+          "g_par"
+        ],
+        [
+          "g_par",
+          "t_reccert"
+        ],
+        [
+          "t_reccert",
+          "e6_int"
+        ],
+        [
+          "g_par",
+          "t_desp_encam"
+        ],
+        [
+          "t_desp_encam",
+          "fim_t_desp_encam_e7"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "blackbox": true,
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    },
+    {
+      "id": "Pool_SEI",
+      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "blackbox": true,
+      "color": {
+        "fill": "#f1f1f1",
+        "stroke": "#616161"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "t_envcert",
+      "Pool_SEI",
+      "Incluir certificado"
+    ],
+    [
+      "Pool_INPI",
+      "c_email",
+      "Meus Pedidos"
+    ],
+    [
+      "Pool_INPI",
+      "t_rpi",
+      "RPI semanal"
+    ],
+    [
+      "t_747",
+      "Pool_INPI",
+      "Petição 747"
+    ],
+    [
+      "t_fale",
+      "Pool_INPI",
+      "Fale Conosco"
+    ]
+  ]
+}
