@@ -1,0 +1,103 @@
+{
+  "id": "Etapa1_Abertura",
+  "name": "Etapa 1 – Abertura do pedido",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Etapa 1: Abertura do pedido",
+      "processId": "Etapa1_Abertura",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "i_inicio",
+          "type": "start",
+          "name": "Interesse em registrar o software",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_identificar",
+          "type": "task",
+          "name": "Identificar procedimento de abertura",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_gw_tipo",
+          "type": "xor",
+          "name": "Tipo de abertura",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_petic_proc",
+          "type": "user",
+          "name": "Realizar o peticionamento do processo",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_incluir_req",
+          "type": "user",
+          "name": "Incluir Requerimento de Avaliação do ativo",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_preencher_req",
+          "type": "task",
+          "name": "Preencher Requerimento de Avaliação do ativo",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_join_tipo",
+          "type": "xor",
+          "lane": "L_INT"
+        },
+        {
+          "id": "e1_fim",
+          "type": "end",
+          "name": "Requerimento enviado → Etapa 2",
+          "lane": "L_INT"
+        }
+      ],
+      "flows": [
+        [
+          "i_inicio",
+          "i_identificar"
+        ],
+        [
+          "i_identificar",
+          "i_gw_tipo"
+        ],
+        [
+          "i_gw_tipo",
+          "i_petic_proc",
+          "Usuário externo"
+        ],
+        [
+          "i_gw_tipo",
+          "i_preencher_req",
+          "Servidor UFF"
+        ],
+        [
+          "i_petic_proc",
+          "i_incluir_req"
+        ],
+        [
+          "i_incluir_req",
+          "i_join_tipo"
+        ],
+        [
+          "i_preencher_req",
+          "i_join_tipo"
+        ],
+        [
+          "i_join_tipo",
+          "e1_fim"
+        ]
+      ]
+    }
+  ],
+  "messageFlows": []
+}

@@ -1,0 +1,306 @@
+{
+  "id": "Etapa6_Resultado",
+  "name": "Etapa 6 – Resultado do INPI",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Etapa 6: Resultado do INPI",
+      "processId": "Etapa6_Resultado",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO"
+        },
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "a_gw_rpi",
+          "type": "event",
+          "name": "Acompanhar publicação na RPI",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_rpi_730",
+          "type": "catch",
+          "event": "message",
+          "name": "Concessão publicada (despacho 730)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_rpi_742",
+          "type": "catch",
+          "event": "message",
+          "name": "Petição não conhecida (despacho 742)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_certificado",
+          "type": "user",
+          "name": "Baixar o certificado de registro no portal do INPI",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_anexar_reg",
+          "type": "task",
+          "name": "Anexar comprovante de registro",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_and_reg",
+          "type": "and",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_email_cert",
+          "type": "send",
+          "name": "Enviar ao interessado o certificado de registro",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "i_receber_cert",
+          "type": "task",
+          "name": "Receber o certificado de registro",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "i_fim_ok",
+          "type": "end",
+          "name": "Interessado ciente do registro",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "a_desp_encam_reg",
+          "type": "task",
+          "name": "Elaborar despacho de encaminhamento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_anexar_742",
+          "type": "task",
+          "name": "Anexar ao SEI a publicação do não conhecimento",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_desp_742",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento (pedido não conhecido)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_email_742",
+          "type": "send",
+          "name": "Enviar e-mail ao interessado informando o não conhecimento",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "i_receber_742",
+          "type": "task",
+          "name": "Receber a comunicação de não conhecimento do pedido",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "i_fim_742",
+          "type": "end",
+          "name": "Pedido não conhecido pelo INPI",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "e6_ini",
+          "type": "start",
+          "name": "Pedido depositado (Etapa 5)",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e6_fim",
+          "type": "end",
+          "name": "Registro concedido → Etapa 7",
+          "lane": "L_AGIR"
+        }
+      ],
+      "flows": [
+        [
+          "a_gw_rpi",
+          "a_rpi_730"
+        ],
+        [
+          "a_gw_rpi",
+          "a_rpi_742"
+        ],
+        [
+          "a_rpi_730",
+          "a_certificado"
+        ],
+        [
+          "a_certificado",
+          "a_anexar_reg"
+        ],
+        [
+          "a_anexar_reg",
+          "a_and_reg"
+        ],
+        [
+          "a_and_reg",
+          "a_email_cert"
+        ],
+        [
+          "a_email_cert",
+          "i_receber_cert"
+        ],
+        [
+          "i_receber_cert",
+          "i_fim_ok"
+        ],
+        [
+          "a_and_reg",
+          "a_desp_encam_reg"
+        ],
+        [
+          "a_rpi_742",
+          "a_anexar_742"
+        ],
+        [
+          "a_anexar_742",
+          "a_desp_742"
+        ],
+        [
+          "a_desp_742",
+          "a_email_742"
+        ],
+        [
+          "a_email_742",
+          "i_receber_742"
+        ],
+        [
+          "i_receber_742",
+          "i_fim_742"
+        ],
+        [
+          "e6_ini",
+          "a_gw_rpi"
+        ],
+        [
+          "a_desp_encam_reg",
+          "e6_fim"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "nodes": [
+        {
+          "id": "n_recebido",
+          "type": "start",
+          "event": "message",
+          "name": "Pedido recebido pelo e-Software",
+          "status": "nova"
+        },
+        {
+          "id": "n_validar",
+          "type": "service",
+          "name": "Validar o pedido automaticamente (GRU paga, assinatura da DV, procuração)",
+          "status": "nova"
+        },
+        {
+          "id": "n_gw_valido",
+          "type": "xor",
+          "name": "Pedido regular?",
+          "status": "nova"
+        },
+        {
+          "id": "n_pub_730",
+          "type": "send",
+          "name": "Publicar a concessão na RPI (despacho 730)",
+          "status": "nova"
+        },
+        {
+          "id": "n_certificado",
+          "type": "service",
+          "name": "Disponibilizar o certificado de registro no portal",
+          "status": "nova"
+        },
+        {
+          "id": "n_fim_730",
+          "type": "end",
+          "name": "Registro concedido",
+          "status": "nova"
+        },
+        {
+          "id": "n_pub_742",
+          "type": "send",
+          "name": "Publicar petição não conhecida na RPI (despacho 742)",
+          "status": "nova"
+        },
+        {
+          "id": "n_fim_742",
+          "type": "end",
+          "name": "Pedido não conhecido",
+          "status": "nova"
+        }
+      ],
+      "flows": [
+        [
+          "n_recebido",
+          "n_validar"
+        ],
+        [
+          "n_validar",
+          "n_gw_valido"
+        ],
+        [
+          "n_gw_valido",
+          "n_pub_730",
+          "Sim"
+        ],
+        [
+          "n_gw_valido",
+          "n_pub_742",
+          "Não"
+        ],
+        [
+          "n_pub_730",
+          "n_certificado"
+        ],
+        [
+          "n_certificado",
+          "n_fim_730"
+        ],
+        [
+          "n_pub_742",
+          "n_fim_742"
+        ]
+      ],
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "n_pub_730",
+      "a_rpi_730"
+    ],
+    [
+      "n_pub_742",
+      "a_rpi_742"
+    ]
+  ]
+}

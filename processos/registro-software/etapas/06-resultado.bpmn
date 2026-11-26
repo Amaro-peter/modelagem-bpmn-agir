@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collab_Etapa6_Resultado">
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI – Etapa 6: Resultado do INPI" processRef="Etapa6_Resultado" />
+    <bpmn:participant id="Pool_INPI" name="INPI – Instituto Nacional da Propriedade Industrial" processRef="Process_Pool_INPI" />
+    <bpmn:messageFlow id="Msg_1" sourceRef="n_pub_730" targetRef="a_rpi_730" />
+    <bpmn:messageFlow id="Msg_2" sourceRef="n_pub_742" targetRef="a_rpi_742" />
+  </bpmn:collaboration>
+  <bpmn:process id="Etapa6_Resultado" name="PROPPI – Etapa 6: Resultado do INPI" isExecutable="false">
+    <bpmn:laneSet id="Etapa6_Resultado_lanes">
+      <bpmn:lane id="L_INT" name="INTERESSADO">
+        <bpmn:flowNodeRef>i_receber_cert</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_fim_ok</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_receber_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_fim_742</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_AGIR" name="AGIR">
+        <bpmn:flowNodeRef>a_gw_rpi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_rpi_730</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_rpi_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_certificado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_anexar_reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_and_reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_cert</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_encam_reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_anexar_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e6_ini</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e6_fim</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:eventBasedGateway id="a_gw_rpi" name="Acompanhar publicação na RPI">
+      <bpmn:incoming>Etapa6_Resultado_f15</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f1</bpmn:outgoing>
+      <bpmn:outgoing>Etapa6_Resultado_f2</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="a_rpi_730" name="Concessão publicada (despacho 730)">
+      <bpmn:incoming>Etapa6_Resultado_f1</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f3</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="a_rpi_730_ed" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="a_rpi_742" name="Petição não conhecida (despacho 742)">
+      <bpmn:incoming>Etapa6_Resultado_f2</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f10</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="a_rpi_742_ed" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="a_certificado" name="Baixar o certificado de registro no portal do INPI">
+      <bpmn:incoming>Etapa6_Resultado_f3</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="a_anexar_reg" name="Anexar comprovante de registro">
+      <bpmn:incoming>Etapa6_Resultado_f4</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:parallelGateway id="a_and_reg">
+      <bpmn:incoming>Etapa6_Resultado_f5</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f6</bpmn:outgoing>
+      <bpmn:outgoing>Etapa6_Resultado_f9</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sendTask id="a_email_cert" name="Enviar ao interessado o certificado de registro">
+      <bpmn:incoming>Etapa6_Resultado_f6</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="i_receber_cert" name="Receber o certificado de registro">
+      <bpmn:incoming>Etapa6_Resultado_f7</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="i_fim_ok" name="Interessado ciente do registro">
+      <bpmn:incoming>Etapa6_Resultado_f8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="a_desp_encam_reg" name="Elaborar despacho de encaminhamento">
+      <bpmn:incoming>Etapa6_Resultado_f9</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f16</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_anexar_742" name="Anexar ao SEI a publicação do não conhecimento">
+      <bpmn:incoming>Etapa6_Resultado_f10</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_desp_742" name="Elaborar despacho de encerramento (pedido não conhecido)">
+      <bpmn:incoming>Etapa6_Resultado_f11</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="a_email_742" name="Enviar e-mail ao interessado informando o não conhecimento">
+      <bpmn:incoming>Etapa6_Resultado_f12</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f13</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="i_receber_742" name="Receber a comunicação de não conhecimento do pedido">
+      <bpmn:incoming>Etapa6_Resultado_f13</bpmn:incoming>
+      <bpmn:outgoing>Etapa6_Resultado_f14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="i_fim_742" name="Pedido não conhecido pelo INPI">
+      <bpmn:incoming>Etapa6_Resultado_f14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="e6_ini" name="Pedido depositado (Etapa 5)">
+      <bpmn:outgoing>Etapa6_Resultado_f15</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="e6_fim" name="Registro concedido → Etapa 7">
+      <bpmn:incoming>Etapa6_Resultado_f16</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f1" sourceRef="a_gw_rpi" targetRef="a_rpi_730" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f2" sourceRef="a_gw_rpi" targetRef="a_rpi_742" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f3" sourceRef="a_rpi_730" targetRef="a_certificado" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f4" sourceRef="a_certificado" targetRef="a_anexar_reg" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f5" sourceRef="a_anexar_reg" targetRef="a_and_reg" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f6" sourceRef="a_and_reg" targetRef="a_email_cert" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f7" sourceRef="a_email_cert" targetRef="i_receber_cert" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f8" sourceRef="i_receber_cert" targetRef="i_fim_ok" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f9" sourceRef="a_and_reg" targetRef="a_desp_encam_reg" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f10" sourceRef="a_rpi_742" targetRef="a_anexar_742" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f11" sourceRef="a_anexar_742" targetRef="a_desp_742" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f12" sourceRef="a_desp_742" targetRef="a_email_742" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f13" sourceRef="a_email_742" targetRef="i_receber_742" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f14" sourceRef="i_receber_742" targetRef="i_fim_742" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f15" sourceRef="e6_ini" targetRef="a_gw_rpi" />
+    <bpmn:sequenceFlow id="Etapa6_Resultado_f16" sourceRef="a_desp_encam_reg" targetRef="e6_fim" />
+  </bpmn:process>
+  <bpmn:process id="Process_Pool_INPI" name="INPI – Instituto Nacional da Propriedade Industrial" isExecutable="false">
+    <bpmn:startEvent id="n_recebido" name="Pedido recebido pelo e-Software">
+      <bpmn:outgoing>Process_Pool_INPI_f1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="n_recebido_ed" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="n_validar" name="Validar o pedido automaticamente (GRU paga, assinatura da DV, procuração)">
+      <bpmn:incoming>Process_Pool_INPI_f1</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="n_gw_valido" name="Pedido regular?">
+      <bpmn:incoming>Process_Pool_INPI_f2</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f3</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_INPI_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="n_pub_730" name="Publicar a concessão na RPI (despacho 730)">
+      <bpmn:incoming>Process_Pool_INPI_f3</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f5</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="n_certificado" name="Disponibilizar o certificado de registro no portal">
+      <bpmn:incoming>Process_Pool_INPI_f5</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="n_fim_730" name="Registro concedido">
+      <bpmn:incoming>Process_Pool_INPI_f6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="n_pub_742" name="Publicar petição não conhecida na RPI (despacho 742)">
+      <bpmn:incoming>Process_Pool_INPI_f4</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="n_fim_742" name="Pedido não conhecido">
+      <bpmn:incoming>Process_Pool_INPI_f7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f1" sourceRef="n_recebido" targetRef="n_validar" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f2" sourceRef="n_validar" targetRef="n_gw_valido" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f3" name="Sim" sourceRef="n_gw_valido" targetRef="n_pub_730" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f4" name="Não" sourceRef="n_gw_valido" targetRef="n_pub_742" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f5" sourceRef="n_pub_730" targetRef="n_certificado" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f6" sourceRef="n_certificado" targetRef="n_fim_730" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f7" sourceRef="n_pub_742" targetRef="n_fim_742" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_Etapa6_Resultado">
+    <bpmndi:BPMNPlane id="BPMNPlane_Collab_Etapa6_Resultado" bpmnElement="Collab_Etapa6_Resultado">
+      <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="2100" height="680" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_INT_di" bpmnElement="L_INT" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="2070" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
+        <dc:Bounds x="30" y="340" width="2070" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_rpi_di" bpmnElement="a_gw_rpi" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="315" y="410" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="275" y="378" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_rpi_730_di" bpmnElement="a_rpi_730" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="862" y="417" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="815" y="385" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_rpi_742_di" bpmnElement="a_rpi_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="862" y="567" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="815" y="521" width="130" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_certificado_di" bpmnElement="a_certificado" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1000" y="380" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_anexar_reg_di" bpmnElement="a_anexar_reg">
+        <dc:Bounds x="1180" y="395" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_and_reg_di" bpmnElement="a_and_reg" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1395" y="410" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_cert_di" bpmnElement="a_email_cert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1540" y="380" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_receber_cert_di" bpmnElement="i_receber_cert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1720" y="55" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_fim_ok_di" bpmnElement="i_fim_ok" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1942" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1895" y="117" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_encam_reg_di" bpmnElement="a_desp_encam_reg">
+        <dc:Bounds x="1540" y="545" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_anexar_742_di" bpmnElement="a_anexar_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1000" y="545" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_742_di" bpmnElement="a_desp_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1180" y="538" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_742_di" bpmnElement="a_email_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1360" y="523" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_receber_742_di" bpmnElement="i_receber_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1540" y="55" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_fim_742_di" bpmnElement="i_fim_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1762" y="227" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1715" y="267" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e6_ini_di" bpmnElement="e6_ini">
+        <dc:Bounds x="142" y="417" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="457" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e6_fim_di" bpmnElement="e6_fim">
+        <dc:Bounds x="1762" y="567" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1715" y="607" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f1_di" bpmnElement="Etapa6_Resultado_f1">
+        <di:waypoint x="365" y="435" />
+        <di:waypoint x="862" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f2_di" bpmnElement="Etapa6_Resultado_f2">
+        <di:waypoint x="340" y="460" />
+        <di:waypoint x="340" y="585" />
+        <di:waypoint x="862" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f3_di" bpmnElement="Etapa6_Resultado_f3">
+        <di:waypoint x="898" y="435" />
+        <di:waypoint x="1000" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f4_di" bpmnElement="Etapa6_Resultado_f4">
+        <di:waypoint x="1120" y="435" />
+        <di:waypoint x="1180" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f5_di" bpmnElement="Etapa6_Resultado_f5">
+        <di:waypoint x="1300" y="435" />
+        <di:waypoint x="1395" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f6_di" bpmnElement="Etapa6_Resultado_f6">
+        <di:waypoint x="1445" y="435" />
+        <di:waypoint x="1540" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f7_di" bpmnElement="Etapa6_Resultado_f7">
+        <di:waypoint x="1660" y="435" />
+        <di:waypoint x="1685" y="435" />
+        <di:waypoint x="1685" y="95" />
+        <di:waypoint x="1720" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f8_di" bpmnElement="Etapa6_Resultado_f8">
+        <di:waypoint x="1840" y="95" />
+        <di:waypoint x="1942" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f9_di" bpmnElement="Etapa6_Resultado_f9">
+        <di:waypoint x="1445" y="435" />
+        <di:waypoint x="1505" y="435" />
+        <di:waypoint x="1505" y="585" />
+        <di:waypoint x="1540" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f10_di" bpmnElement="Etapa6_Resultado_f10">
+        <di:waypoint x="898" y="585" />
+        <di:waypoint x="1000" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f11_di" bpmnElement="Etapa6_Resultado_f11">
+        <di:waypoint x="1120" y="585" />
+        <di:waypoint x="1180" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f12_di" bpmnElement="Etapa6_Resultado_f12">
+        <di:waypoint x="1300" y="585" />
+        <di:waypoint x="1360" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f13_di" bpmnElement="Etapa6_Resultado_f13">
+        <di:waypoint x="1480" y="585" />
+        <di:waypoint x="1490" y="585" />
+        <di:waypoint x="1490" y="95" />
+        <di:waypoint x="1540" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f14_di" bpmnElement="Etapa6_Resultado_f14">
+        <di:waypoint x="1600" y="135" />
+        <di:waypoint x="1600" y="245" />
+        <di:waypoint x="1762" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f15_di" bpmnElement="Etapa6_Resultado_f15">
+        <di:waypoint x="178" y="435" />
+        <di:waypoint x="315" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa6_Resultado_f16_di" bpmnElement="Etapa6_Resultado_f16">
+        <di:waypoint x="1660" y="585" />
+        <di:waypoint x="1762" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Pool_INPI_di" bpmnElement="Pool_INPI" isHorizontal="true" bioc:stroke="#1565c0" bioc:fill="#e3f0fb" color:background-color="#e3f0fb" color:border-color="#1565c0">
+        <dc:Bounds x="0" y="740" width="2100" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_recebido_di" bpmnElement="n_recebido" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="112" y="817" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="65" y="857" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_validar_di" bpmnElement="n_validar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="250" y="765" width="120" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_gw_valido_di" bpmnElement="n_gw_valido" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="465" y="810" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="433" y="792" width="115" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_pub_730_di" bpmnElement="n_pub_730" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="610" y="780" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_certificado_di" bpmnElement="n_certificado" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="790" y="780" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_fim_730_di" bpmnElement="n_fim_730" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1012" y="817" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="965" y="857" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_pub_742_di" bpmnElement="n_pub_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="610" y="930" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_fim_742_di" bpmnElement="n_fim_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="832" y="967" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="785" y="1007" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f1_di" bpmnElement="Process_Pool_INPI_f1">
+        <di:waypoint x="148" y="835" />
+        <di:waypoint x="250" y="835" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f2_di" bpmnElement="Process_Pool_INPI_f2">
+        <di:waypoint x="370" y="835" />
+        <di:waypoint x="465" y="835" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f3_di" bpmnElement="Process_Pool_INPI_f3">
+        <di:waypoint x="515" y="835" />
+        <di:waypoint x="610" y="835" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f4_di" bpmnElement="Process_Pool_INPI_f4">
+        <di:waypoint x="490" y="860" />
+        <di:waypoint x="490" y="985" />
+        <di:waypoint x="610" y="985" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f5_di" bpmnElement="Process_Pool_INPI_f5">
+        <di:waypoint x="730" y="835" />
+        <di:waypoint x="790" y="835" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f6_di" bpmnElement="Process_Pool_INPI_f6">
+        <di:waypoint x="910" y="835" />
+        <di:waypoint x="1012" y="835" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f7_di" bpmnElement="Process_Pool_INPI_f7">
+        <di:waypoint x="730" y="985" />
+        <di:waypoint x="832" y="985" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
+        <di:waypoint x="670" y="780" />
+        <di:waypoint x="670" y="483" />
+        <di:waypoint x="880" y="483" />
+        <di:waypoint x="880" y="453" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_2_di" bpmnElement="Msg_2">
+        <di:waypoint x="700" y="930" />
+        <di:waypoint x="700" y="910" />
+        <di:waypoint x="760" y="910" />
+        <di:waypoint x="760" y="633" />
+        <di:waypoint x="880" y="633" />
+        <di:waypoint x="880" y="603" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

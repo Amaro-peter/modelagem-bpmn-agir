@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collab_Etapa4_Pagamento">
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI – Etapa 4: Pagamento da GRU" processRef="Etapa4_Pagamento" />
+  </bpmn:collaboration>
+  <bpmn:process id="Etapa4_Pagamento" name="PROPPI – Etapa 4: Pagamento da GRU" isExecutable="false">
+    <bpmn:laneSet id="Etapa4_Pagamento_lanes">
+      <bpmn:lane id="L_AGIR" name="AGIR">
+        <bpmn:flowNodeRef>a_einpi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gru</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_pagamento</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_aguarda_pag</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_anexar_pag</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e4_ini</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e4_fim</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="a_einpi" name="Acessar o e-INPI com o login da UFF">
+      <bpmn:incoming>Etapa4_Pagamento_f5</bpmn:incoming>
+      <bpmn:outgoing>Etapa4_Pagamento_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_gru" name="Gerar GRU">
+      <bpmn:incoming>Etapa4_Pagamento_f1</bpmn:incoming>
+      <bpmn:outgoing>Etapa4_Pagamento_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:subProcess id="a_pagamento" name="Subprocesso de Pagamento de Despesa com Registro e Manutenção de Propriedade Intelectual">
+      <bpmn:incoming>Etapa4_Pagamento_f2</bpmn:incoming>
+      <bpmn:outgoing>Etapa4_Pagamento_f3</bpmn:outgoing>
+      <bpmn:startEvent id="pag_ini" name="GRU gerada">
+        <bpmn:outgoing>a_pagamento_f1</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:userTask id="pag_pagar" name="Efetuar o pagamento da GRU">
+        <bpmn:incoming>a_pagamento_f1</bpmn:incoming>
+        <bpmn:outgoing>a_pagamento_f2</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:endEvent id="pag_fim" name="GRU paga">
+        <bpmn:incoming>a_pagamento_f2</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="a_pagamento_f1" sourceRef="pag_ini" targetRef="pag_pagar" />
+      <bpmn:sequenceFlow id="a_pagamento_f2" sourceRef="pag_pagar" targetRef="pag_fim" />
+    </bpmn:subProcess>
+    <bpmn:intermediateCatchEvent id="a_aguarda_pag" name="Aguardar pagamento">
+      <bpmn:incoming>Etapa4_Pagamento_f3</bpmn:incoming>
+      <bpmn:outgoing>Etapa4_Pagamento_f4</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="a_aguarda_pag_ed">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">Aguardar pagamento</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="a_anexar_pag" name="Anexar o comprovante de pagamento">
+      <bpmn:incoming>Etapa4_Pagamento_f4</bpmn:incoming>
+      <bpmn:outgoing>Etapa4_Pagamento_f6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="e4_ini" name="Documentação aprovada (Etapa 3)">
+      <bpmn:outgoing>Etapa4_Pagamento_f5</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="e4_fim" name="Pagamento comprovado → Etapa 5">
+      <bpmn:incoming>Etapa4_Pagamento_f6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Etapa4_Pagamento_f1" sourceRef="a_einpi" targetRef="a_gru" />
+    <bpmn:sequenceFlow id="Etapa4_Pagamento_f2" sourceRef="a_gru" targetRef="a_pagamento" />
+    <bpmn:sequenceFlow id="Etapa4_Pagamento_f3" sourceRef="a_pagamento" targetRef="a_aguarda_pag" />
+    <bpmn:sequenceFlow id="Etapa4_Pagamento_f4" sourceRef="a_aguarda_pag" targetRef="a_anexar_pag" />
+    <bpmn:sequenceFlow id="Etapa4_Pagamento_f5" sourceRef="e4_ini" targetRef="a_einpi" />
+    <bpmn:sequenceFlow id="Etapa4_Pagamento_f6" sourceRef="a_anexar_pag" targetRef="e4_fim" />
+    <bpmn:textAnnotation id="a_gru_note">
+      <bpmn:text>Serviço 730 (R$ 210,00); sem desconto para software (Portaria INPI/PR 10/2025)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="a_gru_assoc" sourceRef="a_gru" targetRef="a_gru_note" />
+    <bpmn:textAnnotation id="a_aguarda_pag_note">
+      <bpmn:text>INPI: GRU paga antes do pedido; confirmação leva ~24 h</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="a_aguarda_pag_assoc" sourceRef="a_aguarda_pag" targetRef="a_aguarda_pag_note" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_Etapa4_Pagamento">
+    <bpmndi:BPMNPlane id="BPMNPlane_Collab_Etapa4_Pagamento" bpmnElement="Collab_Etapa4_Pagamento">
+      <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="1380" height="282" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1350" height="282" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_einpi_di" bpmnElement="a_einpi" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="280" y="140" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gru_di" bpmnElement="a_gru">
+        <dc:Bounds x="460" y="147" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gru_note_di" bpmnElement="a_gru_note">
+        <dc:Bounds x="465" y="10" width="150" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_gru_assoc_di" bpmnElement="a_gru_assoc">
+        <di:waypoint x="495" y="82" />
+        <di:waypoint x="495" y="147" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="a_pagamento_di" bpmnElement="a_pagamento">
+        <dc:Bounds x="640" y="102" width="120" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_aguarda_pag_di" bpmnElement="a_aguarda_pag">
+        <dc:Bounds x="862" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="815" y="209" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_aguarda_pag_note_di" bpmnElement="a_aguarda_pag_note">
+        <dc:Bounds x="825" y="10" width="150" height="57" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_aguarda_pag_assoc_di" bpmnElement="a_aguarda_pag_assoc">
+        <di:waypoint x="855" y="67" />
+        <di:waypoint x="855" y="169" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="a_anexar_pag_di" bpmnElement="a_anexar_pag">
+        <dc:Bounds x="1000" y="147" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e4_ini_di" bpmnElement="e4_ini">
+        <dc:Bounds x="142" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="209" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e4_fim_di" bpmnElement="e4_fim">
+        <dc:Bounds x="1222" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1175" y="209" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Etapa4_Pagamento_f1_di" bpmnElement="Etapa4_Pagamento_f1">
+        <di:waypoint x="400" y="187" />
+        <di:waypoint x="460" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa4_Pagamento_f2_di" bpmnElement="Etapa4_Pagamento_f2">
+        <di:waypoint x="580" y="187" />
+        <di:waypoint x="640" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa4_Pagamento_f3_di" bpmnElement="Etapa4_Pagamento_f3">
+        <di:waypoint x="760" y="187" />
+        <di:waypoint x="862" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa4_Pagamento_f4_di" bpmnElement="Etapa4_Pagamento_f4">
+        <di:waypoint x="898" y="187" />
+        <di:waypoint x="1000" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa4_Pagamento_f5_di" bpmnElement="Etapa4_Pagamento_f5">
+        <di:waypoint x="178" y="187" />
+        <di:waypoint x="280" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa4_Pagamento_f6_di" bpmnElement="Etapa4_Pagamento_f6">
+        <di:waypoint x="1120" y="187" />
+        <di:waypoint x="1222" y="187" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a_pagamento">
+    <bpmndi:BPMNPlane id="BPMNPlane_a_pagamento" bpmnElement="a_pagamento">
+      <bpmndi:BPMNShape id="pag_ini_di" bpmnElement="pag_ini">
+        <dc:Bounds x="82" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="60" y="117" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="pag_pagar_di" bpmnElement="pag_pagar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="220" y="55" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="pag_fim_di" bpmnElement="pag_fim">
+        <dc:Bounds x="442" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="117" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_pagamento_f1_di" bpmnElement="a_pagamento_f1">
+        <di:waypoint x="118" y="95" />
+        <di:waypoint x="220" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="a_pagamento_f2_di" bpmnElement="a_pagamento_f2">
+        <di:waypoint x="340" y="95" />
+        <di:waypoint x="442" y="95" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

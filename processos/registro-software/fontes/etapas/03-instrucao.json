@@ -1,0 +1,198 @@
+{
+  "id": "Etapa3_Instrucao",
+  "name": "Etapa 3 – Instrução documental",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Etapa 3: Instrução documental",
+      "processId": "Etapa3_Instrucao",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO"
+        },
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "a_link_orient_in",
+          "type": "catch",
+          "event": "link",
+          "name": "Envio de orientações",
+          "lane": "L_AGIR",
+          "under": "a_join_orient"
+        },
+        {
+          "id": "a_join_orient",
+          "type": "xor",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_email_orient",
+          "type": "send",
+          "name": "Enviar e-mail com orientações gerais",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "i_zip",
+          "type": "task",
+          "name": "Reunir os arquivos-fonte e compactar em pacote digital (ZIP)",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "i_hash",
+          "type": "task",
+          "name": "Gerar o resumo digital (hash SHA-512) do pacote",
+          "lane": "L_INT",
+          "status": "nova",
+          "note": "INPI: hash gerado pelo titular; recomenda SHA-512 ou mais recente"
+        },
+        {
+          "id": "i_dados",
+          "type": "task",
+          "name": "Preencher documento com os dados do programa exigidos pelo INPI",
+          "lane": "L_INT",
+          "status": "nova",
+          "note": "Título, data, titulares, autores, linguagens, campo, tipo, algoritmo e hash"
+        },
+        {
+          "id": "i_gw_interessado",
+          "type": "xor",
+          "name": "Interessado",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_petic_docs",
+          "type": "user",
+          "name": "Realizar o peticionamento dos documentos",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_preencher_docs",
+          "type": "task",
+          "name": "Preencher documentos solicitados",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_join_interessado",
+          "type": "xor",
+          "lane": "L_INT"
+        },
+        {
+          "id": "a_sei_docs",
+          "type": "user",
+          "name": "Acessar o processo no SEI e baixar os documentos",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_analisar_doc",
+          "type": "task",
+          "name": "Analisar documentação",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_gw_docs",
+          "type": "xor",
+          "name": "Documentos ok?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_link_orient_out",
+          "type": "throw",
+          "event": "link",
+          "name": "Envio de orientações",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e3_ini",
+          "type": "start",
+          "name": "Ativo aprovado (Etapa 2)",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e3_fim",
+          "type": "end",
+          "name": "Documentação aprovada → Etapa 4",
+          "lane": "L_AGIR"
+        }
+      ],
+      "flows": [
+        [
+          "a_link_orient_in",
+          "a_join_orient"
+        ],
+        [
+          "a_join_orient",
+          "a_email_orient"
+        ],
+        [
+          "a_email_orient",
+          "i_zip"
+        ],
+        [
+          "i_zip",
+          "i_hash"
+        ],
+        [
+          "i_hash",
+          "i_dados"
+        ],
+        [
+          "i_dados",
+          "i_gw_interessado"
+        ],
+        [
+          "i_gw_interessado",
+          "i_petic_docs",
+          "Usuário externo"
+        ],
+        [
+          "i_gw_interessado",
+          "i_preencher_docs",
+          "Servidor UFF"
+        ],
+        [
+          "i_petic_docs",
+          "i_join_interessado"
+        ],
+        [
+          "i_preencher_docs",
+          "i_join_interessado"
+        ],
+        [
+          "i_join_interessado",
+          "a_sei_docs"
+        ],
+        [
+          "a_sei_docs",
+          "a_analisar_doc"
+        ],
+        [
+          "a_analisar_doc",
+          "a_gw_docs"
+        ],
+        [
+          "a_gw_docs",
+          "a_link_orient_out",
+          "Não"
+        ],
+        [
+          "e3_ini",
+          "a_join_orient"
+        ],
+        [
+          "a_gw_docs",
+          "e3_fim",
+          "Sim"
+        ]
+      ]
+    }
+  ],
+  "messageFlows": []
+}

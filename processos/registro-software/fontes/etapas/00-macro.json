@@ -1,0 +1,183 @@
+{
+  "id": "Macro_Registro_Software",
+  "name": "Macroprocesso – Registro de Programa de Computador (AS-IS)",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Registro de Programa de Computador (Software)",
+      "processId": "Macro_Registro_Software",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO"
+        },
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "m_ini",
+          "type": "start",
+          "name": "Interesse em registrar o software",
+          "lane": "L_INT"
+        },
+        {
+          "id": "m_e1",
+          "type": "call",
+          "calls": "Etapa1_Abertura",
+          "name": "Etapa 1 – Abertura do pedido",
+          "lane": "L_INT"
+        },
+        {
+          "id": "m_e2",
+          "type": "call",
+          "calls": "Etapa2_Avaliacao",
+          "name": "Etapa 2 – Avaliação do ativo",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_e3",
+          "type": "call",
+          "calls": "Etapa3_Instrucao",
+          "name": "Etapa 3 – Instrução documental",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_e4",
+          "type": "call",
+          "calls": "Etapa4_Pagamento",
+          "name": "Etapa 4 – Pagamento da GRU",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_e5",
+          "type": "call",
+          "calls": "Etapa5_Deposito",
+          "name": "Etapa 5 – Depósito do pedido no INPI",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_e6",
+          "type": "call",
+          "calls": "Etapa6_Resultado",
+          "name": "Etapa 6 – Resultado do INPI",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_e7",
+          "type": "call",
+          "calls": "Etapa7_Registros",
+          "name": "Etapa 7 – Registros internos e formalização da cotitularidade",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_gw_apto",
+          "type": "xor",
+          "name": "Ativo apto?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_fim_aval",
+          "type": "end",
+          "name": "Encerrado na avaliação",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_gw_inpi",
+          "type": "xor",
+          "name": "Resultado do INPI",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_fim_742",
+          "type": "end",
+          "name": "Encerrado: pedido não conhecido",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "m_fim",
+          "type": "end",
+          "name": "Processo concluído",
+          "lane": "L_AGIR"
+        }
+      ],
+      "flows": [
+        [
+          "m_ini",
+          "m_e1"
+        ],
+        [
+          "m_e1",
+          "m_e2"
+        ],
+        [
+          "m_e2",
+          "m_gw_apto"
+        ],
+        [
+          "m_gw_apto",
+          "m_fim_aval",
+          "Não"
+        ],
+        [
+          "m_gw_apto",
+          "m_e3",
+          "Sim"
+        ],
+        [
+          "m_e3",
+          "m_e4"
+        ],
+        [
+          "m_e4",
+          "m_e5"
+        ],
+        [
+          "m_e5",
+          "m_e6"
+        ],
+        [
+          "m_e6",
+          "m_gw_inpi"
+        ],
+        [
+          "m_gw_inpi",
+          "m_fim_742",
+          "742 – não conhecido"
+        ],
+        [
+          "m_gw_inpi",
+          "m_e7",
+          "730 – concedido"
+        ],
+        [
+          "m_e7",
+          "m_fim"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "blackbox": true,
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "m_e5",
+      "Pool_INPI",
+      "Pedido de registro"
+    ],
+    [
+      "Pool_INPI",
+      "m_e6",
+      "Publicação na RPI (730/742)"
+    ]
+  ]
+}

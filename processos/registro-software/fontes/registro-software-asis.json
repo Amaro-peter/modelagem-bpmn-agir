@@ -1,0 +1,1021 @@
+{
+  "id": "AsIs_Registro_Software",
+  "name": "AS-IS – Registro de Programa de Computador (Software) – AGIR/UFF",
+  "pools": [
+    {
+      "id": "Pool_COTIT",
+      "name": "Cotitulares externos",
+      "blackbox": true
+    },
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Registro de Programa de Computador (Software)",
+      "lanes": [
+        {
+          "id": "L_INT",
+          "name": "INTERESSADO"
+        },
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        },
+        {
+          "id": "L_UFF",
+          "name": "Outras unidades da UFF"
+        }
+      ],
+      "groups": [
+        {
+          "id": "G_REG_INPI",
+          "name": "Realizar registro junto ao INPI",
+          "nodes": [
+            "a_dv_baixar",
+            "a_dv_assinar",
+            "a_esoft",
+            "a_esoft_form",
+            "a_esoft_anexar",
+            "a_enviar"
+          ]
+        }
+      ],
+      "nodes": [
+        {
+          "id": "i_inicio",
+          "type": "start",
+          "name": "Interesse em registrar o software",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_identificar",
+          "type": "task",
+          "name": "Identificar procedimento de abertura",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_gw_tipo",
+          "type": "xor",
+          "name": "Tipo de abertura",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_petic_proc",
+          "type": "user",
+          "name": "Realizar o peticionamento do processo",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_incluir_req",
+          "type": "user",
+          "name": "Incluir Requerimento de Avaliação do ativo",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_preencher_req",
+          "type": "task",
+          "name": "Preencher Requerimento de Avaliação do ativo",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_join_tipo",
+          "type": "xor",
+          "lane": "L_INT"
+        },
+        {
+          "id": "a_sei_req",
+          "type": "user",
+          "name": "Acessar o processo no SEI e baixar o requerimento",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_analisar_ativo",
+          "type": "task",
+          "name": "Analisar o ativo",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_gw_requisitos",
+          "type": "xor",
+          "name": "Preenche os requisitos iniciais?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_email_decisao",
+          "type": "send",
+          "name": "Enviar e-mail ao interessado informando a decisão",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_desp_enc_req",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_fim_req",
+          "type": "end",
+          "name": "Encerrado: requisitos não atendidos",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_email_reuniao",
+          "type": "send",
+          "name": "Enviar e-mail ao interessado agendando reunião",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_aguarda_reuniao",
+          "type": "catch",
+          "event": "conditional",
+          "name": "Aguarda a realização da reunião",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_gw_avaliacao",
+          "type": "xor",
+          "name": "Avaliação positiva para a continuidade do processo?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_desp_enc_aval",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_fim_aval",
+          "type": "end",
+          "name": "Encerrado: avaliação negativa",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_link_orient_in",
+          "type": "catch",
+          "event": "link",
+          "name": "Envio de orientações",
+          "lane": "L_AGIR",
+          "under": "a_join_orient"
+        },
+        {
+          "id": "a_join_orient",
+          "type": "xor",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_email_orient",
+          "type": "send",
+          "name": "Enviar e-mail com orientações gerais",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "i_zip",
+          "type": "task",
+          "name": "Reunir os arquivos-fonte e compactar em pacote digital (ZIP)",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "i_hash",
+          "type": "task",
+          "name": "Gerar o resumo digital (hash SHA-512) do pacote",
+          "lane": "L_INT",
+          "status": "nova",
+          "note": "INPI: hash gerado pelo titular; recomenda SHA-512 ou mais recente"
+        },
+        {
+          "id": "i_dados",
+          "type": "task",
+          "name": "Preencher documento com os dados do programa exigidos pelo INPI",
+          "lane": "L_INT",
+          "status": "nova",
+          "note": "Título, data, titulares, autores, linguagens, campo, tipo, algoritmo e hash"
+        },
+        {
+          "id": "i_gw_interessado",
+          "type": "xor",
+          "name": "Interessado",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_petic_docs",
+          "type": "user",
+          "name": "Realizar o peticionamento dos documentos",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_preencher_docs",
+          "type": "task",
+          "name": "Preencher documentos solicitados",
+          "lane": "L_INT"
+        },
+        {
+          "id": "i_join_interessado",
+          "type": "xor",
+          "lane": "L_INT"
+        },
+        {
+          "id": "a_sei_docs",
+          "type": "user",
+          "name": "Acessar o processo no SEI e baixar os documentos",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_analisar_doc",
+          "type": "task",
+          "name": "Analisar documentação",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_gw_docs",
+          "type": "xor",
+          "name": "Documentos ok?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_link_orient_out",
+          "type": "throw",
+          "event": "link",
+          "name": "Envio de orientações",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_einpi",
+          "type": "user",
+          "name": "Acessar o e-INPI com o login da UFF",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_gru",
+          "type": "user",
+          "name": "Gerar GRU",
+          "lane": "L_AGIR",
+          "note": "Serviço 730 (R$ 210,00); sem desconto para software (Portaria INPI/PR 10/2025)"
+        },
+        {
+          "id": "a_pagamento",
+          "type": "subprocess",
+          "name": "Subprocesso de Pagamento de Despesa com Registro e Manutenção de Propriedade Intelectual",
+          "lane": "L_AGIR",
+          "nodes": [
+            {
+              "id": "pag_ini",
+              "type": "start",
+              "name": "GRU gerada"
+            },
+            {
+              "id": "pag_pagar",
+              "type": "user",
+              "name": "Efetuar o pagamento da GRU",
+              "status": "nova"
+            },
+            {
+              "id": "pag_fim",
+              "type": "end",
+              "name": "GRU paga"
+            }
+          ],
+          "flows": [
+            [
+              "pag_ini",
+              "pag_pagar"
+            ],
+            [
+              "pag_pagar",
+              "pag_fim"
+            ]
+          ]
+        },
+        {
+          "id": "a_aguarda_pag",
+          "type": "catch",
+          "event": "conditional",
+          "name": "Aguardar pagamento",
+          "lane": "L_AGIR",
+          "note": "INPI: GRU paga antes do pedido; confirmação leva ~24 h"
+        },
+        {
+          "id": "a_anexar_pag",
+          "type": "task",
+          "name": "Anexar o comprovante de pagamento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_dv_baixar",
+          "type": "user",
+          "name": "Baixar a Declaração de Veracidade (DV) vinculada à GRU",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_dv_assinar",
+          "type": "user",
+          "name": "Assinar a DV digitalmente (certificado ICP-Brasil)",
+          "lane": "L_AGIR",
+          "status": "nova",
+          "note": "Representante da AGIR que utiliza e-CNPJ da UFF com procuração."
+        },
+        {
+          "id": "a_esoft",
+          "type": "user",
+          "name": "Acessar o e-Software e informar o número da GRU paga",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_esoft_form",
+          "type": "user",
+          "name": "Preencher o formulário e-Software com os dados do interessado",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_esoft_anexar",
+          "type": "user",
+          "name": "Anexar a DV assinada e revisar o pedido",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_enviar",
+          "type": "send",
+          "name": "Enviar o pedido de registro ao INPI",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_protocolo",
+          "type": "task",
+          "name": "Anexar ao SEI o recibo com o número do pedido",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_gw_rpi",
+          "type": "event",
+          "name": "Acompanhar publicação na RPI",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_rpi_730",
+          "type": "catch",
+          "event": "message",
+          "name": "Concessão publicada (despacho 730)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_rpi_742",
+          "type": "catch",
+          "event": "message",
+          "name": "Petição não conhecida (despacho 742)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_certificado",
+          "type": "user",
+          "name": "Baixar o certificado de registro no portal do INPI",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_anexar_reg",
+          "type": "task",
+          "name": "Anexar comprovante de registro",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_and_reg",
+          "type": "and",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_email_cert",
+          "type": "send",
+          "name": "Enviar ao interessado o certificado de registro",
+          "lane": "L_AGIR",
+          "status": "nova",
+          "shift": 1
+        },
+        {
+          "id": "i_receber_cert",
+          "type": "task",
+          "name": "Receber o certificado de registro",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "i_fim_ok",
+          "type": "end",
+          "name": "Interessado ciente do registro",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "a_desp_encam_reg",
+          "type": "task",
+          "name": "Elaborar despacho de encaminhamento",
+          "lane": "L_AGIR",
+          "shift": 1
+        },
+        {
+          "id": "uff_registros",
+          "type": "task",
+          "name": "Realizar os registros patrimonial e contábil para devolver à AGIR",
+          "lane": "L_UFF"
+        },
+        {
+          "id": "a_gw_cotitular",
+          "type": "xor",
+          "name": "O ativo possui cotitularidade?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_desp_enc_sem_cot",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_fim_sem_cot",
+          "type": "end",
+          "name": "Encerrado: registro concluído",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_minuta",
+          "type": "task",
+          "name": "Anexar minuta do Contrato de Ajuste de Propriedade Intelectual",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_desp_encam_proger",
+          "type": "task",
+          "name": "Elaborar despacho de encaminhamento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "uff_parecer",
+          "type": "task",
+          "name": "Emitir parecer jurídico sobre o Contrato de Ajuste e devolver à AGIR",
+          "lane": "L_UFF"
+        },
+        {
+          "id": "a_contrato",
+          "type": "task",
+          "name": "Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_email_cadastro",
+          "type": "send",
+          "name": "Enviar e-mail com orientações sobre o cadastro de usuários externos",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_disp_contrato",
+          "type": "task",
+          "name": "Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_and_assinaturas",
+          "type": "and",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_assinar_contrato",
+          "type": "user",
+          "name": "Assinar o Contrato de Ajuste (AGIR)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "uff_assinar_contrato",
+          "type": "user",
+          "name": "Assinar o Contrato de Ajuste (Reitoria)",
+          "lane": "L_UFF",
+          "status": "nova"
+        },
+        {
+          "id": "a_ass_externas",
+          "type": "catch",
+          "event": "message",
+          "name": "Assinaturas dos cotitulares externos concluídas",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_and_assinaturas_fim",
+          "type": "and",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_desp_enc_cot",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_fim_cot",
+          "type": "end",
+          "name": "Encerrado: contrato disponibilizado",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_anexar_742",
+          "type": "task",
+          "name": "Anexar ao SEI a publicação do não conhecimento",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_desp_742",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento (pedido não conhecido)",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_email_742",
+          "type": "send",
+          "name": "Enviar e-mail ao interessado informando o não conhecimento",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "i_receber_742",
+          "type": "task",
+          "name": "Receber a comunicação de não conhecimento do pedido",
+          "lane": "L_INT",
+          "status": "nova"
+        },
+        {
+          "id": "i_fim_742",
+          "type": "end",
+          "name": "Pedido não conhecido pelo INPI",
+          "lane": "L_INT",
+          "status": "nova"
+        }
+      ],
+      "flows": [
+        [
+          "i_inicio",
+          "i_identificar"
+        ],
+        [
+          "i_identificar",
+          "i_gw_tipo"
+        ],
+        [
+          "i_gw_tipo",
+          "i_petic_proc",
+          "Usuário externo"
+        ],
+        [
+          "i_gw_tipo",
+          "i_preencher_req",
+          "Servidor UFF"
+        ],
+        [
+          "i_petic_proc",
+          "i_incluir_req"
+        ],
+        [
+          "i_incluir_req",
+          "i_join_tipo"
+        ],
+        [
+          "i_preencher_req",
+          "i_join_tipo"
+        ],
+        [
+          "i_join_tipo",
+          "a_sei_req"
+        ],
+        [
+          "a_sei_req",
+          "a_analisar_ativo"
+        ],
+        [
+          "a_analisar_ativo",
+          "a_gw_requisitos"
+        ],
+        [
+          "a_gw_requisitos",
+          "a_email_reuniao",
+          "Sim"
+        ],
+        [
+          "a_gw_requisitos",
+          "a_email_decisao",
+          "Não"
+        ],
+        [
+          "a_email_decisao",
+          "a_desp_enc_req"
+        ],
+        [
+          "a_desp_enc_req",
+          "a_fim_req"
+        ],
+        [
+          "a_email_reuniao",
+          "a_aguarda_reuniao"
+        ],
+        [
+          "a_aguarda_reuniao",
+          "a_gw_avaliacao"
+        ],
+        [
+          "a_gw_avaliacao",
+          "a_desp_enc_aval",
+          "Não"
+        ],
+        [
+          "a_desp_enc_aval",
+          "a_fim_aval"
+        ],
+        [
+          "a_gw_avaliacao",
+          "a_join_orient",
+          "Sim"
+        ],
+        [
+          "a_link_orient_in",
+          "a_join_orient"
+        ],
+        [
+          "a_join_orient",
+          "a_email_orient"
+        ],
+        [
+          "a_email_orient",
+          "i_zip"
+        ],
+        [
+          "i_zip",
+          "i_hash"
+        ],
+        [
+          "i_hash",
+          "i_dados"
+        ],
+        [
+          "i_dados",
+          "i_gw_interessado"
+        ],
+        [
+          "i_gw_interessado",
+          "i_petic_docs",
+          "Usuário externo"
+        ],
+        [
+          "i_gw_interessado",
+          "i_preencher_docs",
+          "Servidor UFF"
+        ],
+        [
+          "i_petic_docs",
+          "i_join_interessado"
+        ],
+        [
+          "i_preencher_docs",
+          "i_join_interessado"
+        ],
+        [
+          "i_join_interessado",
+          "a_sei_docs"
+        ],
+        [
+          "a_sei_docs",
+          "a_analisar_doc"
+        ],
+        [
+          "a_analisar_doc",
+          "a_gw_docs"
+        ],
+        [
+          "a_gw_docs",
+          "a_link_orient_out",
+          "Não"
+        ],
+        [
+          "a_gw_docs",
+          "a_einpi",
+          "Sim"
+        ],
+        [
+          "a_einpi",
+          "a_gru"
+        ],
+        [
+          "a_gru",
+          "a_pagamento"
+        ],
+        [
+          "a_pagamento",
+          "a_aguarda_pag"
+        ],
+        [
+          "a_aguarda_pag",
+          "a_anexar_pag"
+        ],
+        [
+          "a_anexar_pag",
+          "a_dv_baixar"
+        ],
+        [
+          "a_dv_baixar",
+          "a_dv_assinar"
+        ],
+        [
+          "a_dv_assinar",
+          "a_esoft"
+        ],
+        [
+          "a_esoft",
+          "a_esoft_form"
+        ],
+        [
+          "a_esoft_form",
+          "a_esoft_anexar"
+        ],
+        [
+          "a_esoft_anexar",
+          "a_enviar"
+        ],
+        [
+          "a_enviar",
+          "a_protocolo"
+        ],
+        [
+          "a_protocolo",
+          "a_gw_rpi"
+        ],
+        [
+          "a_gw_rpi",
+          "a_rpi_730"
+        ],
+        [
+          "a_gw_rpi",
+          "a_rpi_742"
+        ],
+        [
+          "a_rpi_730",
+          "a_certificado"
+        ],
+        [
+          "a_certificado",
+          "a_anexar_reg"
+        ],
+        [
+          "a_anexar_reg",
+          "a_and_reg"
+        ],
+        [
+          "a_and_reg",
+          "a_email_cert"
+        ],
+        [
+          "a_email_cert",
+          "i_receber_cert"
+        ],
+        [
+          "i_receber_cert",
+          "i_fim_ok"
+        ],
+        [
+          "a_and_reg",
+          "a_desp_encam_reg"
+        ],
+        [
+          "a_desp_encam_reg",
+          "uff_registros"
+        ],
+        [
+          "uff_registros",
+          "a_gw_cotitular"
+        ],
+        [
+          "a_gw_cotitular",
+          "a_desp_enc_sem_cot",
+          "Não"
+        ],
+        [
+          "a_desp_enc_sem_cot",
+          "a_fim_sem_cot"
+        ],
+        [
+          "a_gw_cotitular",
+          "a_minuta",
+          "Sim"
+        ],
+        [
+          "a_minuta",
+          "a_desp_encam_proger"
+        ],
+        [
+          "a_desp_encam_proger",
+          "uff_parecer"
+        ],
+        [
+          "uff_parecer",
+          "a_contrato"
+        ],
+        [
+          "a_contrato",
+          "a_email_cadastro"
+        ],
+        [
+          "a_email_cadastro",
+          "a_disp_contrato"
+        ],
+        [
+          "a_disp_contrato",
+          "a_and_assinaturas"
+        ],
+        [
+          "a_and_assinaturas",
+          "a_assinar_contrato"
+        ],
+        [
+          "a_and_assinaturas",
+          "uff_assinar_contrato"
+        ],
+        [
+          "a_and_assinaturas",
+          "a_ass_externas"
+        ],
+        [
+          "a_assinar_contrato",
+          "a_and_assinaturas_fim"
+        ],
+        [
+          "uff_assinar_contrato",
+          "a_and_assinaturas_fim"
+        ],
+        [
+          "a_ass_externas",
+          "a_and_assinaturas_fim"
+        ],
+        [
+          "a_and_assinaturas_fim",
+          "a_desp_enc_cot"
+        ],
+        [
+          "a_desp_enc_cot",
+          "a_fim_cot"
+        ],
+        [
+          "a_rpi_742",
+          "a_anexar_742"
+        ],
+        [
+          "a_anexar_742",
+          "a_desp_742"
+        ],
+        [
+          "a_desp_742",
+          "a_email_742"
+        ],
+        [
+          "a_email_742",
+          "i_receber_742"
+        ],
+        [
+          "i_receber_742",
+          "i_fim_742"
+        ]
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "nodes": [
+        {
+          "id": "n_recebido",
+          "type": "start",
+          "event": "message",
+          "name": "Pedido recebido pelo e-Software",
+          "status": "nova"
+        },
+        {
+          "id": "n_validar",
+          "type": "service",
+          "name": "Validar o pedido automaticamente (GRU paga, assinatura da DV, procuração)",
+          "status": "nova"
+        },
+        {
+          "id": "n_gw_valido",
+          "type": "xor",
+          "name": "Pedido regular?",
+          "status": "nova"
+        },
+        {
+          "id": "n_pub_730",
+          "type": "send",
+          "name": "Publicar a concessão na RPI (despacho 730)",
+          "status": "nova"
+        },
+        {
+          "id": "n_certificado",
+          "type": "service",
+          "name": "Disponibilizar o certificado de registro no portal",
+          "status": "nova"
+        },
+        {
+          "id": "n_fim_730",
+          "type": "end",
+          "name": "Registro concedido",
+          "status": "nova"
+        },
+        {
+          "id": "n_pub_742",
+          "type": "send",
+          "name": "Publicar petição não conhecida na RPI (despacho 742)",
+          "status": "nova"
+        },
+        {
+          "id": "n_fim_742",
+          "type": "end",
+          "name": "Pedido não conhecido",
+          "status": "nova"
+        }
+      ],
+      "flows": [
+        [
+          "n_recebido",
+          "n_validar"
+        ],
+        [
+          "n_validar",
+          "n_gw_valido"
+        ],
+        [
+          "n_gw_valido",
+          "n_pub_730",
+          "Sim"
+        ],
+        [
+          "n_gw_valido",
+          "n_pub_742",
+          "Não"
+        ],
+        [
+          "n_pub_730",
+          "n_certificado"
+        ],
+        [
+          "n_certificado",
+          "n_fim_730"
+        ],
+        [
+          "n_pub_742",
+          "n_fim_742"
+        ]
+      ],
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "a_enviar",
+      "n_recebido",
+      "Pedido de registro (e-Software)"
+    ],
+    [
+      "n_pub_730",
+      "a_rpi_730"
+    ],
+    [
+      "n_pub_742",
+      "a_rpi_742"
+    ],
+    [
+      "a_email_cadastro",
+      "Pool_COTIT",
+      "Orientações de cadastro no SEI"
+    ],
+    [
+      "a_disp_contrato",
+      "Pool_COTIT",
+      "Contrato para assinatura (SEI)"
+    ],
+    [
+      "Pool_COTIT",
+      "a_ass_externas",
+      "Contrato assinado"
+    ]
+  ]
+}

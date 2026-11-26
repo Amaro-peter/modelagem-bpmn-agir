@@ -1,0 +1,154 @@
+{
+  "id": "Etapa2_Avaliacao",
+  "name": "Etapa 2 – Avaliação do ativo",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Etapa 2: Avaliação do ativo",
+      "processId": "Etapa2_Avaliacao",
+      "lanes": [
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "a_sei_req",
+          "type": "user",
+          "name": "Acessar o processo no SEI e baixar o requerimento",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_analisar_ativo",
+          "type": "task",
+          "name": "Analisar o ativo",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_gw_requisitos",
+          "type": "xor",
+          "name": "Preenche os requisitos iniciais?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_email_decisao",
+          "type": "send",
+          "name": "Enviar e-mail ao interessado informando a decisão",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_desp_enc_req",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_fim_req",
+          "type": "end",
+          "name": "Encerrado: requisitos não atendidos",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_email_reuniao",
+          "type": "send",
+          "name": "Enviar e-mail ao interessado agendando reunião",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_aguarda_reuniao",
+          "type": "catch",
+          "event": "conditional",
+          "name": "Aguarda a realização da reunião",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_gw_avaliacao",
+          "type": "xor",
+          "name": "Avaliação positiva para a continuidade do processo?",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_desp_enc_aval",
+          "type": "task",
+          "name": "Elaborar despacho de encerramento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "a_fim_aval",
+          "type": "end",
+          "name": "Encerrado: avaliação negativa",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e2_ini",
+          "type": "start",
+          "name": "Requerimento recebido (Etapa 1)",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e2_fim",
+          "type": "end",
+          "name": "Ativo aprovado → Etapa 3",
+          "lane": "L_AGIR"
+        }
+      ],
+      "flows": [
+        [
+          "a_sei_req",
+          "a_analisar_ativo"
+        ],
+        [
+          "a_analisar_ativo",
+          "a_gw_requisitos"
+        ],
+        [
+          "a_gw_requisitos",
+          "a_email_reuniao",
+          "Sim"
+        ],
+        [
+          "a_gw_requisitos",
+          "a_email_decisao",
+          "Não"
+        ],
+        [
+          "a_email_decisao",
+          "a_desp_enc_req"
+        ],
+        [
+          "a_desp_enc_req",
+          "a_fim_req"
+        ],
+        [
+          "a_email_reuniao",
+          "a_aguarda_reuniao"
+        ],
+        [
+          "a_aguarda_reuniao",
+          "a_gw_avaliacao"
+        ],
+        [
+          "a_gw_avaliacao",
+          "a_desp_enc_aval",
+          "Não"
+        ],
+        [
+          "a_desp_enc_aval",
+          "a_fim_aval"
+        ],
+        [
+          "e2_ini",
+          "a_sei_req"
+        ],
+        [
+          "a_gw_avaliacao",
+          "e2_fim",
+          "Sim"
+        ]
+      ]
+    }
+  ],
+  "messageFlows": []
+}

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collab_Etapa5_Deposito">
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI – Etapa 5: Depósito do pedido no INPI" processRef="Etapa5_Deposito" />
+    <bpmn:participant id="Pool_INPI" name="INPI – Instituto Nacional da Propriedade Industrial" />
+    <bpmn:messageFlow id="Msg_1" name="Pedido de registro (e-Software)" sourceRef="a_enviar" targetRef="Pool_INPI" />
+  </bpmn:collaboration>
+  <bpmn:process id="Etapa5_Deposito" name="PROPPI – Etapa 5: Depósito do pedido no INPI" isExecutable="false">
+    <bpmn:laneSet id="Etapa5_Deposito_lanes">
+      <bpmn:lane id="L_AGIR" name="AGIR">
+        <bpmn:flowNodeRef>a_dv_baixar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_dv_assinar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_esoft</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_esoft_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_esoft_anexar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_enviar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_protocolo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e5_ini</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e5_fim</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="a_dv_baixar" name="Baixar a Declaração de Veracidade (DV) vinculada à GRU">
+      <bpmn:incoming>Etapa5_Deposito_f7</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_dv_assinar" name="Assinar a DV digitalmente (certificado ICP-Brasil)">
+      <bpmn:incoming>Etapa5_Deposito_f1</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_esoft" name="Acessar o e-Software e informar o número da GRU paga">
+      <bpmn:incoming>Etapa5_Deposito_f2</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_esoft_form" name="Preencher o formulário e-Software com os dados do interessado">
+      <bpmn:incoming>Etapa5_Deposito_f3</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_esoft_anexar" name="Anexar a DV assinada e revisar o pedido">
+      <bpmn:incoming>Etapa5_Deposito_f4</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="a_enviar" name="Enviar o pedido de registro ao INPI">
+      <bpmn:incoming>Etapa5_Deposito_f5</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f6</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="a_protocolo" name="Anexar ao SEI o recibo com o número do pedido">
+      <bpmn:incoming>Etapa5_Deposito_f6</bpmn:incoming>
+      <bpmn:outgoing>Etapa5_Deposito_f8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:startEvent id="e5_ini" name="Pagamento comprovado (Etapa 4)">
+      <bpmn:outgoing>Etapa5_Deposito_f7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="e5_fim" name="Pedido depositado → Etapa 6">
+      <bpmn:incoming>Etapa5_Deposito_f8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f1" sourceRef="a_dv_baixar" targetRef="a_dv_assinar" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f2" sourceRef="a_dv_assinar" targetRef="a_esoft" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f3" sourceRef="a_esoft" targetRef="a_esoft_form" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f4" sourceRef="a_esoft_form" targetRef="a_esoft_anexar" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f5" sourceRef="a_esoft_anexar" targetRef="a_enviar" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f6" sourceRef="a_enviar" targetRef="a_protocolo" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f7" sourceRef="e5_ini" targetRef="a_dv_baixar" />
+    <bpmn:sequenceFlow id="Etapa5_Deposito_f8" sourceRef="a_protocolo" targetRef="e5_fim" />
+    <bpmn:textAnnotation id="a_dv_assinar_note">
+      <bpmn:text>Representante da AGIR que utiliza e-CNPJ da UFF com procuração.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="a_dv_assinar_assoc" sourceRef="a_dv_assinar" targetRef="a_dv_assinar_note" />
+    <bpmn:group id="G_REG_INPI" categoryValueRef="G_REG_INPI_cv" />
+  </bpmn:process>
+  <bpmn:category id="G_REG_INPI_cat">
+    <bpmn:categoryValue id="G_REG_INPI_cv" value="Realizar registro junto ao INPI" />
+  </bpmn:category>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_Etapa5_Deposito">
+    <bpmndi:BPMNPlane id="BPMNPlane_Collab_Etapa5_Deposito" bpmnElement="Collab_Etapa5_Deposito">
+      <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="1740" height="282" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1710" height="282" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G_REG_INPI_di" bpmnElement="G_REG_INPI">
+        <dc:Bounds x="265" y="97" width="1050" height="168" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_dv_baixar_di" bpmnElement="a_dv_baixar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="280" y="125" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_dv_assinar_di" bpmnElement="a_dv_assinar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="460" y="132" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_dv_assinar_note_di" bpmnElement="a_dv_assinar_note">
+        <dc:Bounds x="465" y="10" width="150" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_dv_assinar_assoc_di" bpmnElement="a_dv_assinar_assoc">
+        <di:waypoint x="495" y="82" />
+        <di:waypoint x="495" y="132" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="a_esoft_di" bpmnElement="a_esoft" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="640" y="132" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_esoft_form_di" bpmnElement="a_esoft_form" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="820" y="125" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_esoft_anexar_di" bpmnElement="a_esoft_anexar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1000" y="140" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_enviar_di" bpmnElement="a_enviar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1180" y="140" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_protocolo_di" bpmnElement="a_protocolo" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1360" y="147" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e5_ini_di" bpmnElement="e5_ini">
+        <dc:Bounds x="142" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="209" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e5_fim_di" bpmnElement="e5_fim">
+        <dc:Bounds x="1582" y="169" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1535" y="209" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f1_di" bpmnElement="Etapa5_Deposito_f1">
+        <di:waypoint x="400" y="187" />
+        <di:waypoint x="460" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f2_di" bpmnElement="Etapa5_Deposito_f2">
+        <di:waypoint x="580" y="187" />
+        <di:waypoint x="640" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f3_di" bpmnElement="Etapa5_Deposito_f3">
+        <di:waypoint x="760" y="187" />
+        <di:waypoint x="820" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f4_di" bpmnElement="Etapa5_Deposito_f4">
+        <di:waypoint x="940" y="187" />
+        <di:waypoint x="1000" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f5_di" bpmnElement="Etapa5_Deposito_f5">
+        <di:waypoint x="1120" y="187" />
+        <di:waypoint x="1180" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f6_di" bpmnElement="Etapa5_Deposito_f6">
+        <di:waypoint x="1300" y="187" />
+        <di:waypoint x="1360" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f7_di" bpmnElement="Etapa5_Deposito_f7">
+        <di:waypoint x="178" y="187" />
+        <di:waypoint x="280" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa5_Deposito_f8_di" bpmnElement="Etapa5_Deposito_f8">
+        <di:waypoint x="1480" y="187" />
+        <di:waypoint x="1582" y="187" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Pool_INPI_di" bpmnElement="Pool_INPI" isHorizontal="true" bioc:stroke="#1565c0" bioc:fill="#e3f0fb" color:background-color="#e3f0fb" color:border-color="#1565c0">
+        <dc:Bounds x="0" y="342" width="1740" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
+        <di:waypoint x="1228" y="235" />
+        <di:waypoint x="1228" y="342" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1234" y="308" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

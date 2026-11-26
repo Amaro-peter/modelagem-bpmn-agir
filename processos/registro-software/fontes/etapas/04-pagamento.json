@@ -1,0 +1,120 @@
+{
+  "id": "Etapa4_Pagamento",
+  "name": "Etapa 4 – Pagamento da GRU",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Etapa 4: Pagamento da GRU",
+      "processId": "Etapa4_Pagamento",
+      "lanes": [
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "a_einpi",
+          "type": "user",
+          "name": "Acessar o e-INPI com o login da UFF",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_gru",
+          "type": "user",
+          "name": "Gerar GRU",
+          "lane": "L_AGIR",
+          "note": "Serviço 730 (R$ 210,00); sem desconto para software (Portaria INPI/PR 10/2025)"
+        },
+        {
+          "id": "a_pagamento",
+          "type": "subprocess",
+          "name": "Subprocesso de Pagamento de Despesa com Registro e Manutenção de Propriedade Intelectual",
+          "lane": "L_AGIR",
+          "nodes": [
+            {
+              "id": "pag_ini",
+              "type": "start",
+              "name": "GRU gerada"
+            },
+            {
+              "id": "pag_pagar",
+              "type": "user",
+              "name": "Efetuar o pagamento da GRU",
+              "status": "nova"
+            },
+            {
+              "id": "pag_fim",
+              "type": "end",
+              "name": "GRU paga"
+            }
+          ],
+          "flows": [
+            [
+              "pag_ini",
+              "pag_pagar"
+            ],
+            [
+              "pag_pagar",
+              "pag_fim"
+            ]
+          ]
+        },
+        {
+          "id": "a_aguarda_pag",
+          "type": "catch",
+          "event": "conditional",
+          "name": "Aguardar pagamento",
+          "lane": "L_AGIR",
+          "note": "INPI: GRU paga antes do pedido; confirmação leva ~24 h"
+        },
+        {
+          "id": "a_anexar_pag",
+          "type": "task",
+          "name": "Anexar o comprovante de pagamento",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e4_ini",
+          "type": "start",
+          "name": "Documentação aprovada (Etapa 3)",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e4_fim",
+          "type": "end",
+          "name": "Pagamento comprovado → Etapa 5",
+          "lane": "L_AGIR"
+        }
+      ],
+      "flows": [
+        [
+          "a_einpi",
+          "a_gru"
+        ],
+        [
+          "a_gru",
+          "a_pagamento"
+        ],
+        [
+          "a_pagamento",
+          "a_aguarda_pag"
+        ],
+        [
+          "a_aguarda_pag",
+          "a_anexar_pag"
+        ],
+        [
+          "e4_ini",
+          "a_einpi"
+        ],
+        [
+          "a_anexar_pag",
+          "e4_fim"
+        ]
+      ]
+    }
+  ],
+  "messageFlows": []
+}

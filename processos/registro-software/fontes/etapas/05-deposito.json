@@ -1,0 +1,145 @@
+{
+  "id": "Etapa5_Deposito",
+  "name": "Etapa 5 – Depósito do pedido no INPI",
+  "pools": [
+    {
+      "id": "Pool_PROPPI",
+      "name": "PROPPI – Etapa 5: Depósito do pedido no INPI",
+      "processId": "Etapa5_Deposito",
+      "lanes": [
+        {
+          "id": "L_AGIR",
+          "name": "AGIR"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "a_dv_baixar",
+          "type": "user",
+          "name": "Baixar a Declaração de Veracidade (DV) vinculada à GRU",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_dv_assinar",
+          "type": "user",
+          "name": "Assinar a DV digitalmente (certificado ICP-Brasil)",
+          "lane": "L_AGIR",
+          "status": "nova",
+          "note": "Representante da AGIR que utiliza e-CNPJ da UFF com procuração."
+        },
+        {
+          "id": "a_esoft",
+          "type": "user",
+          "name": "Acessar o e-Software e informar o número da GRU paga",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_esoft_form",
+          "type": "user",
+          "name": "Preencher o formulário e-Software com os dados do interessado",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_esoft_anexar",
+          "type": "user",
+          "name": "Anexar a DV assinada e revisar o pedido",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_enviar",
+          "type": "send",
+          "name": "Enviar o pedido de registro ao INPI",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "a_protocolo",
+          "type": "task",
+          "name": "Anexar ao SEI o recibo com o número do pedido",
+          "lane": "L_AGIR",
+          "status": "nova"
+        },
+        {
+          "id": "e5_ini",
+          "type": "start",
+          "name": "Pagamento comprovado (Etapa 4)",
+          "lane": "L_AGIR"
+        },
+        {
+          "id": "e5_fim",
+          "type": "end",
+          "name": "Pedido depositado → Etapa 6",
+          "lane": "L_AGIR"
+        }
+      ],
+      "flows": [
+        [
+          "a_dv_baixar",
+          "a_dv_assinar"
+        ],
+        [
+          "a_dv_assinar",
+          "a_esoft"
+        ],
+        [
+          "a_esoft",
+          "a_esoft_form"
+        ],
+        [
+          "a_esoft_form",
+          "a_esoft_anexar"
+        ],
+        [
+          "a_esoft_anexar",
+          "a_enviar"
+        ],
+        [
+          "a_enviar",
+          "a_protocolo"
+        ],
+        [
+          "e5_ini",
+          "a_dv_baixar"
+        ],
+        [
+          "a_protocolo",
+          "e5_fim"
+        ]
+      ],
+      "groups": [
+        {
+          "id": "G_REG_INPI",
+          "name": "Realizar registro junto ao INPI",
+          "nodes": [
+            "a_dv_baixar",
+            "a_dv_assinar",
+            "a_esoft",
+            "a_esoft_form",
+            "a_esoft_anexar",
+            "a_enviar"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Pool_INPI",
+      "name": "INPI – Instituto Nacional da Propriedade Industrial",
+      "blackbox": true,
+      "color": {
+        "fill": "#e3f0fb",
+        "stroke": "#1565c0"
+      }
+    }
+  ],
+  "messageFlows": [
+    [
+      "a_enviar",
+      "Pool_INPI",
+      "Pedido de registro (e-Software)"
+    ]
+  ]
+}

@@ -1,0 +1,1401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collab_AsIs_Registro_Software">
+    <bpmn:participant id="Pool_COTIT" name="Cotitulares externos" />
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI – Registro de Programa de Computador (Software)" processRef="Process_Pool_PROPPI" />
+    <bpmn:participant id="Pool_INPI" name="INPI – Instituto Nacional da Propriedade Industrial" processRef="Process_Pool_INPI" />
+    <bpmn:messageFlow id="Msg_1" name="Pedido de registro (e-Software)" sourceRef="a_enviar" targetRef="n_recebido" />
+    <bpmn:messageFlow id="Msg_2" sourceRef="n_pub_730" targetRef="a_rpi_730" />
+    <bpmn:messageFlow id="Msg_3" sourceRef="n_pub_742" targetRef="a_rpi_742" />
+    <bpmn:messageFlow id="Msg_4" name="Orientações de cadastro no SEI" sourceRef="a_email_cadastro" targetRef="Pool_COTIT" />
+    <bpmn:messageFlow id="Msg_5" name="Contrato para assinatura (SEI)" sourceRef="a_disp_contrato" targetRef="Pool_COTIT" />
+    <bpmn:messageFlow id="Msg_6" name="Contrato assinado" sourceRef="Pool_COTIT" targetRef="a_ass_externas" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Pool_PROPPI" name="PROPPI – Registro de Programa de Computador (Software)" isExecutable="false">
+    <bpmn:laneSet id="Process_Pool_PROPPI_lanes">
+      <bpmn:lane id="L_INT" name="INTERESSADO">
+        <bpmn:flowNodeRef>i_inicio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_identificar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_gw_tipo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_petic_proc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_incluir_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_preencher_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_join_tipo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_zip</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_hash</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_dados</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_gw_interessado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_petic_docs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_preencher_docs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_join_interessado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_receber_cert</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_fim_ok</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_receber_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_fim_742</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_AGIR" name="AGIR">
+        <bpmn:flowNodeRef>a_sei_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_analisar_ativo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gw_requisitos</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_decisao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_enc_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_fim_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_reuniao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_aguarda_reuniao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gw_avaliacao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_enc_aval</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_fim_aval</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_link_orient_in</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_join_orient</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_orient</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_sei_docs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_analisar_doc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gw_docs</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_link_orient_out</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_einpi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gru</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_pagamento</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_aguarda_pag</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_anexar_pag</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_dv_baixar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_dv_assinar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_esoft</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_esoft_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_esoft_anexar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_enviar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_protocolo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gw_rpi</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_rpi_730</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_rpi_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_certificado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_anexar_reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_and_reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_cert</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_encam_reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_gw_cotitular</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_enc_sem_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_fim_sem_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_minuta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_encam_proger</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_cadastro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_disp_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_and_assinaturas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_assinar_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_ass_externas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_and_assinaturas_fim</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_enc_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_fim_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_anexar_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_742</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_UFF" name="Outras unidades da UFF">
+        <bpmn:flowNodeRef>uff_registros</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>uff_parecer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>uff_assinar_contrato</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="i_inicio" name="Interesse em registrar o software">
+      <bpmn:outgoing>Process_Pool_PROPPI_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="i_identificar" name="Identificar procedimento de abertura">
+      <bpmn:incoming>Process_Pool_PROPPI_f1</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="i_gw_tipo" name="Tipo de abertura">
+      <bpmn:incoming>Process_Pool_PROPPI_f2</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f3</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="i_petic_proc" name="Realizar o peticionamento do processo">
+      <bpmn:incoming>Process_Pool_PROPPI_f3</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="i_incluir_req" name="Incluir Requerimento de Avaliação do ativo">
+      <bpmn:incoming>Process_Pool_PROPPI_f5</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="i_preencher_req" name="Preencher Requerimento de Avaliação do ativo">
+      <bpmn:incoming>Process_Pool_PROPPI_f4</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="i_join_tipo">
+      <bpmn:incoming>Process_Pool_PROPPI_f6</bpmn:incoming>
+      <bpmn:incoming>Process_Pool_PROPPI_f7</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="a_sei_req" name="Acessar o processo no SEI e baixar o requerimento">
+      <bpmn:incoming>Process_Pool_PROPPI_f8</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f9</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="a_analisar_ativo" name="Analisar o ativo">
+      <bpmn:incoming>Process_Pool_PROPPI_f9</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="a_gw_requisitos" name="Preenche os requisitos iniciais?">
+      <bpmn:incoming>Process_Pool_PROPPI_f10</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f11</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="a_email_decisao" name="Enviar e-mail ao interessado informando a decisão">
+      <bpmn:incoming>Process_Pool_PROPPI_f12</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f13</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="a_desp_enc_req" name="Elaborar despacho de encerramento">
+      <bpmn:incoming>Process_Pool_PROPPI_f13</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_req" name="Encerrado: requisitos não atendidos">
+      <bpmn:incoming>Process_Pool_PROPPI_f14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="a_email_reuniao" name="Enviar e-mail ao interessado agendando reunião">
+      <bpmn:incoming>Process_Pool_PROPPI_f11</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f15</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="a_aguarda_reuniao" name="Aguarda a realização da reunião">
+      <bpmn:incoming>Process_Pool_PROPPI_f15</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f16</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="a_aguarda_reuniao_ed">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">Aguarda a realização da reunião</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="a_gw_avaliacao" name="Avaliação positiva para a continuidade do processo?">
+      <bpmn:incoming>Process_Pool_PROPPI_f16</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f17</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f19</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="a_desp_enc_aval" name="Elaborar despacho de encerramento">
+      <bpmn:incoming>Process_Pool_PROPPI_f17</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f18</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_aval" name="Encerrado: avaliação negativa">
+      <bpmn:incoming>Process_Pool_PROPPI_f18</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="a_link_orient_in" name="Envio de orientações">
+      <bpmn:outgoing>Process_Pool_PROPPI_f20</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="a_link_orient_in_ed" name="Envio de orientações" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="a_join_orient">
+      <bpmn:incoming>Process_Pool_PROPPI_f19</bpmn:incoming>
+      <bpmn:incoming>Process_Pool_PROPPI_f20</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f21</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="a_email_orient" name="Enviar e-mail com orientações gerais">
+      <bpmn:incoming>Process_Pool_PROPPI_f21</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f22</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="i_zip" name="Reunir os arquivos-fonte e compactar em pacote digital (ZIP)">
+      <bpmn:incoming>Process_Pool_PROPPI_f22</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f23</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="i_hash" name="Gerar o resumo digital (hash SHA-512) do pacote">
+      <bpmn:incoming>Process_Pool_PROPPI_f23</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f24</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="i_dados" name="Preencher documento com os dados do programa exigidos pelo INPI">
+      <bpmn:incoming>Process_Pool_PROPPI_f24</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f25</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="i_gw_interessado" name="Interessado">
+      <bpmn:incoming>Process_Pool_PROPPI_f25</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f26</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f27</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="i_petic_docs" name="Realizar o peticionamento dos documentos">
+      <bpmn:incoming>Process_Pool_PROPPI_f26</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f28</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="i_preencher_docs" name="Preencher documentos solicitados">
+      <bpmn:incoming>Process_Pool_PROPPI_f27</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f29</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="i_join_interessado">
+      <bpmn:incoming>Process_Pool_PROPPI_f28</bpmn:incoming>
+      <bpmn:incoming>Process_Pool_PROPPI_f29</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f30</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="a_sei_docs" name="Acessar o processo no SEI e baixar os documentos">
+      <bpmn:incoming>Process_Pool_PROPPI_f30</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f31</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="a_analisar_doc" name="Analisar documentação">
+      <bpmn:incoming>Process_Pool_PROPPI_f31</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f32</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="a_gw_docs" name="Documentos ok?">
+      <bpmn:incoming>Process_Pool_PROPPI_f32</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f33</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f34</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="a_link_orient_out" name="Envio de orientações">
+      <bpmn:incoming>Process_Pool_PROPPI_f33</bpmn:incoming>
+      <bpmn:linkEventDefinition id="a_link_orient_out_ed" name="Envio de orientações" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:userTask id="a_einpi" name="Acessar o e-INPI com o login da UFF">
+      <bpmn:incoming>Process_Pool_PROPPI_f34</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f35</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_gru" name="Gerar GRU">
+      <bpmn:incoming>Process_Pool_PROPPI_f35</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f36</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:subProcess id="a_pagamento" name="Subprocesso de Pagamento de Despesa com Registro e Manutenção de Propriedade Intelectual">
+      <bpmn:incoming>Process_Pool_PROPPI_f36</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f37</bpmn:outgoing>
+      <bpmn:startEvent id="pag_ini" name="GRU gerada">
+        <bpmn:outgoing>a_pagamento_f1</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:userTask id="pag_pagar" name="Efetuar o pagamento da GRU">
+        <bpmn:incoming>a_pagamento_f1</bpmn:incoming>
+        <bpmn:outgoing>a_pagamento_f2</bpmn:outgoing>
+      </bpmn:userTask>
+      <bpmn:endEvent id="pag_fim" name="GRU paga">
+        <bpmn:incoming>a_pagamento_f2</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="a_pagamento_f1" sourceRef="pag_ini" targetRef="pag_pagar" />
+      <bpmn:sequenceFlow id="a_pagamento_f2" sourceRef="pag_pagar" targetRef="pag_fim" />
+    </bpmn:subProcess>
+    <bpmn:intermediateCatchEvent id="a_aguarda_pag" name="Aguardar pagamento">
+      <bpmn:incoming>Process_Pool_PROPPI_f37</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f38</bpmn:outgoing>
+      <bpmn:conditionalEventDefinition id="a_aguarda_pag_ed">
+        <bpmn:condition xsi:type="bpmn:tFormalExpression">Aguardar pagamento</bpmn:condition>
+      </bpmn:conditionalEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="a_anexar_pag" name="Anexar o comprovante de pagamento">
+      <bpmn:incoming>Process_Pool_PROPPI_f38</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f39</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="a_dv_baixar" name="Baixar a Declaração de Veracidade (DV) vinculada à GRU">
+      <bpmn:incoming>Process_Pool_PROPPI_f39</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f40</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_dv_assinar" name="Assinar a DV digitalmente (certificado ICP-Brasil)">
+      <bpmn:incoming>Process_Pool_PROPPI_f40</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f41</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_esoft" name="Acessar o e-Software e informar o número da GRU paga">
+      <bpmn:incoming>Process_Pool_PROPPI_f41</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f42</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_esoft_form" name="Preencher o formulário e-Software com os dados do interessado">
+      <bpmn:incoming>Process_Pool_PROPPI_f42</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f43</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="a_esoft_anexar" name="Anexar a DV assinada e revisar o pedido">
+      <bpmn:incoming>Process_Pool_PROPPI_f43</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f44</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="a_enviar" name="Enviar o pedido de registro ao INPI">
+      <bpmn:incoming>Process_Pool_PROPPI_f44</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f45</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="a_protocolo" name="Anexar ao SEI o recibo com o número do pedido">
+      <bpmn:incoming>Process_Pool_PROPPI_f45</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f46</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:eventBasedGateway id="a_gw_rpi" name="Acompanhar publicação na RPI">
+      <bpmn:incoming>Process_Pool_PROPPI_f46</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f47</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f48</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="a_rpi_730" name="Concessão publicada (despacho 730)">
+      <bpmn:incoming>Process_Pool_PROPPI_f47</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f49</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="a_rpi_730_ed" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="a_rpi_742" name="Petição não conhecida (despacho 742)">
+      <bpmn:incoming>Process_Pool_PROPPI_f48</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f75</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="a_rpi_742_ed" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:userTask id="a_certificado" name="Baixar o certificado de registro no portal do INPI">
+      <bpmn:incoming>Process_Pool_PROPPI_f49</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f50</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="a_anexar_reg" name="Anexar comprovante de registro">
+      <bpmn:incoming>Process_Pool_PROPPI_f50</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f51</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:parallelGateway id="a_and_reg">
+      <bpmn:incoming>Process_Pool_PROPPI_f51</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f52</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f55</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sendTask id="a_email_cert" name="Enviar ao interessado o certificado de registro">
+      <bpmn:incoming>Process_Pool_PROPPI_f52</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f53</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="i_receber_cert" name="Receber o certificado de registro">
+      <bpmn:incoming>Process_Pool_PROPPI_f53</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f54</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="i_fim_ok" name="Interessado ciente do registro">
+      <bpmn:incoming>Process_Pool_PROPPI_f54</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="a_desp_encam_reg" name="Elaborar despacho de encaminhamento">
+      <bpmn:incoming>Process_Pool_PROPPI_f55</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f56</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="uff_registros" name="Realizar os registros patrimonial e contábil para devolver à AGIR">
+      <bpmn:incoming>Process_Pool_PROPPI_f56</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f57</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="a_gw_cotitular" name="O ativo possui cotitularidade?">
+      <bpmn:incoming>Process_Pool_PROPPI_f57</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f58</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f60</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="a_desp_enc_sem_cot" name="Elaborar despacho de encerramento">
+      <bpmn:incoming>Process_Pool_PROPPI_f58</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f59</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_sem_cot" name="Encerrado: registro concluído">
+      <bpmn:incoming>Process_Pool_PROPPI_f59</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="a_minuta" name="Anexar minuta do Contrato de Ajuste de Propriedade Intelectual">
+      <bpmn:incoming>Process_Pool_PROPPI_f60</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f61</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_desp_encam_proger" name="Elaborar despacho de encaminhamento">
+      <bpmn:incoming>Process_Pool_PROPPI_f61</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f62</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="uff_parecer" name="Emitir parecer jurídico sobre o Contrato de Ajuste e devolver à AGIR">
+      <bpmn:incoming>Process_Pool_PROPPI_f62</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f63</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_contrato" name="Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER">
+      <bpmn:incoming>Process_Pool_PROPPI_f63</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f64</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="a_email_cadastro" name="Enviar e-mail com orientações sobre o cadastro de usuários externos">
+      <bpmn:incoming>Process_Pool_PROPPI_f64</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f65</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="a_disp_contrato" name="Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas">
+      <bpmn:incoming>Process_Pool_PROPPI_f65</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f66</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:parallelGateway id="a_and_assinaturas">
+      <bpmn:incoming>Process_Pool_PROPPI_f66</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f67</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f68</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_PROPPI_f69</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="a_assinar_contrato" name="Assinar o Contrato de Ajuste (AGIR)">
+      <bpmn:incoming>Process_Pool_PROPPI_f67</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f70</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="uff_assinar_contrato" name="Assinar o Contrato de Ajuste (Reitoria)">
+      <bpmn:incoming>Process_Pool_PROPPI_f68</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f71</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateCatchEvent id="a_ass_externas" name="Assinaturas dos cotitulares externos concluídas">
+      <bpmn:incoming>Process_Pool_PROPPI_f69</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f72</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="a_ass_externas_ed" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:parallelGateway id="a_and_assinaturas_fim">
+      <bpmn:incoming>Process_Pool_PROPPI_f70</bpmn:incoming>
+      <bpmn:incoming>Process_Pool_PROPPI_f71</bpmn:incoming>
+      <bpmn:incoming>Process_Pool_PROPPI_f72</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f73</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:task id="a_desp_enc_cot" name="Elaborar despacho de encerramento">
+      <bpmn:incoming>Process_Pool_PROPPI_f73</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f74</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_cot" name="Encerrado: contrato disponibilizado">
+      <bpmn:incoming>Process_Pool_PROPPI_f74</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="a_anexar_742" name="Anexar ao SEI a publicação do não conhecimento">
+      <bpmn:incoming>Process_Pool_PROPPI_f75</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f76</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_desp_742" name="Elaborar despacho de encerramento (pedido não conhecido)">
+      <bpmn:incoming>Process_Pool_PROPPI_f76</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f77</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="a_email_742" name="Enviar e-mail ao interessado informando o não conhecimento">
+      <bpmn:incoming>Process_Pool_PROPPI_f77</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f78</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="i_receber_742" name="Receber a comunicação de não conhecimento do pedido">
+      <bpmn:incoming>Process_Pool_PROPPI_f78</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_PROPPI_f79</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="i_fim_742" name="Pedido não conhecido pelo INPI">
+      <bpmn:incoming>Process_Pool_PROPPI_f79</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f1" sourceRef="i_inicio" targetRef="i_identificar" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f2" sourceRef="i_identificar" targetRef="i_gw_tipo" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f3" name="Usuário externo" sourceRef="i_gw_tipo" targetRef="i_petic_proc" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f4" name="Servidor UFF" sourceRef="i_gw_tipo" targetRef="i_preencher_req" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f5" sourceRef="i_petic_proc" targetRef="i_incluir_req" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f6" sourceRef="i_incluir_req" targetRef="i_join_tipo" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f7" sourceRef="i_preencher_req" targetRef="i_join_tipo" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f8" sourceRef="i_join_tipo" targetRef="a_sei_req" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f9" sourceRef="a_sei_req" targetRef="a_analisar_ativo" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f10" sourceRef="a_analisar_ativo" targetRef="a_gw_requisitos" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f11" name="Sim" sourceRef="a_gw_requisitos" targetRef="a_email_reuniao" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f12" name="Não" sourceRef="a_gw_requisitos" targetRef="a_email_decisao" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f13" sourceRef="a_email_decisao" targetRef="a_desp_enc_req" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f14" sourceRef="a_desp_enc_req" targetRef="a_fim_req" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f15" sourceRef="a_email_reuniao" targetRef="a_aguarda_reuniao" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f16" sourceRef="a_aguarda_reuniao" targetRef="a_gw_avaliacao" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f17" name="Não" sourceRef="a_gw_avaliacao" targetRef="a_desp_enc_aval" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f18" sourceRef="a_desp_enc_aval" targetRef="a_fim_aval" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f19" name="Sim" sourceRef="a_gw_avaliacao" targetRef="a_join_orient" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f20" sourceRef="a_link_orient_in" targetRef="a_join_orient" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f21" sourceRef="a_join_orient" targetRef="a_email_orient" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f22" sourceRef="a_email_orient" targetRef="i_zip" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f23" sourceRef="i_zip" targetRef="i_hash" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f24" sourceRef="i_hash" targetRef="i_dados" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f25" sourceRef="i_dados" targetRef="i_gw_interessado" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f26" name="Usuário externo" sourceRef="i_gw_interessado" targetRef="i_petic_docs" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f27" name="Servidor UFF" sourceRef="i_gw_interessado" targetRef="i_preencher_docs" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f28" sourceRef="i_petic_docs" targetRef="i_join_interessado" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f29" sourceRef="i_preencher_docs" targetRef="i_join_interessado" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f30" sourceRef="i_join_interessado" targetRef="a_sei_docs" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f31" sourceRef="a_sei_docs" targetRef="a_analisar_doc" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f32" sourceRef="a_analisar_doc" targetRef="a_gw_docs" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f33" name="Não" sourceRef="a_gw_docs" targetRef="a_link_orient_out" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f34" name="Sim" sourceRef="a_gw_docs" targetRef="a_einpi" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f35" sourceRef="a_einpi" targetRef="a_gru" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f36" sourceRef="a_gru" targetRef="a_pagamento" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f37" sourceRef="a_pagamento" targetRef="a_aguarda_pag" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f38" sourceRef="a_aguarda_pag" targetRef="a_anexar_pag" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f39" sourceRef="a_anexar_pag" targetRef="a_dv_baixar" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f40" sourceRef="a_dv_baixar" targetRef="a_dv_assinar" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f41" sourceRef="a_dv_assinar" targetRef="a_esoft" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f42" sourceRef="a_esoft" targetRef="a_esoft_form" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f43" sourceRef="a_esoft_form" targetRef="a_esoft_anexar" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f44" sourceRef="a_esoft_anexar" targetRef="a_enviar" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f45" sourceRef="a_enviar" targetRef="a_protocolo" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f46" sourceRef="a_protocolo" targetRef="a_gw_rpi" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f47" sourceRef="a_gw_rpi" targetRef="a_rpi_730" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f48" sourceRef="a_gw_rpi" targetRef="a_rpi_742" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f49" sourceRef="a_rpi_730" targetRef="a_certificado" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f50" sourceRef="a_certificado" targetRef="a_anexar_reg" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f51" sourceRef="a_anexar_reg" targetRef="a_and_reg" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f52" sourceRef="a_and_reg" targetRef="a_email_cert" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f53" sourceRef="a_email_cert" targetRef="i_receber_cert" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f54" sourceRef="i_receber_cert" targetRef="i_fim_ok" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f55" sourceRef="a_and_reg" targetRef="a_desp_encam_reg" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f56" sourceRef="a_desp_encam_reg" targetRef="uff_registros" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f57" sourceRef="uff_registros" targetRef="a_gw_cotitular" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f58" name="Não" sourceRef="a_gw_cotitular" targetRef="a_desp_enc_sem_cot" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f59" sourceRef="a_desp_enc_sem_cot" targetRef="a_fim_sem_cot" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f60" name="Sim" sourceRef="a_gw_cotitular" targetRef="a_minuta" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f61" sourceRef="a_minuta" targetRef="a_desp_encam_proger" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f62" sourceRef="a_desp_encam_proger" targetRef="uff_parecer" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f63" sourceRef="uff_parecer" targetRef="a_contrato" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f64" sourceRef="a_contrato" targetRef="a_email_cadastro" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f65" sourceRef="a_email_cadastro" targetRef="a_disp_contrato" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f66" sourceRef="a_disp_contrato" targetRef="a_and_assinaturas" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f67" sourceRef="a_and_assinaturas" targetRef="a_assinar_contrato" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f68" sourceRef="a_and_assinaturas" targetRef="uff_assinar_contrato" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f69" sourceRef="a_and_assinaturas" targetRef="a_ass_externas" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f70" sourceRef="a_assinar_contrato" targetRef="a_and_assinaturas_fim" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f71" sourceRef="uff_assinar_contrato" targetRef="a_and_assinaturas_fim" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f72" sourceRef="a_ass_externas" targetRef="a_and_assinaturas_fim" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f73" sourceRef="a_and_assinaturas_fim" targetRef="a_desp_enc_cot" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f74" sourceRef="a_desp_enc_cot" targetRef="a_fim_cot" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f75" sourceRef="a_rpi_742" targetRef="a_anexar_742" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f76" sourceRef="a_anexar_742" targetRef="a_desp_742" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f77" sourceRef="a_desp_742" targetRef="a_email_742" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f78" sourceRef="a_email_742" targetRef="i_receber_742" />
+    <bpmn:sequenceFlow id="Process_Pool_PROPPI_f79" sourceRef="i_receber_742" targetRef="i_fim_742" />
+    <bpmn:textAnnotation id="i_hash_note">
+      <bpmn:text>INPI: hash gerado pelo titular; recomenda SHA-512 ou mais recente</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="i_hash_assoc" sourceRef="i_hash" targetRef="i_hash_note" />
+    <bpmn:textAnnotation id="i_dados_note">
+      <bpmn:text>Título, data, titulares, autores, linguagens, campo, tipo, algoritmo e hash</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="i_dados_assoc" sourceRef="i_dados" targetRef="i_dados_note" />
+    <bpmn:textAnnotation id="a_gru_note">
+      <bpmn:text>Serviço 730 (R$ 210,00); sem desconto para software (Portaria INPI/PR 10/2025)</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="a_gru_assoc" sourceRef="a_gru" targetRef="a_gru_note" />
+    <bpmn:textAnnotation id="a_aguarda_pag_note">
+      <bpmn:text>INPI: GRU paga antes do pedido; confirmação leva ~24 h</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="a_aguarda_pag_assoc" sourceRef="a_aguarda_pag" targetRef="a_aguarda_pag_note" />
+    <bpmn:textAnnotation id="a_dv_assinar_note">
+      <bpmn:text>Representante da AGIR que utiliza e-CNPJ da UFF com procuração.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="a_dv_assinar_assoc" sourceRef="a_dv_assinar" targetRef="a_dv_assinar_note" />
+    <bpmn:group id="G_REG_INPI" categoryValueRef="G_REG_INPI_cv" />
+  </bpmn:process>
+  <bpmn:process id="Process_Pool_INPI" name="INPI – Instituto Nacional da Propriedade Industrial" isExecutable="false">
+    <bpmn:startEvent id="n_recebido" name="Pedido recebido pelo e-Software">
+      <bpmn:outgoing>Process_Pool_INPI_f1</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="n_recebido_ed" />
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="n_validar" name="Validar o pedido automaticamente (GRU paga, assinatura da DV, procuração)">
+      <bpmn:incoming>Process_Pool_INPI_f1</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="n_gw_valido" name="Pedido regular?">
+      <bpmn:incoming>Process_Pool_INPI_f2</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f3</bpmn:outgoing>
+      <bpmn:outgoing>Process_Pool_INPI_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="n_pub_730" name="Publicar a concessão na RPI (despacho 730)">
+      <bpmn:incoming>Process_Pool_INPI_f3</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f5</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="n_certificado" name="Disponibilizar o certificado de registro no portal">
+      <bpmn:incoming>Process_Pool_INPI_f5</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="n_fim_730" name="Registro concedido">
+      <bpmn:incoming>Process_Pool_INPI_f6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sendTask id="n_pub_742" name="Publicar petição não conhecida na RPI (despacho 742)">
+      <bpmn:incoming>Process_Pool_INPI_f4</bpmn:incoming>
+      <bpmn:outgoing>Process_Pool_INPI_f7</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="n_fim_742" name="Pedido não conhecido">
+      <bpmn:incoming>Process_Pool_INPI_f7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f1" sourceRef="n_recebido" targetRef="n_validar" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f2" sourceRef="n_validar" targetRef="n_gw_valido" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f3" name="Sim" sourceRef="n_gw_valido" targetRef="n_pub_730" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f4" name="Não" sourceRef="n_gw_valido" targetRef="n_pub_742" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f5" sourceRef="n_pub_730" targetRef="n_certificado" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f6" sourceRef="n_certificado" targetRef="n_fim_730" />
+    <bpmn:sequenceFlow id="Process_Pool_INPI_f7" sourceRef="n_pub_742" targetRef="n_fim_742" />
+  </bpmn:process>
+  <bpmn:category id="G_REG_INPI_cat">
+    <bpmn:categoryValue id="G_REG_INPI_cv" value="Realizar registro junto ao INPI" />
+  </bpmn:category>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_AsIs_Registro_Software">
+    <bpmndi:BPMNPlane id="BPMNPlane_Collab_AsIs_Registro_Software" bpmnElement="Collab_AsIs_Registro_Software">
+      <bpmndi:BPMNShape id="Pool_COTIT_di" bpmnElement="Pool_COTIT" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="10380" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
+        <dc:Bounds x="0" y="140" width="10380" height="1354" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_INT_di" bpmnElement="L_INT" isHorizontal="true">
+        <dc:Bounds x="30" y="140" width="10350" height="432" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
+        <dc:Bounds x="30" y="572" width="10350" height="732" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_UFF_di" bpmnElement="L_UFF" isHorizontal="true">
+        <dc:Bounds x="30" y="1304" width="10350" height="190" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G_REG_INPI_di" bpmnElement="G_REG_INPI">
+        <dc:Bounds x="5125" y="819" width="1050" height="168" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_inicio_di" bpmnElement="i_inicio">
+        <dc:Bounds x="142" y="309" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="349" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_identificar_di" bpmnElement="i_identificar">
+        <dc:Bounds x="280" y="287" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_gw_tipo_di" bpmnElement="i_gw_tipo" isMarkerVisible="true">
+        <dc:Bounds x="495" y="302" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="459" y="284" width="122" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_petic_proc_di" bpmnElement="i_petic_proc">
+        <dc:Bounds x="640" y="280" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_incluir_req_di" bpmnElement="i_incluir_req">
+        <dc:Bounds x="820" y="272" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_preencher_req_di" bpmnElement="i_preencher_req">
+        <dc:Bounds x="640" y="437" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_join_tipo_di" bpmnElement="i_join_tipo" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="302" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_sei_req_di" bpmnElement="a_sei_req" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1180" y="704" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_analisar_ativo_di" bpmnElement="a_analisar_ativo">
+        <dc:Bounds x="1360" y="719" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_requisitos_di" bpmnElement="a_gw_requisitos" isMarkerVisible="true">
+        <dc:Bounds x="1575" y="734" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1535" y="702" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_decisao_di" bpmnElement="a_email_decisao">
+        <dc:Bounds x="1720" y="704" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_req_di" bpmnElement="a_desp_enc_req">
+        <dc:Bounds x="1900" y="719" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_fim_req_di" bpmnElement="a_fim_req">
+        <dc:Bounds x="2122" y="741" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2075" y="781" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_reuniao_di" bpmnElement="a_email_reuniao">
+        <dc:Bounds x="1720" y="854" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_aguarda_reuniao_di" bpmnElement="a_aguarda_reuniao">
+        <dc:Bounds x="1942" y="891" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1895" y="931" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_avaliacao_di" bpmnElement="a_gw_avaliacao" isMarkerVisible="true">
+        <dc:Bounds x="2115" y="884" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2075" y="838" width="130" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_aval_di" bpmnElement="a_desp_enc_aval">
+        <dc:Bounds x="2260" y="869" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_fim_aval_di" bpmnElement="a_fim_aval">
+        <dc:Bounds x="2482" y="891" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2435" y="931" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_link_orient_in_di" bpmnElement="a_link_orient_in">
+        <dc:Bounds x="2302" y="1191" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2255" y="1231" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_join_orient_di" bpmnElement="a_join_orient" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="2295" y="1034" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_orient_di" bpmnElement="a_email_orient">
+        <dc:Bounds x="2440" y="1012" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_zip_di" bpmnElement="i_zip" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="2620" y="280" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_hash_di" bpmnElement="i_hash" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="2800" y="287" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_hash_note_di" bpmnElement="i_hash_note">
+        <dc:Bounds x="2805" y="150" width="150" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="i_hash_assoc_di" bpmnElement="i_hash_assoc">
+        <di:waypoint x="2835" y="222" />
+        <di:waypoint x="2835" y="287" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="i_dados_di" bpmnElement="i_dados" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="2980" y="280" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_dados_note_di" bpmnElement="i_dados_note">
+        <dc:Bounds x="2985" y="150" width="150" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="i_dados_assoc_di" bpmnElement="i_dados_assoc">
+        <di:waypoint x="3015" y="222" />
+        <di:waypoint x="3015" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="i_gw_interessado_di" bpmnElement="i_gw_interessado" isMarkerVisible="true">
+        <dc:Bounds x="3195" y="302" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3177" y="284" width="87" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_petic_docs_di" bpmnElement="i_petic_docs">
+        <dc:Bounds x="3340" y="272" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_preencher_docs_di" bpmnElement="i_preencher_docs">
+        <dc:Bounds x="3340" y="437" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_join_interessado_di" bpmnElement="i_join_interessado" isMarkerVisible="true">
+        <dc:Bounds x="3555" y="302" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_sei_docs_di" bpmnElement="a_sei_docs" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="3700" y="704" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_analisar_doc_di" bpmnElement="a_analisar_doc">
+        <dc:Bounds x="3880" y="719" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_docs_di" bpmnElement="a_gw_docs" isMarkerVisible="true">
+        <dc:Bounds x="4095" y="734" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4066" y="716" width="108" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_link_orient_out_di" bpmnElement="a_link_orient_out">
+        <dc:Bounds x="4282" y="741" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4235" y="781" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_einpi_di" bpmnElement="a_einpi" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="4240" y="862" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gru_di" bpmnElement="a_gru">
+        <dc:Bounds x="4420" y="869" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gru_note_di" bpmnElement="a_gru_note">
+        <dc:Bounds x="4425" y="582" width="150" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_gru_assoc_di" bpmnElement="a_gru_assoc">
+        <di:waypoint x="4455" y="654" />
+        <di:waypoint x="4455" y="869" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="a_pagamento_di" bpmnElement="a_pagamento">
+        <dc:Bounds x="4600" y="824" width="120" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_aguarda_pag_di" bpmnElement="a_aguarda_pag">
+        <dc:Bounds x="4822" y="891" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4775" y="931" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_aguarda_pag_note_di" bpmnElement="a_aguarda_pag_note">
+        <dc:Bounds x="4785" y="582" width="150" height="57" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_aguarda_pag_assoc_di" bpmnElement="a_aguarda_pag_assoc">
+        <di:waypoint x="4815" y="639" />
+        <di:waypoint x="4815" y="891" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="a_anexar_pag_di" bpmnElement="a_anexar_pag">
+        <dc:Bounds x="4960" y="869" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_dv_baixar_di" bpmnElement="a_dv_baixar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="5140" y="847" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_dv_assinar_di" bpmnElement="a_dv_assinar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="5320" y="854" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_dv_assinar_note_di" bpmnElement="a_dv_assinar_note">
+        <dc:Bounds x="5325" y="582" width="150" height="72" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_dv_assinar_assoc_di" bpmnElement="a_dv_assinar_assoc">
+        <di:waypoint x="5355" y="654" />
+        <di:waypoint x="5355" y="854" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="a_esoft_di" bpmnElement="a_esoft" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="5500" y="854" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_esoft_form_di" bpmnElement="a_esoft_form" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="5680" y="847" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_esoft_anexar_di" bpmnElement="a_esoft_anexar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="5860" y="862" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_enviar_di" bpmnElement="a_enviar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6040" y="862" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_protocolo_di" bpmnElement="a_protocolo" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6220" y="869" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_rpi_di" bpmnElement="a_gw_rpi" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6435" y="884" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6395" y="852" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_rpi_730_di" bpmnElement="a_rpi_730" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6982" y="891" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6935" y="859" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_rpi_742_di" bpmnElement="a_rpi_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6982" y="1041" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6935" y="995" width="130" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_certificado_di" bpmnElement="a_certificado" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7120" y="854" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_anexar_reg_di" bpmnElement="a_anexar_reg">
+        <dc:Bounds x="7300" y="869" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_and_reg_di" bpmnElement="a_and_reg" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7515" y="884" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_cert_di" bpmnElement="a_email_cert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7840" y="854" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_receber_cert_di" bpmnElement="i_receber_cert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="8020" y="287" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_fim_ok_di" bpmnElement="i_fim_ok" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="8242" y="309" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="8195" y="349" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_encam_reg_di" bpmnElement="a_desp_encam_reg">
+        <dc:Bounds x="7840" y="1019" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="uff_registros_di" bpmnElement="uff_registros">
+        <dc:Bounds x="8020" y="1352" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_cotitular_di" bpmnElement="a_gw_cotitular" isMarkerVisible="true">
+        <dc:Bounds x="8235" y="734" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="8195" y="702" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_sem_cot_di" bpmnElement="a_desp_enc_sem_cot">
+        <dc:Bounds x="8380" y="719" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_fim_sem_cot_di" bpmnElement="a_fim_sem_cot">
+        <dc:Bounds x="8602" y="741" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="8555" y="781" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_minuta_di" bpmnElement="a_minuta">
+        <dc:Bounds x="8380" y="862" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_encam_proger_di" bpmnElement="a_desp_encam_proger">
+        <dc:Bounds x="8560" y="869" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="uff_parecer_di" bpmnElement="uff_parecer">
+        <dc:Bounds x="8740" y="1344" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_contrato_di" bpmnElement="a_contrato">
+        <dc:Bounds x="8920" y="697" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_cadastro_di" bpmnElement="a_email_cadastro">
+        <dc:Bounds x="9100" y="689" width="120" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_disp_contrato_di" bpmnElement="a_disp_contrato">
+        <dc:Bounds x="9280" y="697" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_and_assinaturas_di" bpmnElement="a_and_assinaturas" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="9495" y="734" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_assinar_contrato_di" bpmnElement="a_assinar_contrato" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="9640" y="712" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="uff_assinar_contrato_di" bpmnElement="uff_assinar_contrato" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="9640" y="1352" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_ass_externas_di" bpmnElement="a_ass_externas" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="9682" y="891" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="9635" y="931" width="130" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_and_assinaturas_fim_di" bpmnElement="a_and_assinaturas_fim" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="9855" y="734" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_cot_di" bpmnElement="a_desp_enc_cot">
+        <dc:Bounds x="10000" y="719" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_fim_cot_di" bpmnElement="a_fim_cot">
+        <dc:Bounds x="10222" y="741" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="10175" y="781" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_anexar_742_di" bpmnElement="a_anexar_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7120" y="1019" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_742_di" bpmnElement="a_desp_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7300" y="1012" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_742_di" bpmnElement="a_email_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7480" y="997" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_receber_742_di" bpmnElement="i_receber_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7660" y="287" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_fim_742_di" bpmnElement="i_fim_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7882" y="309" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="7835" y="349" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f1_di" bpmnElement="Process_Pool_PROPPI_f1">
+        <di:waypoint x="178" y="327" />
+        <di:waypoint x="280" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f2_di" bpmnElement="Process_Pool_PROPPI_f2">
+        <di:waypoint x="400" y="327" />
+        <di:waypoint x="495" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f3_di" bpmnElement="Process_Pool_PROPPI_f3">
+        <di:waypoint x="545" y="327" />
+        <di:waypoint x="640" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f4_di" bpmnElement="Process_Pool_PROPPI_f4">
+        <di:waypoint x="520" y="352" />
+        <di:waypoint x="520" y="477" />
+        <di:waypoint x="640" y="477" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f5_di" bpmnElement="Process_Pool_PROPPI_f5">
+        <di:waypoint x="760" y="327" />
+        <di:waypoint x="820" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f6_di" bpmnElement="Process_Pool_PROPPI_f6">
+        <di:waypoint x="940" y="327" />
+        <di:waypoint x="1035" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f7_di" bpmnElement="Process_Pool_PROPPI_f7">
+        <di:waypoint x="760" y="477" />
+        <di:waypoint x="1060" y="477" />
+        <di:waypoint x="1060" y="352" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f8_di" bpmnElement="Process_Pool_PROPPI_f8">
+        <di:waypoint x="1085" y="327" />
+        <di:waypoint x="1240" y="327" />
+        <di:waypoint x="1240" y="704" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f9_di" bpmnElement="Process_Pool_PROPPI_f9">
+        <di:waypoint x="1300" y="759" />
+        <di:waypoint x="1360" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f10_di" bpmnElement="Process_Pool_PROPPI_f10">
+        <di:waypoint x="1480" y="759" />
+        <di:waypoint x="1575" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f11_di" bpmnElement="Process_Pool_PROPPI_f11">
+        <di:waypoint x="1600" y="784" />
+        <di:waypoint x="1600" y="909" />
+        <di:waypoint x="1720" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f12_di" bpmnElement="Process_Pool_PROPPI_f12">
+        <di:waypoint x="1625" y="759" />
+        <di:waypoint x="1720" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f13_di" bpmnElement="Process_Pool_PROPPI_f13">
+        <di:waypoint x="1840" y="759" />
+        <di:waypoint x="1900" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f14_di" bpmnElement="Process_Pool_PROPPI_f14">
+        <di:waypoint x="2020" y="759" />
+        <di:waypoint x="2122" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f15_di" bpmnElement="Process_Pool_PROPPI_f15">
+        <di:waypoint x="1840" y="909" />
+        <di:waypoint x="1942" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f16_di" bpmnElement="Process_Pool_PROPPI_f16">
+        <di:waypoint x="1978" y="909" />
+        <di:waypoint x="2115" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f17_di" bpmnElement="Process_Pool_PROPPI_f17">
+        <di:waypoint x="2165" y="909" />
+        <di:waypoint x="2260" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f18_di" bpmnElement="Process_Pool_PROPPI_f18">
+        <di:waypoint x="2380" y="909" />
+        <di:waypoint x="2482" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f19_di" bpmnElement="Process_Pool_PROPPI_f19">
+        <di:waypoint x="2140" y="934" />
+        <di:waypoint x="2140" y="1059" />
+        <di:waypoint x="2295" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f20_di" bpmnElement="Process_Pool_PROPPI_f20">
+        <di:waypoint x="2320" y="1191" />
+        <di:waypoint x="2320" y="1084" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f21_di" bpmnElement="Process_Pool_PROPPI_f21">
+        <di:waypoint x="2345" y="1059" />
+        <di:waypoint x="2440" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f22_di" bpmnElement="Process_Pool_PROPPI_f22">
+        <di:waypoint x="2560" y="1059" />
+        <di:waypoint x="2680" y="1059" />
+        <di:waypoint x="2680" y="375" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f23_di" bpmnElement="Process_Pool_PROPPI_f23">
+        <di:waypoint x="2740" y="327" />
+        <di:waypoint x="2800" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f24_di" bpmnElement="Process_Pool_PROPPI_f24">
+        <di:waypoint x="2920" y="327" />
+        <di:waypoint x="2980" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f25_di" bpmnElement="Process_Pool_PROPPI_f25">
+        <di:waypoint x="3100" y="327" />
+        <di:waypoint x="3195" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f26_di" bpmnElement="Process_Pool_PROPPI_f26">
+        <di:waypoint x="3245" y="327" />
+        <di:waypoint x="3340" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f27_di" bpmnElement="Process_Pool_PROPPI_f27">
+        <di:waypoint x="3220" y="352" />
+        <di:waypoint x="3220" y="477" />
+        <di:waypoint x="3340" y="477" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f28_di" bpmnElement="Process_Pool_PROPPI_f28">
+        <di:waypoint x="3460" y="327" />
+        <di:waypoint x="3555" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f29_di" bpmnElement="Process_Pool_PROPPI_f29">
+        <di:waypoint x="3460" y="477" />
+        <di:waypoint x="3580" y="477" />
+        <di:waypoint x="3580" y="352" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f30_di" bpmnElement="Process_Pool_PROPPI_f30">
+        <di:waypoint x="3605" y="327" />
+        <di:waypoint x="3760" y="327" />
+        <di:waypoint x="3760" y="704" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f31_di" bpmnElement="Process_Pool_PROPPI_f31">
+        <di:waypoint x="3820" y="759" />
+        <di:waypoint x="3880" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f32_di" bpmnElement="Process_Pool_PROPPI_f32">
+        <di:waypoint x="4000" y="759" />
+        <di:waypoint x="4095" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f33_di" bpmnElement="Process_Pool_PROPPI_f33">
+        <di:waypoint x="4145" y="759" />
+        <di:waypoint x="4282" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f34_di" bpmnElement="Process_Pool_PROPPI_f34">
+        <di:waypoint x="4120" y="784" />
+        <di:waypoint x="4120" y="909" />
+        <di:waypoint x="4240" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f35_di" bpmnElement="Process_Pool_PROPPI_f35">
+        <di:waypoint x="4360" y="909" />
+        <di:waypoint x="4420" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f36_di" bpmnElement="Process_Pool_PROPPI_f36">
+        <di:waypoint x="4540" y="909" />
+        <di:waypoint x="4600" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f37_di" bpmnElement="Process_Pool_PROPPI_f37">
+        <di:waypoint x="4720" y="909" />
+        <di:waypoint x="4822" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f38_di" bpmnElement="Process_Pool_PROPPI_f38">
+        <di:waypoint x="4858" y="909" />
+        <di:waypoint x="4960" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f39_di" bpmnElement="Process_Pool_PROPPI_f39">
+        <di:waypoint x="5080" y="909" />
+        <di:waypoint x="5140" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f40_di" bpmnElement="Process_Pool_PROPPI_f40">
+        <di:waypoint x="5260" y="909" />
+        <di:waypoint x="5320" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f41_di" bpmnElement="Process_Pool_PROPPI_f41">
+        <di:waypoint x="5440" y="909" />
+        <di:waypoint x="5500" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f42_di" bpmnElement="Process_Pool_PROPPI_f42">
+        <di:waypoint x="5620" y="909" />
+        <di:waypoint x="5680" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f43_di" bpmnElement="Process_Pool_PROPPI_f43">
+        <di:waypoint x="5800" y="909" />
+        <di:waypoint x="5860" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f44_di" bpmnElement="Process_Pool_PROPPI_f44">
+        <di:waypoint x="5980" y="909" />
+        <di:waypoint x="6040" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f45_di" bpmnElement="Process_Pool_PROPPI_f45">
+        <di:waypoint x="6160" y="909" />
+        <di:waypoint x="6220" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f46_di" bpmnElement="Process_Pool_PROPPI_f46">
+        <di:waypoint x="6340" y="909" />
+        <di:waypoint x="6435" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f47_di" bpmnElement="Process_Pool_PROPPI_f47">
+        <di:waypoint x="6485" y="909" />
+        <di:waypoint x="6982" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f48_di" bpmnElement="Process_Pool_PROPPI_f48">
+        <di:waypoint x="6460" y="934" />
+        <di:waypoint x="6460" y="1059" />
+        <di:waypoint x="6982" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f49_di" bpmnElement="Process_Pool_PROPPI_f49">
+        <di:waypoint x="7018" y="909" />
+        <di:waypoint x="7120" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f50_di" bpmnElement="Process_Pool_PROPPI_f50">
+        <di:waypoint x="7240" y="909" />
+        <di:waypoint x="7300" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f51_di" bpmnElement="Process_Pool_PROPPI_f51">
+        <di:waypoint x="7420" y="909" />
+        <di:waypoint x="7515" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f52_di" bpmnElement="Process_Pool_PROPPI_f52">
+        <di:waypoint x="7565" y="909" />
+        <di:waypoint x="7840" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f53_di" bpmnElement="Process_Pool_PROPPI_f53">
+        <di:waypoint x="7960" y="909" />
+        <di:waypoint x="8080" y="909" />
+        <di:waypoint x="8080" y="367" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f54_di" bpmnElement="Process_Pool_PROPPI_f54">
+        <di:waypoint x="8140" y="327" />
+        <di:waypoint x="8242" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f55_di" bpmnElement="Process_Pool_PROPPI_f55">
+        <di:waypoint x="7565" y="909" />
+        <di:waypoint x="7805" y="909" />
+        <di:waypoint x="7805" y="1059" />
+        <di:waypoint x="7840" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f56_di" bpmnElement="Process_Pool_PROPPI_f56">
+        <di:waypoint x="7900" y="1099" />
+        <di:waypoint x="7900" y="1399" />
+        <di:waypoint x="8020" y="1399" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f57_di" bpmnElement="Process_Pool_PROPPI_f57">
+        <di:waypoint x="8140" y="1399" />
+        <di:waypoint x="8260" y="1399" />
+        <di:waypoint x="8260" y="784" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f58_di" bpmnElement="Process_Pool_PROPPI_f58">
+        <di:waypoint x="8285" y="759" />
+        <di:waypoint x="8380" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f59_di" bpmnElement="Process_Pool_PROPPI_f59">
+        <di:waypoint x="8500" y="759" />
+        <di:waypoint x="8602" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f60_di" bpmnElement="Process_Pool_PROPPI_f60">
+        <di:waypoint x="8260" y="784" />
+        <di:waypoint x="8260" y="909" />
+        <di:waypoint x="8380" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f61_di" bpmnElement="Process_Pool_PROPPI_f61">
+        <di:waypoint x="8500" y="909" />
+        <di:waypoint x="8560" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f62_di" bpmnElement="Process_Pool_PROPPI_f62">
+        <di:waypoint x="8620" y="949" />
+        <di:waypoint x="8620" y="1399" />
+        <di:waypoint x="8740" y="1399" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f63_di" bpmnElement="Process_Pool_PROPPI_f63">
+        <di:waypoint x="8800" y="1344" />
+        <di:waypoint x="8800" y="759" />
+        <di:waypoint x="8920" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f64_di" bpmnElement="Process_Pool_PROPPI_f64">
+        <di:waypoint x="9040" y="759" />
+        <di:waypoint x="9100" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f65_di" bpmnElement="Process_Pool_PROPPI_f65">
+        <di:waypoint x="9220" y="759" />
+        <di:waypoint x="9280" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f66_di" bpmnElement="Process_Pool_PROPPI_f66">
+        <di:waypoint x="9400" y="759" />
+        <di:waypoint x="9495" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f67_di" bpmnElement="Process_Pool_PROPPI_f67">
+        <di:waypoint x="9545" y="759" />
+        <di:waypoint x="9640" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f68_di" bpmnElement="Process_Pool_PROPPI_f68">
+        <di:waypoint x="9520" y="784" />
+        <di:waypoint x="9520" y="1399" />
+        <di:waypoint x="9640" y="1399" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f69_di" bpmnElement="Process_Pool_PROPPI_f69">
+        <di:waypoint x="9520" y="784" />
+        <di:waypoint x="9520" y="909" />
+        <di:waypoint x="9682" y="909" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f70_di" bpmnElement="Process_Pool_PROPPI_f70">
+        <di:waypoint x="9760" y="759" />
+        <di:waypoint x="9855" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f71_di" bpmnElement="Process_Pool_PROPPI_f71">
+        <di:waypoint x="9760" y="1399" />
+        <di:waypoint x="9880" y="1399" />
+        <di:waypoint x="9880" y="784" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f72_di" bpmnElement="Process_Pool_PROPPI_f72">
+        <di:waypoint x="9718" y="909" />
+        <di:waypoint x="9880" y="909" />
+        <di:waypoint x="9880" y="784" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f73_di" bpmnElement="Process_Pool_PROPPI_f73">
+        <di:waypoint x="9905" y="759" />
+        <di:waypoint x="10000" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f74_di" bpmnElement="Process_Pool_PROPPI_f74">
+        <di:waypoint x="10120" y="759" />
+        <di:waypoint x="10222" y="759" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f75_di" bpmnElement="Process_Pool_PROPPI_f75">
+        <di:waypoint x="7018" y="1059" />
+        <di:waypoint x="7120" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f76_di" bpmnElement="Process_Pool_PROPPI_f76">
+        <di:waypoint x="7240" y="1059" />
+        <di:waypoint x="7300" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f77_di" bpmnElement="Process_Pool_PROPPI_f77">
+        <di:waypoint x="7420" y="1059" />
+        <di:waypoint x="7480" y="1059" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f78_di" bpmnElement="Process_Pool_PROPPI_f78">
+        <di:waypoint x="7600" y="1059" />
+        <di:waypoint x="7720" y="1059" />
+        <di:waypoint x="7720" y="367" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_PROPPI_f79_di" bpmnElement="Process_Pool_PROPPI_f79">
+        <di:waypoint x="7780" y="327" />
+        <di:waypoint x="7882" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Pool_INPI_di" bpmnElement="Pool_INPI" isHorizontal="true" bioc:stroke="#1565c0" bioc:fill="#e3f0fb" color:background-color="#e3f0fb" color:border-color="#1565c0">
+        <dc:Bounds x="0" y="1554" width="10380" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_recebido_di" bpmnElement="n_recebido" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6232" y="1631" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6185" y="1671" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_validar_di" bpmnElement="n_validar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6370" y="1579" width="120" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_gw_valido_di" bpmnElement="n_gw_valido" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6585" y="1624" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6553" y="1606" width="115" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_pub_730_di" bpmnElement="n_pub_730" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6730" y="1594" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_certificado_di" bpmnElement="n_certificado" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6910" y="1594" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_fim_730_di" bpmnElement="n_fim_730" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="7132" y="1631" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="7085" y="1671" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_pub_742_di" bpmnElement="n_pub_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6730" y="1744" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_fim_742_di" bpmnElement="n_fim_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="6952" y="1781" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6905" y="1821" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f1_di" bpmnElement="Process_Pool_INPI_f1">
+        <di:waypoint x="6268" y="1649" />
+        <di:waypoint x="6370" y="1649" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f2_di" bpmnElement="Process_Pool_INPI_f2">
+        <di:waypoint x="6490" y="1649" />
+        <di:waypoint x="6585" y="1649" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f3_di" bpmnElement="Process_Pool_INPI_f3">
+        <di:waypoint x="6635" y="1649" />
+        <di:waypoint x="6730" y="1649" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f4_di" bpmnElement="Process_Pool_INPI_f4">
+        <di:waypoint x="6610" y="1674" />
+        <di:waypoint x="6610" y="1799" />
+        <di:waypoint x="6730" y="1799" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f5_di" bpmnElement="Process_Pool_INPI_f5">
+        <di:waypoint x="6850" y="1649" />
+        <di:waypoint x="6910" y="1649" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f6_di" bpmnElement="Process_Pool_INPI_f6">
+        <di:waypoint x="7030" y="1649" />
+        <di:waypoint x="7132" y="1649" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Process_Pool_INPI_f7_di" bpmnElement="Process_Pool_INPI_f7">
+        <di:waypoint x="6850" y="1799" />
+        <di:waypoint x="6952" y="1799" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
+        <di:waypoint x="6100" y="957" />
+        <di:waypoint x="6100" y="1601" />
+        <di:waypoint x="6250" y="1601" />
+        <di:waypoint x="6250" y="1631" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_2_di" bpmnElement="Msg_2">
+        <di:waypoint x="6790" y="1594" />
+        <di:waypoint x="6790" y="957" />
+        <di:waypoint x="7000" y="957" />
+        <di:waypoint x="7000" y="927" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_3_di" bpmnElement="Msg_3">
+        <di:waypoint x="6820" y="1744" />
+        <di:waypoint x="6820" y="1724" />
+        <di:waypoint x="6880" y="1724" />
+        <di:waypoint x="6880" y="1107" />
+        <di:waypoint x="7000" y="1107" />
+        <di:waypoint x="7000" y="1077" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_4_di" bpmnElement="Msg_4">
+        <di:waypoint x="9148" y="689" />
+        <di:waypoint x="9148" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="9154" y="86" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_5_di" bpmnElement="Msg_5">
+        <di:waypoint x="9328" y="697" />
+        <di:waypoint x="9328" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="9334" y="86" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_6_di" bpmnElement="Msg_6">
+        <di:waypoint x="9790" y="80" />
+        <di:waypoint x="9790" y="923" />
+        <di:waypoint x="9718" y="923" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="9796" y="86" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a_pagamento">
+    <bpmndi:BPMNPlane id="BPMNPlane_a_pagamento" bpmnElement="a_pagamento">
+      <bpmndi:BPMNShape id="pag_ini_di" bpmnElement="pag_ini">
+        <dc:Bounds x="82" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="60" y="117" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="pag_pagar_di" bpmnElement="pag_pagar" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="220" y="55" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="pag_fim_di" bpmnElement="pag_fim">
+        <dc:Bounds x="442" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="427" y="117" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="a_pagamento_f1_di" bpmnElement="a_pagamento_f1">
+        <di:waypoint x="118" y="95" />
+        <di:waypoint x="220" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="a_pagamento_f2_di" bpmnElement="a_pagamento_f2">
+        <di:waypoint x="340" y="95" />
+        <di:waypoint x="442" y="95" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

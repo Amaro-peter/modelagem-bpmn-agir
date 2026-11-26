@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collab_Etapa1_Abertura">
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI – Etapa 1: Abertura do pedido" processRef="Etapa1_Abertura" />
+  </bpmn:collaboration>
+  <bpmn:process id="Etapa1_Abertura" name="PROPPI – Etapa 1: Abertura do pedido" isExecutable="false">
+    <bpmn:laneSet id="Etapa1_Abertura_lanes">
+      <bpmn:lane id="L_INT" name="INTERESSADO">
+        <bpmn:flowNodeRef>i_inicio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_identificar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_gw_tipo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_petic_proc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_incluir_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_preencher_req</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_join_tipo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e1_fim</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="i_inicio" name="Interesse em registrar o software">
+      <bpmn:outgoing>Etapa1_Abertura_f1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="i_identificar" name="Identificar procedimento de abertura">
+      <bpmn:incoming>Etapa1_Abertura_f1</bpmn:incoming>
+      <bpmn:outgoing>Etapa1_Abertura_f2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="i_gw_tipo" name="Tipo de abertura">
+      <bpmn:incoming>Etapa1_Abertura_f2</bpmn:incoming>
+      <bpmn:outgoing>Etapa1_Abertura_f3</bpmn:outgoing>
+      <bpmn:outgoing>Etapa1_Abertura_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="i_petic_proc" name="Realizar o peticionamento do processo">
+      <bpmn:incoming>Etapa1_Abertura_f3</bpmn:incoming>
+      <bpmn:outgoing>Etapa1_Abertura_f5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="i_incluir_req" name="Incluir Requerimento de Avaliação do ativo">
+      <bpmn:incoming>Etapa1_Abertura_f5</bpmn:incoming>
+      <bpmn:outgoing>Etapa1_Abertura_f6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="i_preencher_req" name="Preencher Requerimento de Avaliação do ativo">
+      <bpmn:incoming>Etapa1_Abertura_f4</bpmn:incoming>
+      <bpmn:outgoing>Etapa1_Abertura_f7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="i_join_tipo">
+      <bpmn:incoming>Etapa1_Abertura_f6</bpmn:incoming>
+      <bpmn:incoming>Etapa1_Abertura_f7</bpmn:incoming>
+      <bpmn:outgoing>Etapa1_Abertura_f8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="e1_fim" name="Requerimento enviado → Etapa 2">
+      <bpmn:incoming>Etapa1_Abertura_f8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f1" sourceRef="i_inicio" targetRef="i_identificar" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f2" sourceRef="i_identificar" targetRef="i_gw_tipo" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f3" name="Usuário externo" sourceRef="i_gw_tipo" targetRef="i_petic_proc" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f4" name="Servidor UFF" sourceRef="i_gw_tipo" targetRef="i_preencher_req" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f5" sourceRef="i_petic_proc" targetRef="i_incluir_req" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f6" sourceRef="i_incluir_req" targetRef="i_join_tipo" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f7" sourceRef="i_preencher_req" targetRef="i_join_tipo" />
+    <bpmn:sequenceFlow id="Etapa1_Abertura_f8" sourceRef="i_join_tipo" targetRef="e1_fim" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_Etapa1_Abertura">
+    <bpmndi:BPMNPlane id="BPMNPlane_Collab_Etapa1_Abertura" bpmnElement="Collab_Etapa1_Abertura">
+      <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="1380" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_INT_di" bpmnElement="L_INT" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1350" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_inicio_di" bpmnElement="i_inicio">
+        <dc:Bounds x="142" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="117" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_identificar_di" bpmnElement="i_identificar">
+        <dc:Bounds x="280" y="55" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_gw_tipo_di" bpmnElement="i_gw_tipo" isMarkerVisible="true">
+        <dc:Bounds x="495" y="70" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="459" y="52" width="122" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_petic_proc_di" bpmnElement="i_petic_proc">
+        <dc:Bounds x="640" y="48" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_incluir_req_di" bpmnElement="i_incluir_req">
+        <dc:Bounds x="820" y="40" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_preencher_req_di" bpmnElement="i_preencher_req">
+        <dc:Bounds x="640" y="205" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_join_tipo_di" bpmnElement="i_join_tipo" isMarkerVisible="true">
+        <dc:Bounds x="1035" y="70" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e1_fim_di" bpmnElement="e1_fim">
+        <dc:Bounds x="1222" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1175" y="117" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f1_di" bpmnElement="Etapa1_Abertura_f1">
+        <di:waypoint x="178" y="95" />
+        <di:waypoint x="280" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f2_di" bpmnElement="Etapa1_Abertura_f2">
+        <di:waypoint x="400" y="95" />
+        <di:waypoint x="495" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f3_di" bpmnElement="Etapa1_Abertura_f3">
+        <di:waypoint x="545" y="95" />
+        <di:waypoint x="640" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f4_di" bpmnElement="Etapa1_Abertura_f4">
+        <di:waypoint x="520" y="120" />
+        <di:waypoint x="520" y="245" />
+        <di:waypoint x="640" y="245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f5_di" bpmnElement="Etapa1_Abertura_f5">
+        <di:waypoint x="760" y="95" />
+        <di:waypoint x="820" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f6_di" bpmnElement="Etapa1_Abertura_f6">
+        <di:waypoint x="940" y="95" />
+        <di:waypoint x="1035" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f7_di" bpmnElement="Etapa1_Abertura_f7">
+        <di:waypoint x="760" y="245" />
+        <di:waypoint x="1060" y="245" />
+        <di:waypoint x="1060" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa1_Abertura_f8_di" bpmnElement="Etapa1_Abertura_f8">
+        <di:waypoint x="1085" y="95" />
+        <di:waypoint x="1222" y="95" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

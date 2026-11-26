@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collab_Etapa7_Registros">
+    <bpmn:participant id="Pool_COTIT" name="Cotitulares externos" />
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI – Etapa 7: Registros internos e formalização da cotitularidade" processRef="Etapa7_Registros" />
+    <bpmn:messageFlow id="Msg_1" name="Orientações de cadastro no SEI" sourceRef="a_email_cadastro" targetRef="Pool_COTIT" />
+    <bpmn:messageFlow id="Msg_2" name="Contrato para assinatura (SEI)" sourceRef="a_disp_contrato" targetRef="Pool_COTIT" />
+    <bpmn:messageFlow id="Msg_3" name="Contrato assinado" sourceRef="Pool_COTIT" targetRef="a_ass_externas" />
+  </bpmn:collaboration>
+  <bpmn:process id="Etapa7_Registros" name="PROPPI – Etapa 7: Registros internos e formalização da cotitularidade" isExecutable="false">
+    <bpmn:laneSet id="Etapa7_Registros_lanes">
+      <bpmn:lane id="L_AGIR" name="AGIR">
+        <bpmn:flowNodeRef>a_gw_cotitular</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_enc_sem_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_fim_sem_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_minuta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_encam_proger</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_email_cadastro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_disp_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_and_assinaturas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_assinar_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_ass_externas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_and_assinaturas_fim</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_desp_enc_cot</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>a_fim_cot</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_UFF" name="Outras unidades da UFF">
+        <bpmn:flowNodeRef>uff_registros</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>uff_parecer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>uff_assinar_contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e7_ini</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:task id="uff_registros" name="Realizar os registros patrimonial e contábil para devolver à AGIR">
+      <bpmn:incoming>Etapa7_Registros_f19</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="a_gw_cotitular" name="O ativo possui cotitularidade?">
+      <bpmn:incoming>Etapa7_Registros_f1</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f2</bpmn:outgoing>
+      <bpmn:outgoing>Etapa7_Registros_f4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="a_desp_enc_sem_cot" name="Elaborar despacho de encerramento">
+      <bpmn:incoming>Etapa7_Registros_f2</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_sem_cot" name="Encerrado: registro concluído">
+      <bpmn:incoming>Etapa7_Registros_f3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="a_minuta" name="Anexar minuta do Contrato de Ajuste de Propriedade Intelectual">
+      <bpmn:incoming>Etapa7_Registros_f4</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_desp_encam_proger" name="Elaborar despacho de encaminhamento">
+      <bpmn:incoming>Etapa7_Registros_f5</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="uff_parecer" name="Emitir parecer jurídico sobre o Contrato de Ajuste e devolver à AGIR">
+      <bpmn:incoming>Etapa7_Registros_f6</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="a_contrato" name="Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER">
+      <bpmn:incoming>Etapa7_Registros_f7</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="a_email_cadastro" name="Enviar e-mail com orientações sobre o cadastro de usuários externos">
+      <bpmn:incoming>Etapa7_Registros_f8</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f9</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="a_disp_contrato" name="Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas">
+      <bpmn:incoming>Etapa7_Registros_f9</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:parallelGateway id="a_and_assinaturas">
+      <bpmn:incoming>Etapa7_Registros_f10</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f11</bpmn:outgoing>
+      <bpmn:outgoing>Etapa7_Registros_f12</bpmn:outgoing>
+      <bpmn:outgoing>Etapa7_Registros_f13</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="a_assinar_contrato" name="Assinar o Contrato de Ajuste (AGIR)">
+      <bpmn:incoming>Etapa7_Registros_f11</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="uff_assinar_contrato" name="Assinar o Contrato de Ajuste (Reitoria)">
+      <bpmn:incoming>Etapa7_Registros_f12</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f15</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateCatchEvent id="a_ass_externas" name="Assinaturas dos cotitulares externos concluídas">
+      <bpmn:incoming>Etapa7_Registros_f13</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f16</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="a_ass_externas_ed" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:parallelGateway id="a_and_assinaturas_fim">
+      <bpmn:incoming>Etapa7_Registros_f14</bpmn:incoming>
+      <bpmn:incoming>Etapa7_Registros_f15</bpmn:incoming>
+      <bpmn:incoming>Etapa7_Registros_f16</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f17</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:task id="a_desp_enc_cot" name="Elaborar despacho de encerramento">
+      <bpmn:incoming>Etapa7_Registros_f17</bpmn:incoming>
+      <bpmn:outgoing>Etapa7_Registros_f18</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_cot" name="Encerrado: contrato disponibilizado">
+      <bpmn:incoming>Etapa7_Registros_f18</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="e7_ini" name="Processo encaminhado pela AGIR (Etapa 6)">
+      <bpmn:outgoing>Etapa7_Registros_f19</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Etapa7_Registros_f1" sourceRef="uff_registros" targetRef="a_gw_cotitular" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f2" name="Não" sourceRef="a_gw_cotitular" targetRef="a_desp_enc_sem_cot" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f3" sourceRef="a_desp_enc_sem_cot" targetRef="a_fim_sem_cot" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f4" name="Sim" sourceRef="a_gw_cotitular" targetRef="a_minuta" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f5" sourceRef="a_minuta" targetRef="a_desp_encam_proger" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f6" sourceRef="a_desp_encam_proger" targetRef="uff_parecer" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f7" sourceRef="uff_parecer" targetRef="a_contrato" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f8" sourceRef="a_contrato" targetRef="a_email_cadastro" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f9" sourceRef="a_email_cadastro" targetRef="a_disp_contrato" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f10" sourceRef="a_disp_contrato" targetRef="a_and_assinaturas" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f11" sourceRef="a_and_assinaturas" targetRef="a_assinar_contrato" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f12" sourceRef="a_and_assinaturas" targetRef="uff_assinar_contrato" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f13" sourceRef="a_and_assinaturas" targetRef="a_ass_externas" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f14" sourceRef="a_assinar_contrato" targetRef="a_and_assinaturas_fim" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f15" sourceRef="uff_assinar_contrato" targetRef="a_and_assinaturas_fim" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f16" sourceRef="a_ass_externas" targetRef="a_and_assinaturas_fim" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f17" sourceRef="a_and_assinaturas_fim" targetRef="a_desp_enc_cot" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f18" sourceRef="a_desp_enc_cot" targetRef="a_fim_cot" />
+    <bpmn:sequenceFlow id="Etapa7_Registros_f19" sourceRef="e7_ini" targetRef="uff_registros" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_Etapa7_Registros">
+    <bpmndi:BPMNPlane id="BPMNPlane_Collab_Etapa7_Registros" bpmnElement="Collab_Etapa7_Registros">
+      <bpmndi:BPMNShape id="Pool_COTIT_di" bpmnElement="Pool_COTIT" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="2640" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
+        <dc:Bounds x="0" y="140" width="2640" height="530" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
+        <dc:Bounds x="30" y="140" width="2610" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_UFF_di" bpmnElement="L_UFF" isHorizontal="true">
+        <dc:Bounds x="30" y="480" width="2610" height="190" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="uff_registros_di" bpmnElement="uff_registros">
+        <dc:Bounds x="280" y="528" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_gw_cotitular_di" bpmnElement="a_gw_cotitular" isMarkerVisible="true">
+        <dc:Bounds x="495" y="210" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="455" y="178" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_sem_cot_di" bpmnElement="a_desp_enc_sem_cot">
+        <dc:Bounds x="640" y="195" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_fim_sem_cot_di" bpmnElement="a_fim_sem_cot">
+        <dc:Bounds x="862" y="217" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="815" y="257" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_minuta_di" bpmnElement="a_minuta">
+        <dc:Bounds x="640" y="338" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_encam_proger_di" bpmnElement="a_desp_encam_proger">
+        <dc:Bounds x="820" y="345" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="uff_parecer_di" bpmnElement="uff_parecer">
+        <dc:Bounds x="1000" y="520" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_contrato_di" bpmnElement="a_contrato">
+        <dc:Bounds x="1180" y="173" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_email_cadastro_di" bpmnElement="a_email_cadastro">
+        <dc:Bounds x="1360" y="165" width="120" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_disp_contrato_di" bpmnElement="a_disp_contrato">
+        <dc:Bounds x="1540" y="173" width="120" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_and_assinaturas_di" bpmnElement="a_and_assinaturas" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1755" y="210" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_assinar_contrato_di" bpmnElement="a_assinar_contrato" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1900" y="188" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="uff_assinar_contrato_di" bpmnElement="uff_assinar_contrato" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1900" y="528" width="120" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_ass_externas_di" bpmnElement="a_ass_externas" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="1942" y="367" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1895" y="407" width="130" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_and_assinaturas_fim_di" bpmnElement="a_and_assinaturas_fim" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
+        <dc:Bounds x="2115" y="210" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_cot_di" bpmnElement="a_desp_enc_cot">
+        <dc:Bounds x="2260" y="195" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_fim_cot_di" bpmnElement="a_fim_cot">
+        <dc:Bounds x="2482" y="217" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2435" y="257" width="130" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e7_ini_di" bpmnElement="e7_ini">
+        <dc:Bounds x="142" y="557" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="95" y="597" width="130" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f1_di" bpmnElement="Etapa7_Registros_f1">
+        <di:waypoint x="400" y="575" />
+        <di:waypoint x="520" y="575" />
+        <di:waypoint x="520" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f2_di" bpmnElement="Etapa7_Registros_f2">
+        <di:waypoint x="545" y="235" />
+        <di:waypoint x="640" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f3_di" bpmnElement="Etapa7_Registros_f3">
+        <di:waypoint x="760" y="235" />
+        <di:waypoint x="862" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f4_di" bpmnElement="Etapa7_Registros_f4">
+        <di:waypoint x="520" y="260" />
+        <di:waypoint x="520" y="385" />
+        <di:waypoint x="640" y="385" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f5_di" bpmnElement="Etapa7_Registros_f5">
+        <di:waypoint x="760" y="385" />
+        <di:waypoint x="820" y="385" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f6_di" bpmnElement="Etapa7_Registros_f6">
+        <di:waypoint x="880" y="425" />
+        <di:waypoint x="880" y="575" />
+        <di:waypoint x="1000" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f7_di" bpmnElement="Etapa7_Registros_f7">
+        <di:waypoint x="1060" y="520" />
+        <di:waypoint x="1060" y="235" />
+        <di:waypoint x="1180" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f8_di" bpmnElement="Etapa7_Registros_f8">
+        <di:waypoint x="1300" y="235" />
+        <di:waypoint x="1360" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f9_di" bpmnElement="Etapa7_Registros_f9">
+        <di:waypoint x="1480" y="235" />
+        <di:waypoint x="1540" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f10_di" bpmnElement="Etapa7_Registros_f10">
+        <di:waypoint x="1660" y="235" />
+        <di:waypoint x="1755" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f11_di" bpmnElement="Etapa7_Registros_f11">
+        <di:waypoint x="1805" y="235" />
+        <di:waypoint x="1900" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f12_di" bpmnElement="Etapa7_Registros_f12">
+        <di:waypoint x="1780" y="260" />
+        <di:waypoint x="1780" y="575" />
+        <di:waypoint x="1900" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f13_di" bpmnElement="Etapa7_Registros_f13">
+        <di:waypoint x="1780" y="260" />
+        <di:waypoint x="1780" y="385" />
+        <di:waypoint x="1942" y="385" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f14_di" bpmnElement="Etapa7_Registros_f14">
+        <di:waypoint x="2020" y="235" />
+        <di:waypoint x="2115" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f15_di" bpmnElement="Etapa7_Registros_f15">
+        <di:waypoint x="2020" y="575" />
+        <di:waypoint x="2140" y="575" />
+        <di:waypoint x="2140" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f16_di" bpmnElement="Etapa7_Registros_f16">
+        <di:waypoint x="1978" y="385" />
+        <di:waypoint x="2140" y="385" />
+        <di:waypoint x="2140" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f17_di" bpmnElement="Etapa7_Registros_f17">
+        <di:waypoint x="2165" y="235" />
+        <di:waypoint x="2260" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f18_di" bpmnElement="Etapa7_Registros_f18">
+        <di:waypoint x="2380" y="235" />
+        <di:waypoint x="2482" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa7_Registros_f19_di" bpmnElement="Etapa7_Registros_f19">
+        <di:waypoint x="178" y="575" />
+        <di:waypoint x="280" y="575" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
+        <di:waypoint x="1408" y="165" />
+        <di:waypoint x="1408" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1414" y="86" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_2_di" bpmnElement="Msg_2">
+        <di:waypoint x="1588" y="173" />
+        <di:waypoint x="1588" y="80" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1594" y="86" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_3_di" bpmnElement="Msg_3">
+        <di:waypoint x="2050" y="80" />
+        <di:waypoint x="2050" y="399" />
+        <di:waypoint x="1978" y="399" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2056" y="86" width="110" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

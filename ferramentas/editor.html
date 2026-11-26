@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Editor BPMN</title>
+<link rel="stylesheet" href="/node_modules/bpmn-js/dist/assets/diagram-js.css">
+<link rel="stylesheet" href="/node_modules/bpmn-js/dist/assets/bpmn-js.css">
+<link rel="stylesheet" href="/node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css">
+<style>
+  html,body{margin:0;height:100%;font-family:system-ui,sans-serif}
+  #bar{display:flex;gap:8px;padding:8px;border-bottom:1px solid #ddd;align-items:center}
+  #canvas{height:calc(100% - 49px)}
+</style></head><body>
+<div id="bar">
+  <input type="file" id="file" accept=".bpmn,.xml">
+  <button id="novo">Novo</button>
+  <button id="xml">Baixar .bpmn</button>
+  <button id="svg">Baixar .svg</button>
+  <button id="salvar"><b>Salvar no projeto</b> (Ctrl+S)</button>
+  <span id="status" style="color:#2e7d32"></span>
+  <span id="nome"></span>
+</div>
+<div id="canvas"></div>
+<script src="/node_modules/bpmn-js/dist/bpmn-modeler.development.js"></script>
+<script>
+const modeler = new BpmnJS({ container: '#canvas' });
+// enquadra o diagrama sem ficar por baixo da paleta (inclusive ao entrar numa etapa)
+function enquadrar(){ const c = modeler.get('canvas'); c.zoom('fit-viewport'); c.scroll({ dx: 140, dy: 50 }); }
+modeler.on('root.set', () => setTimeout(enquadrar, 0));
+let nome = 'diagrama';
+let arquivo = null; // caminho original (ex.: processos/registro-software/macro/00-macro.bpmn)
+const vazio = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:process id="Process_1" isExecutable="false"><bpmn:startEvent id="StartEvent_1"/></bpmn:process>
+<bpmndi:BPMNDiagram id="BPMNDiagram_1"><bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+<bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1"><dc:Bounds x="180" y="160" width="36" height="36"/></bpmndi:BPMNShape>
+</bpmndi:BPMNPlane></bpmndi:BPMNDiagram></bpmn:definitions>`;
+async function abrir(xml){ await modeler.importXML(xml); enquadrar(); document.getElementById('nome').textContent = nome; }
+function baixar(conteudo, arquivo, tipo){ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([conteudo],{type:tipo})); a.download=arquivo; a.click(); }
+document.getElementById('file').onchange = async e => { const f=e.target.files[0]; if(!f) return; arquivo=null; nome=f.name.replace(/\.(bpmn|xml)$/,''); abrir(await f.text()); };
+document.getElementById('novo').onclick = () => { nome='diagrama'; arquivo=null; abrir(vazio); };
+document.getElementById('xml').onclick = async () => { const {xml}=await modeler.saveXML({format:true}); baixar(xml, nome+'.bpmn','application/xml'); };
+document.getElementById('svg').onclick = async () => { const {svg}=await modeler.saveSVG(); baixar(svg, nome+'.svg','image/svg+xml'); };
+async function salvar(){
+  const {xml}=await modeler.saveXML({format:true});
+  const destino = (arquivo && arquivo.startsWith('processos/')) ? arquivo : 'processos/rascunhos/'+nome+'.bpmn';
+  const r=await fetch('/save?file='+encodeURIComponent(destino),{method:'PUT',body:xml});
+  document.getElementById('status').textContent = r.ok ? (await r.text())+' às '+new Date().toLocaleTimeString() : 'erro ao salvar: '+await r.text();
+}
+document.getElementById('salvar').onclick = salvar;
+document.addEventListener('keydown', e => { if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); salvar(); } });
+const q = new URLSearchParams(location.search).get('file');
+if (q) fetch('/'+q.replace(/^\/+/,'')).then(r=>r.text()).then(x=>{ arquivo=q.replace(/^\/+/,''); nome=q.split('/').pop().replace(/\.bpmn$/,''); abrir(x); }); else abrir(vazio);
+</script></body></html>
