@@ -7,6 +7,7 @@ A fonte precisa de:
 - "etapa": N em cada nó (eventos de borda herdam a etapa da atividade).
 - "desfecho": true nos eventos de fim que encerram o processo (vão para o macro).
 - (opcional) "nomeCurto" na pool principal: usado no nome da pool das vistas por etapa.
+- (opcional) "compacto": true no topo: repassado às etapas e ao macro (colunas com largura adaptável).
 
 Saída: <pasta>/00-macro.json e <pasta>/NN-<slug>.json.
 - Fluxo que cruza etapas vira um fim "→ Etapa N – nome" na origem e um início "(Etapa M – nome)" no destino.
@@ -76,6 +77,8 @@ for k in sorted(etapas):
     pools += [smain]
     pools += [copy.deepcopy(p) for p in d['pools'] if p['id'] in ext_ids and d['pools'].index(p) > d['pools'].index(main)]
     sd = {'id': proc_id(k), 'name': f'{d["name"]} – {title(k)}', 'pools': pools, 'messageFlows': msgs}
+    if d.get('compacto'):
+        sd['compacto'] = True
     fname = f'{k:02d}-{etapas[k]["slug"]}.json'
     (out / fname).write_text(json.dumps(sd, ensure_ascii=False, indent=2))
     files[k] = fname
@@ -136,5 +139,7 @@ mpools = [copy.deepcopy(p) for p in d['pools'] if p['id'] in ext_used and d['poo
 mpools += [macro_main]
 mpools += [copy.deepcopy(p) for p in d['pools'] if p['id'] in ext_used and d['pools'].index(p) > d['pools'].index(main)]
 macro = {'id': f'{d["id"]}_Macro', 'name': f'Macroprocesso – {d["name"]}', 'pools': mpools, 'messageFlows': mmsgs}
+if d.get('compacto'):
+    macro['compacto'] = True
 (out / '00-macro.json').write_text(json.dumps(macro, ensure_ascii=False, indent=2))
 print('etapas:', ', '.join(files[k] for k in sorted(files)), '+ 00-macro.json')

@@ -17,16 +17,12 @@
           "name": "INTERESSADO (portal)"
         },
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
-        },
-        {
-          "id": "L_BOLS",
-          "name": "AGIR – Bolsista"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI (sistema)",
+          "name": "Plataforma de Gestão de PI",
           "color": {
             "fill": "#f3eefa",
             "stroke": "#6a3d9a"
@@ -45,77 +41,77 @@
           "type": "call",
           "calls": "ToBe_Registro_Software_Etapa1",
           "name": "Etapa 1 – Solicitação e triagem",
-          "lane": "L_BOLS"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_gw1",
           "type": "xor",
           "name": "Resultado da Etapa 1",
-          "lane": "L_BOLS"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_fim1_0",
           "type": "end",
-          "name": "Encerrado na triagem",
-          "lane": "L_BOLS"
+          "name": "Encerrado na triagem (interessado notificado)",
+          "lane": "L_AGIR"
         },
         {
           "id": "m_e2",
           "type": "call",
           "calls": "ToBe_Registro_Software_Etapa2",
           "name": "Etapa 2 – Reunião inicial e avaliação",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_gw2",
           "type": "xor",
           "name": "Resultado da Etapa 2",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_fim2_0",
           "type": "end",
-          "name": "Arquivado por falta de resposta",
-          "lane": "L_SERV"
+          "name": "Arquivado por falta de resposta (interessado notificado)",
+          "lane": "L_AGIR"
         },
         {
           "id": "m_fim2_1",
           "type": "end",
-          "name": "Encerrado: avaliação negativa",
-          "lane": "L_SERV"
+          "name": "Encerrado: avaliação negativa (interessado notificado)",
+          "lane": "L_AGIR"
         },
         {
           "id": "m_e3",
           "type": "call",
           "calls": "ToBe_Registro_Software_Etapa3",
           "name": "Etapa 3 – Coleta estruturada e validação",
-          "lane": "L_BOLS"
+          "lane": "L_INT"
         },
         {
           "id": "m_gw3",
           "type": "xor",
           "name": "Resultado da Etapa 3",
-          "lane": "L_BOLS"
+          "lane": "L_INT"
         },
         {
           "id": "m_fim3_0",
           "type": "end",
-          "name": "Arquivado por falta de resposta",
-          "lane": "L_BOLS"
+          "name": "Arquivado por falta de resposta (interessado notificado)",
+          "lane": "L_INT"
         },
         {
           "id": "m_e4",
           "type": "call",
           "calls": "ToBe_Registro_Software_Etapa4",
           "name": "Etapa 4 – Pagamento da GRU",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_e5",
           "type": "call",
           "calls": "ToBe_Registro_Software_Etapa5",
           "name": "Etapa 5 – Protocolo assistido no INPI",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_e6",
@@ -133,7 +129,7 @@
         {
           "id": "m_fim6_0",
           "type": "end",
-          "name": "Encerrado: pedido não conhecido",
+          "name": "Encerrado: pedido não conhecido (interessado notificado)",
           "lane": "L_PLAT"
         },
         {
@@ -141,13 +137,13 @@
           "type": "call",
           "calls": "ToBe_Registro_Software_Etapa7",
           "name": "Etapa 7 – Registros internos, cotitularidade e encerramento",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "m_fim",
           "type": "end",
           "name": "Processo concluído",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         }
       ],
       "flows": [
@@ -241,7 +237,7 @@
     },
     {
       "id": "Pool_SEI",
-      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "name": "SEI – registro oficial da UFF",
       "blackbox": true,
       "color": {
         "fill": "#f1f1f1",
@@ -294,5 +290,6 @@
       "m_e6",
       "Pool_INPI"
     ]
-  ]
+  ],
+  "compacto": true
 }

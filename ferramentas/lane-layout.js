@@ -62,7 +62,7 @@ function columns(nodes, edges) {
   return { col, back };
 }
 
-export function layoutDiagram(pools, messageFlows = [], { poolBand = true, groups = [] } = {}) {
+export function layoutDiagram(pools, messageFlows = [], { poolBand = true, groups = [], compact = false } = {}) {
   const allNodes = pools.flatMap(p => p.nodes || []);
   const byId = new Map(allNodes.map(n => [n.id, n]));
   const blackbox = new Set(pools.filter(p => p.blackbox).map(p => p.id));
@@ -79,6 +79,16 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
   // dica de posição: "under": "<id>" coloca o nó na mesma coluna, logo abaixo do nó indicado
   for (const n of allNodes) if (n.under) col.set(n.id, col.get(n.under));
   const nCols = Math.max(...allNodes.map(n => col.get(n.id))) + 1;
+  // largura das colunas: fixa (padrão) ou, no modo compacto, ajustada ao maior elemento da coluna + vão de 60 px
+  const colW = Array(nCols).fill(COL_W);
+  if (compact) {
+    colW.fill(0);
+    for (const n of allNodes) if (!hostOf.has(n.id)) colW[col.get(n.id)] = Math.max(colW[col.get(n.id)], sizeOf(n)[0] + 60);
+    for (let i = 0; i < nCols; i++) colW[i] = Math.max(colW[i], 96);
+  }
+  const colX = [];
+  colW.reduce((acc, w, i) => (colX[i] = acc, acc + w), 0);
+  const totalW = colW.reduce((a, b) => a + b, 0);
 
   const shapes = {}, lanes = {}, poolBounds = {}, notes = {};
   let y = 0;
@@ -87,7 +97,7 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
     const hasLanes = !!p.lanes?.length;
     const band = p.band ?? poolBand;
     const left = (band ? BAND : 0) + (hasLanes ? BAND : 0);
-    width = Math.max(width, left + MARGIN + nCols * COL_W + MARGIN / 2);
+    width = Math.max(width, left + MARGIN + totalW + MARGIN / 2);
   }
 
   for (const p of pools) {
@@ -133,7 +143,7 @@ export function layoutDiagram(pools, messageFlows = [], { poolBand = true, group
       for (const n of members) {
         if (hostOf.has(n.id)) continue;
         const [w, hh] = sizeOf(n);
-        const cx = left + MARGIN + col.get(n.id) * COL_W + TASK_W / 2;
+        const cx = left + MARGIN + colX[col.get(n.id)] + (compact ? colW[col.get(n.id)] / 2 : TASK_W / 2);
         const cy = y + strip + LANE_PAD + row.get(n.id) * ROW_H + ROW_H / 2;
         shapes[n.id] = { x: cx - w / 2, y: cy - hh / 2, width: w, height: hh };
         if (n.note) {
@@ -293,6 +303,15 @@ function route(a, b, byId, shapes, col) {
     for (const k of [25, 40]) {
       const below = Math.max(s.y + s.height, t.y + t.height) + k;
       candidates.push([P(sc.x, s.y + s.height), P(sc.x, below), P(tc.x, below), P(tc.x, t.y + t.height)]);
+    }
+    // por cima ou por baixo, descendo/subindo num corredor logo antes do destino e entrando pela lateral esquerda
+    for (const k of [25, 40, 55]) {
+      for (const cor of [t.x - 22, t.x - 34]) {
+        const above = Math.min(s.y, t.y) - k;
+        candidates.push([P(sc.x, s.y), P(sc.x, above), P(cor, above), P(cor, tc.y), P(t.x, tc.y)]);
+        const below = Math.max(s.y + s.height, t.y + t.height) + k;
+        candidates.push([P(sc.x, s.y + s.height), P(sc.x, below), P(cor, below), P(cor, tc.y), P(t.x, tc.y)]);
+      }
     }
     const bottom = Math.max(...Object.values(shapes).map(v => v.y + v.height)) + 25;
     candidates.push([P(sc.x, s.y + s.height), P(sc.x, bottom), P(tc.x, bottom), P(tc.x, t.y + t.height)]);

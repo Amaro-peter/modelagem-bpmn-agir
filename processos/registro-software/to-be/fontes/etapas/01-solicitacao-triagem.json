@@ -12,16 +12,12 @@
           "name": "INTERESSADO (portal)"
         },
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
-        },
-        {
-          "id": "L_BOLS",
-          "name": "AGIR – Bolsista"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI (sistema)",
+          "name": "Plataforma de Gestão de PI",
           "color": {
             "fill": "#f3eefa",
             "stroke": "#6a3d9a"
@@ -32,72 +28,55 @@
         {
           "id": "e1_ini",
           "type": "start",
-          "name": "Necessidade de registrar o software",
           "lane": "L_INT",
+          "name": "Necessidade de registrar o software",
           "status": "nova"
         },
         {
           "id": "t_sol",
           "type": "user",
-          "name": "Preencher a solicitação inicial no portal (formulário estruturado)",
           "lane": "L_INT",
+          "name": "Enviar a solicitação pelo portal (formulário estruturado)",
           "status": "nova"
         },
         {
           "id": "t_reg",
           "type": "service",
-          "name": "Registrar a solicitação e gerar o protocolo de acompanhamento",
           "lane": "L_PLAT",
-          "status": "nova"
-        },
-        {
-          "id": "t_sei1",
-          "type": "service",
-          "name": "Abrir o processo no SEI e incluir o requerimento (Web Service)",
-          "lane": "L_PLAT",
+          "name": "Registrar a solicitação, abrir o processo no SEI e notificar o interessado",
           "status": "nova",
-          "note": "Integração pelos Web Services do SEI: depende de aprovação da STI/UFF"
+          "note": "Web Services do SEI: dependem de aprovação da STI/UFF"
         },
         {
-          "id": "g_sei1",
-          "type": "xor",
-          "name": "Integração com o SEI ok?",
-          "lane": "L_PLAT",
+          "id": "t_reg_err",
+          "type": "boundary",
+          "attachedTo": "t_reg",
+          "event": "error",
+          "interrupting": true,
+          "name": "Falha na integração com o SEI",
           "status": "nova"
         },
         {
-          "id": "t_sei1m",
+          "id": "t_reg_man",
           "type": "user",
-          "name": "Abrir o processo no SEI e vincular o número (contingência)",
-          "lane": "L_BOLS",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Abrir o processo no SEI manualmente e vincular (contingência)",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
-          "id": "j_sei1",
+          "id": "j_tri",
           "type": "xor",
-          "lane": "L_PLAT",
-          "status": "nova"
-        },
-        {
-          "id": "t_not1",
-          "type": "send",
-          "name": "Notificar o interessado: solicitação recebida",
-          "lane": "L_PLAT",
-          "status": "nova"
-        },
-        {
-          "id": "t_fila",
-          "type": "service",
-          "name": "Distribuir na fila de triagem e iniciar o prazo de atendimento",
-          "lane": "L_PLAT",
+          "lane": "L_AGIR",
           "status": "nova"
         },
         {
           "id": "t_tri",
           "type": "user",
-          "name": "Fazer a triagem da solicitação (requisitos iniciais)",
-          "lane": "L_BOLS",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Fazer a triagem (requisitos iniciais)",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
           "id": "t_tri_b",
@@ -105,57 +84,46 @@
           "attachedTo": "t_tri",
           "event": "timer",
           "interrupting": false,
-          "timer": "P2D",
           "name": "Prazo de triagem vencido",
-          "status": "nova"
+          "status": "nova",
+          "timer": "P2D"
         },
         {
           "id": "t_tri_alerta",
-          "type": "send",
-          "name": "Alertar a equipe e o servidor sobre a triagem atrasada",
-          "lane": "L_PLAT",
-          "status": "nova"
-        },
-        {
-          "id": "t_tri_alerta_fim",
           "type": "end",
-          "name": "Alerta registrado",
           "lane": "L_PLAT",
-          "status": "nova"
+          "name": "Equipe e servidor alertados",
+          "status": "nova",
+          "event": "message"
         },
         {
           "id": "g_req",
           "type": "xor",
-          "name": "Atende aos requisitos iniciais?",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
+          "name": "Atende aos requisitos?",
           "status": "nova"
         },
         {
           "id": "t_enc1",
           "type": "user",
-          "name": "Confirmar o encerramento e assinar o despacho (SEI)",
-          "lane": "L_SERV",
-          "status": "nova"
-        },
-        {
-          "id": "t_not_enc1",
-          "type": "send",
-          "name": "Notificar o interessado com a justificativa",
-          "lane": "L_PLAT",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Assinar o despacho de encerramento (SEI)",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "e1_fim",
           "type": "end",
-          "name": "Encerrado na triagem",
           "lane": "L_PLAT",
-          "status": "nova"
+          "name": "Encerrado na triagem (interessado notificado)",
+          "status": "nova",
+          "event": "message"
         },
         {
           "id": "fim_g_req_e2",
           "type": "end",
           "name": "→ Etapa 2 – Reunião inicial e avaliação",
-          "lane": "L_BOLS"
+          "lane": "L_AGIR"
         }
       ],
       "flows": [
@@ -169,36 +137,18 @@
         ],
         [
           "t_reg",
-          "t_sei1"
+          "j_tri"
         ],
         [
-          "t_sei1",
-          "g_sei1"
+          "t_reg_err",
+          "t_reg_man"
         ],
         [
-          "g_sei1",
-          "j_sei1",
-          "Sim"
+          "t_reg_man",
+          "j_tri"
         ],
         [
-          "g_sei1",
-          "t_sei1m",
-          "Não"
-        ],
-        [
-          "t_sei1m",
-          "j_sei1"
-        ],
-        [
-          "j_sei1",
-          "t_not1"
-        ],
-        [
-          "t_not1",
-          "t_fila"
-        ],
-        [
-          "t_fila",
+          "j_tri",
           "t_tri"
         ],
         [
@@ -210,20 +160,12 @@
           "t_tri_alerta"
         ],
         [
-          "t_tri_alerta",
-          "t_tri_alerta_fim"
-        ],
-        [
           "g_req",
           "t_enc1",
           "Não"
         ],
         [
           "t_enc1",
-          "t_not_enc1"
-        ],
-        [
-          "t_not_enc1",
           "e1_fim"
         ],
         [
@@ -235,7 +177,7 @@
     },
     {
       "id": "Pool_SEI",
-      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "name": "SEI – registro oficial da UFF",
       "blackbox": true,
       "color": {
         "fill": "#f1f1f1",
@@ -245,9 +187,10 @@
   ],
   "messageFlows": [
     [
-      "t_sei1",
+      "t_reg",
       "Pool_SEI",
       "Gerar processo"
     ]
-  ]
+  ],
+  "compacto": true
 }

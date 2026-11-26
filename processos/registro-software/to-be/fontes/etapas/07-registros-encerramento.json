@@ -13,8 +13,8 @@
       "processId": "ToBe_Registro_Software_Etapa7",
       "lanes": [
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_UFF",
@@ -32,31 +32,34 @@
           "id": "a_gw_cotitular",
           "type": "xor",
           "name": "O ativo possui cotitularidade?",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "a_desp_enc_sem_cot",
           "type": "task",
           "name": "Elaborar despacho de encerramento",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "a_fim_sem_cot",
           "type": "end",
           "name": "Encerrado: registro concluído",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "a_minuta",
           "type": "task",
           "name": "Anexar minuta do Contrato de Ajuste de Propriedade Intelectual",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "a_desp_encam_proger",
           "type": "task",
           "name": "Elaborar despacho de encaminhamento",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "uff_parecer",
@@ -68,30 +71,34 @@
           "id": "a_contrato",
           "type": "task",
           "name": "Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "a_email_cadastro",
           "type": "send",
           "name": "Enviar e-mail com orientações sobre o cadastro de usuários externos",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "a_disp_contrato",
           "type": "task",
           "name": "Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "a_and_assinaturas",
           "type": "and",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "a_assinar_contrato",
           "type": "user",
           "name": "Assinar o Contrato de Ajuste (AGIR)",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "uff_assinar_contrato",
@@ -104,24 +111,25 @@
           "type": "catch",
           "event": "message",
           "name": "Assinaturas dos cotitulares externos concluídas",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "a_and_assinaturas_fim",
           "type": "and",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "a_desp_enc_cot",
           "type": "task",
           "name": "Elaborar despacho de encerramento",
-          "lane": "L_SERV"
+          "lane": "L_AGIR",
+          "papel": "servidor"
         },
         {
           "id": "a_fim_cot",
           "type": "end",
           "name": "Encerrado: contrato disponibilizado",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         },
         {
           "id": "ini_uff_registros_e6",
@@ -228,5 +236,6 @@
       "a_ass_externas",
       "Contrato assinado"
     ]
-  ]
+  ],
+  "compacto": true
 }

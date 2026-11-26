@@ -12,16 +12,12 @@
           "name": "INTERESSADO (portal)"
         },
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
-        },
-        {
-          "id": "L_BOLS",
-          "name": "AGIR – Bolsista"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI (sistema)",
+          "name": "Plataforma de Gestão de PI",
           "color": {
             "fill": "#f3eefa",
             "stroke": "#6a3d9a"
@@ -38,8 +34,8 @@
         {
           "id": "t_hor",
           "type": "send",
-          "name": "Oferecer ao interessado os horários livres da agenda da equipe",
           "lane": "L_PLAT",
+          "name": "Oferecer ao interessado os horários livres da equipe",
           "status": "nova"
         },
         {
@@ -51,149 +47,129 @@
         {
           "id": "t_esc",
           "type": "user",
-          "name": "Escolher o horário da reunião no portal",
           "lane": "L_INT",
+          "name": "Escolher o horário da reunião no portal",
           "status": "nova"
         },
         {
           "id": "t_conf",
           "type": "service",
-          "name": "Confirmar a reunião: convite de calendário e lembrete na véspera",
           "lane": "L_PLAT",
+          "name": "Confirmar a reunião (convite e lembrete na véspera)",
           "status": "nova"
         },
         {
           "id": "c_data",
           "type": "catch",
-          "name": "Data e hora da reunião",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
+          "name": "Data da reunião",
           "status": "nova",
           "event": "timer"
         },
         {
           "id": "g_comp",
           "type": "xor",
-          "name": "O interessado compareceu?",
-          "lane": "L_SERV",
-          "status": "nova"
-        },
-        {
-          "id": "t_falta",
-          "type": "send",
-          "name": "Registrar a ausência e notificar o interessado",
-          "lane": "L_PLAT",
+          "lane": "L_AGIR",
+          "name": "Interessado compareceu?",
           "status": "nova"
         },
         {
           "id": "t_reuniao",
           "type": "user",
-          "name": "Conduzir a reunião inicial e avaliar o ativo",
-          "lane": "L_SERV",
-          "status": "nova"
-        },
-        {
-          "id": "t_ata",
-          "type": "user",
-          "name": "Registrar a ata e o parecer na plataforma",
-          "lane": "L_BOLS",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Conduzir a reunião, avaliar o ativo e registrar a ata",
+          "status": "nova",
+          "papel": "servidor (ata: bolsista)"
         },
         {
           "id": "g_aval",
           "type": "xor",
-          "name": "Avaliação positiva para a continuidade?",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
+          "name": "Avaliação positiva?",
           "status": "nova"
         },
         {
           "id": "t_enc2",
           "type": "user",
+          "lane": "L_AGIR",
           "name": "Assinar o despacho de encerramento (SEI)",
-          "lane": "L_SERV",
-          "status": "nova"
-        },
-        {
-          "id": "t_not_enc2",
-          "type": "send",
-          "name": "Notificar o interessado com a justificativa",
-          "lane": "L_PLAT",
-          "status": "nova"
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "e2_fim",
           "type": "end",
-          "name": "Encerrado: avaliação negativa",
           "lane": "L_PLAT",
-          "status": "nova"
+          "name": "Encerrado: avaliação negativa (interessado notificado)",
+          "status": "nova",
+          "event": "message"
         },
         {
-          "id": "i2_b_lem",
+          "id": "lk_hor_out",
+          "type": "throw",
+          "lane": "L_AGIR",
+          "name": "Oferecer novos horários",
+          "status": "nova",
+          "event": "link"
+        },
+        {
+          "id": "lk_hor_in",
+          "type": "catch",
+          "lane": "L_PLAT",
+          "name": "Oferecer novos horários",
+          "status": "nova",
+          "event": "link"
+        },
+        {
+          "id": "i2_lem",
           "type": "boundary",
           "attachedTo": "t_esc",
           "event": "timer",
           "interrupting": false,
-          "timer": "P5D",
-          "name": "Lembretes: 5 e 10 dias úteis",
-          "status": "nova"
-        },
-        {
-          "id": "i2_lem",
-          "type": "send",
-          "name": "Enviar lembrete automático ao interessado",
-          "lane": "L_PLAT",
-          "status": "nova"
+          "name": "Lembretes (5 e 10 dias úteis)",
+          "status": "nova",
+          "timer": "P5D"
         },
         {
           "id": "i2_lem_fim",
           "type": "end",
-          "name": "Lembrete enviado",
           "lane": "L_PLAT",
-          "status": "nova"
+          "name": "Lembrete enviado",
+          "status": "nova",
+          "event": "message"
         },
         {
-          "id": "i2_b_30",
+          "id": "i2_30",
           "type": "boundary",
           "attachedTo": "t_esc",
           "event": "timer",
           "interrupting": true,
-          "timer": "P30D",
           "name": "30 dias sem resposta",
-          "status": "nova"
+          "status": "nova",
+          "timer": "P30D"
         },
         {
           "id": "i2_dec",
           "type": "user",
-          "name": "Decidir: arquivar ou prorrogar o prazo",
-          "lane": "L_SERV",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Decidir: arquivar (despacho no SEI) ou prorrogar",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "i2_gw",
           "type": "xor",
+          "lane": "L_AGIR",
           "name": "Arquivar?",
-          "lane": "L_SERV",
-          "status": "nova"
-        },
-        {
-          "id": "i2_arq",
-          "type": "user",
-          "name": "Assinar despacho de arquivamento (SEI)",
-          "lane": "L_SERV",
-          "status": "nova"
-        },
-        {
-          "id": "i2_not",
-          "type": "send",
-          "name": "Notificar o interessado do arquivamento",
-          "lane": "L_PLAT",
           "status": "nova"
         },
         {
           "id": "i2_fim",
           "type": "end",
-          "name": "Arquivado por falta de resposta",
           "lane": "L_PLAT",
-          "status": "nova"
+          "name": "Arquivado por falta de resposta (interessado notificado)",
+          "status": "nova",
+          "event": "message"
         },
         {
           "id": "ini_j_hor_e1",
@@ -205,7 +181,7 @@
           "id": "fim_g_aval_e3",
           "type": "end",
           "name": "→ Etapa 3 – Coleta estruturada e validação",
-          "lane": "L_SERV"
+          "lane": "L_AGIR"
         }
       ],
       "flows": [
@@ -239,11 +215,11 @@
         ],
         [
           "g_comp",
-          "t_falta",
+          "lk_hor_out",
           "Não"
         ],
         [
-          "t_falta",
+          "lk_hor_in",
           "j_hor"
         ],
         [
@@ -253,10 +229,6 @@
         ],
         [
           "t_reuniao",
-          "t_ata"
-        ],
-        [
-          "t_ata",
           "g_aval"
         ],
         [
@@ -266,22 +238,14 @@
         ],
         [
           "t_enc2",
-          "t_not_enc2"
-        ],
-        [
-          "t_not_enc2",
           "e2_fim"
-        ],
-        [
-          "i2_b_lem",
-          "i2_lem"
         ],
         [
           "i2_lem",
           "i2_lem_fim"
         ],
         [
-          "i2_b_30",
+          "i2_30",
           "i2_dec"
         ],
         [
@@ -290,16 +254,8 @@
         ],
         [
           "i2_gw",
-          "i2_arq",
+          "i2_fim",
           "Sim"
-        ],
-        [
-          "i2_arq",
-          "i2_not"
-        ],
-        [
-          "i2_not",
-          "i2_fim"
         ],
         [
           "i2_gw",
@@ -314,5 +270,6 @@
       ]
     }
   ],
-  "messageFlows": []
+  "messageFlows": [],
+  "compacto": true
 }

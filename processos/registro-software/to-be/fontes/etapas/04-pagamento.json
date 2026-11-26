@@ -8,16 +8,12 @@
       "processId": "ToBe_Registro_Software_Etapa4",
       "lanes": [
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
-        },
-        {
-          "id": "L_BOLS",
-          "name": "AGIR – Bolsista"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI (sistema)",
+          "name": "Plataforma de Gestão de PI",
           "color": {
             "fill": "#f3eefa",
             "stroke": "#6a3d9a"
@@ -28,58 +24,61 @@
         {
           "id": "j_gru",
           "type": "xor",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "status": "nova"
         },
         {
           "id": "t_gru",
           "type": "user",
+          "lane": "L_AGIR",
           "name": "Emitir a GRU 730 no e-INPI (cadastro da UFF)",
-          "lane": "L_BOLS",
-          "status": "nova"
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
-          "id": "g_einpi",
-          "type": "xor",
-          "name": "e-INPI disponível?",
-          "lane": "L_BOLS",
+          "id": "t_gru_err",
+          "type": "boundary",
+          "attachedTo": "t_gru",
+          "event": "error",
+          "interrupting": true,
+          "name": "e-INPI indisponível",
           "status": "nova"
         },
         {
           "id": "c_retry",
           "type": "catch",
-          "name": "Nova tentativa (intervalo parametrizável)",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
+          "name": "Nova tentativa",
           "status": "nova",
           "event": "timer"
         },
         {
           "id": "t_pagar",
           "type": "user",
+          "lane": "L_AGIR",
           "name": "Efetuar o pagamento da GRU",
-          "lane": "L_SERV"
+          "papel": "servidor"
         },
         {
           "id": "c_comp",
           "type": "catch",
-          "name": "Compensação do pagamento (cerca de 24 h)",
           "lane": "L_PLAT",
+          "name": "Compensação (cerca de 24 h)",
           "status": "nova",
           "event": "timer"
         },
         {
           "id": "t_comp",
           "type": "service",
-          "name": "Registrar o pagamento e anexar o comprovante ao SEI (Web Service)",
           "lane": "L_PLAT",
-          "status": "nova",
-          "note": "Se o SEI estiver indisponível: contingência manual pelo bolsista, como nas Etapas 1 e 3"
+          "name": "Anexar o comprovante de pagamento ao SEI",
+          "status": "nova"
         },
         {
           "id": "ini_j_gru_e3",
           "type": "start",
           "name": "(Etapa 3 – Coleta estruturada e validação)",
-          "lane": "L_BOLS"
+          "lane": "L_AGIR"
         },
         {
           "id": "fim_t_comp_e5",
@@ -99,21 +98,7 @@
         ],
         [
           "t_gru",
-          "g_einpi"
-        ],
-        [
-          "g_einpi",
-          "c_retry",
-          "Não"
-        ],
-        [
-          "c_retry",
-          "j_gru"
-        ],
-        [
-          "g_einpi",
-          "t_pagar",
-          "Sim"
+          "t_pagar"
         ],
         [
           "t_pagar",
@@ -122,6 +107,14 @@
         [
           "c_comp",
           "t_comp"
+        ],
+        [
+          "t_gru_err",
+          "c_retry"
+        ],
+        [
+          "c_retry",
+          "j_gru"
         ],
         [
           "t_comp",
@@ -140,7 +133,7 @@
     },
     {
       "id": "Pool_SEI",
-      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "name": "SEI – registro oficial da UFF",
       "blackbox": true,
       "color": {
         "fill": "#f1f1f1",
@@ -159,5 +152,6 @@
       "Pool_INPI",
       "Emitir GRU"
     ]
-  ]
+  ],
+  "compacto": true
 }

@@ -8,16 +8,12 @@
       "processId": "ToBe_Registro_Software_Etapa5",
       "lanes": [
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
-        },
-        {
-          "id": "L_BOLS",
-          "name": "AGIR – Bolsista"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI (sistema)",
+          "name": "Plataforma de Gestão de PI",
           "color": {
             "fill": "#f3eefa",
             "stroke": "#6a3d9a"
@@ -28,75 +24,61 @@
         {
           "id": "t_ficha",
           "type": "service",
-          "name": "Gerar a ficha de preenchimento do e-Software (versão aprovada)",
           "lane": "L_PLAT",
+          "name": "Gerar a ficha de preenchimento do e-Software",
           "status": "nova"
         },
         {
           "id": "t_dv",
           "type": "user",
-          "name": "Baixar a Declaração de Veracidade (DV) vinculada à GRU",
-          "lane": "L_BOLS"
-        },
-        {
-          "id": "t_dv_ass",
-          "type": "user",
-          "name": "Assinar a DV digitalmente (certificado ICP-Brasil)",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
+          "name": "Baixar e assinar a DV (ICP-Brasil)",
+          "status": "nova",
+          "papel": "bolsista baixa; servidor assina",
           "note": "Representante da AGIR que utiliza e-CNPJ da UFF com procuração."
         },
         {
           "id": "j_fill",
           "type": "xor",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "status": "nova"
         },
         {
           "id": "t_fill",
           "type": "user",
-          "name": "Preencher o e-Software pela ficha e conferir campo a campo (sem enviar)",
-          "lane": "L_BOLS",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Preencher o e-Software pela ficha e conferir campo a campo",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
           "id": "t_valfinal",
           "type": "user",
-          "name": "Validar o preenchimento final contra a ficha aprovada",
-          "lane": "L_SERV",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Validar o preenchimento final",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "g_valfinal",
           "type": "xor",
+          "lane": "L_AGIR",
           "name": "Preenchimento correto?",
-          "lane": "L_SERV",
           "status": "nova"
         },
         {
           "id": "t_envia",
           "type": "send",
-          "name": "Enviar o pedido de registro ao INPI",
-          "lane": "L_SERV"
-        },
-        {
-          "id": "t_recibo",
-          "type": "user",
-          "name": "Registrar o número do pedido e o recibo na plataforma",
-          "lane": "L_BOLS",
-          "status": "nova"
+          "lane": "L_AGIR",
+          "name": "Enviar o pedido ao INPI e registrar o número",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "t_monit",
           "type": "service",
-          "name": "Anexar o recibo ao SEI e iniciar o acompanhamento do pedido",
           "lane": "L_PLAT",
-          "status": "nova"
-        },
-        {
-          "id": "t_not5",
-          "type": "send",
-          "name": "Notificar o interessado: pedido protocolado",
-          "lane": "L_PLAT",
+          "name": "Anexar o recibo ao SEI, iniciar o acompanhamento e notificar",
           "status": "nova"
         },
         {
@@ -106,7 +88,7 @@
           "lane": "L_PLAT"
         },
         {
-          "id": "fim_t_not5_e6",
+          "id": "fim_t_monit_e6",
           "type": "end",
           "name": "→ Etapa 6 – Acompanhamento do INPI e conferência do certificado",
           "lane": "L_PLAT"
@@ -123,10 +105,6 @@
         ],
         [
           "t_dv",
-          "t_dv_ass"
-        ],
-        [
-          "t_dv_ass",
           "j_fill"
         ],
         [
@@ -144,7 +122,7 @@
         [
           "g_valfinal",
           "j_fill",
-          "Não, devolver com apontamentos"
+          "Não"
         ],
         [
           "g_valfinal",
@@ -153,19 +131,11 @@
         ],
         [
           "t_envia",
-          "t_recibo"
-        ],
-        [
-          "t_recibo",
           "t_monit"
         ],
         [
           "t_monit",
-          "t_not5"
-        ],
-        [
-          "t_not5",
-          "fim_t_not5_e6"
+          "fim_t_monit_e6"
         ]
       ],
       "groups": [
@@ -174,7 +144,6 @@
           "name": "Realizar registro junto ao INPI",
           "nodes": [
             "t_dv",
-            "t_dv_ass",
             "t_fill",
             "t_valfinal",
             "t_envia"
@@ -193,7 +162,7 @@
     },
     {
       "id": "Pool_SEI",
-      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "name": "SEI – registro oficial da UFF",
       "blackbox": true,
       "color": {
         "fill": "#f1f1f1",
@@ -212,5 +181,6 @@
       "Pool_INPI",
       "Pedido (e-Software)"
     ]
-  ]
+  ],
+  "compacto": true
 }

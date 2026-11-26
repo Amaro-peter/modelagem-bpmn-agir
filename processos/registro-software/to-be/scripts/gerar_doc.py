@@ -38,6 +38,7 @@ w('**Legenda:**')
 w('- 🟩 verde = atividade nova ou alterada em relação ao AS-IS;')
 w('- sem cor = mantida igual ao AS-IS;')
 w('- raia lilás = **Plataforma de Gestão de PI** (atividades automáticas);')
+w('- eventos com envelope = notificações automáticas ao interessado ou à equipe;')
 w('- pool azul = INPI; pool cinza = SEI (registro oficial).\n')
 
 w('## 1. Diagramas\n')
@@ -50,8 +51,7 @@ for k, e in sorted(etapas.items()):
     w(f'| Etapa {k} – {e["nome"]} | [{f}.bpmn](../etapas/{f}.bpmn) · [imagem](../etapas/{f}.png) |')
 w('\n**Participantes:**')
 w('- **Interessado**, que passa a usar o portal.')
-w('- **AGIR – Servidor administrativo** decide, assina despachos e a DV, paga e faz as validações finais.')
-w('- **AGIR – Bolsista** opera: triagem, conferências, preenchimento assistido e consultas.')
+w('- **AGIR (servidores e bolsistas)**, numa raia só. A divisão "bolsista opera, servidor decide" está registrada em cada tarefa e aparece na tabela da seção 4.')
 w('- **Outras unidades da UFF** cuidam dos registros patrimonial e contábil, do parecer jurídico e da assinatura da Reitoria.')
 w('- **Plataforma de Gestão de PI** executa as atividades automáticas.')
 w('- **Participantes externos:**')
@@ -68,22 +68,22 @@ for g in [
      'Etapa 1 (registro, notificação, fila, evento de borda "Prazo de triagem vencido"); Etapa 2 (autoagendamento, confirmação, lembrete)'),
     ('3.2 E-mails perdidos e controle na memória das pessoas',
      'Toda comunicação passa pela plataforma (portal + e-mail automático) e fica no histórico do pedido. Pendências têm dono e prazo, com lembretes e escalonamento. Nada depende de caixa de e-mail pessoal.',
-     'Raia da Plataforma (tarefas "Notificar…", "Enviar lembrete…", "Alertar…"); eventos de borda de lembrete e de 30 dias'),
+     'Raia da Plataforma (notificações, lembretes e alertas, como tarefas ou eventos de mensagem); eventos de borda de lembrete e de 30 dias'),
     ('3.3 Falta de acompanhamento sistemático no INPI',
      'Monitoramento individual de cada pedido: leitura semanal da RPI, leitura dos e-mails "Meus Pedidos", janela parametrizável (10 dias alerta o bolsista, 15 dias escala ao servidor) e registro de cada consulta.',
-     'Etapa 6 (gateway de eventos "Aguardar novidade do pedido" e seus três gatilhos)'),
+     'Etapa 6 (gateway de eventos "Aguardar novidade" e seus três gatilhos)'),
     ('3.4 Interpretação das informações enviadas pelo interessado',
      'Formulário estruturado com campos obrigatórios, orientações, validação automática (formatos, CPF, coerência) e hash calculado no navegador. Inconsistências voltam com apontamentos objetivos.',
-     'Etapa 3 (formulário, hash, validação automática, apontamento de pendências)'),
+     'Etapa 3 (formulário, hash e validação automática, pendências apontadas no portal)'),
     ('3.5 Erros de preenchimento no e-Software',
      'Ficha de preenchimento gerada da versão aprovada pelo interessado. O bolsista preenche e confere campo a campo, e o servidor valida antes de enviar. É uma dupla conferência que não depende de API do INPI.',
      'Etapa 3 (aceite eletrônico e versão aprovada); Etapa 5 (ficha, conferência, validação final)'),
     ('3.6 Demora na comunicação do andamento',
      'Notificações automáticas em cada mudança de situação (recebimento, agendamento, pendências, aprovação dos dados, protocolo, decisão do INPI, correção, certificado), além do painel no portal.',
-     'Tarefas "Notificar o interessado…" em todas as etapas'),
+     'Notificações automáticas da Plataforma (tarefas e eventos de mensagem) em todas as etapas'),
     ('3.7 Certificados com erro e correções posteriores',
      'Antes do protocolo: validação automática, conferência humana, aceite do interessado e validação final. Depois da emissão: comparação automática do certificado com a versão aprovada e validação do servidor. Em caso de divergência, a correção segue a origem do erro (serviço 747 se veio dos dados da AGIR, Fale Conosco se o erro é do INPI).',
-     'Etapas 3 e 5 (prevenção); Etapa 6 ("Extrair os dados do certificado e comparar…", "Origem do erro")'),
+     'Etapas 3 e 5 (prevenção); Etapa 6 ("Comparar o certificado com a versão aprovada", "Pedir a correção ao INPI")'),
 ]:
     w(f'| {g[0]} | {g[1]} | {g[2]} |')
 
@@ -127,31 +127,38 @@ w('- Todas são repetitivas e baseadas em regras: registrar, notificar, lembrar,
 w('- Hoje elas dependem da memória e da caixa de e-mail de cada pessoa, que é a origem dos gargalos 3.1 a 3.3 e 3.6.')
 w('- Nenhuma delas toma decisão administrativa.\n')
 w('### Atividades mantidas sob responsabilidade humana')
-for role in ['L_INT', 'L_SERV', 'L_BOLS', 'L_UFF']:
+for role in ['L_INT', 'L_UFF']:
     items = [n for n in human if n['lane'] == role]
     if items:
         w(f'**{lanes[role]}** ({len(items)}): ' + '; '.join(dict.fromkeys(n['name'] for n in items)) + '.\n')
+agir = [n for n in human if n['lane'] == 'L_AGIR']
+w(f'**{lanes["L_AGIR"]}** ({len(agir)}). Quem faz o quê:\n')
+w('| Etapa | Atividade | Papel |')
+w('|---|---|---|')
+for n in agir:
+    w(f'| {n["etapa"]} | {n["name"]} | {n.get("papel", "–")} |')
+w('')
 w('**Por que essas atividades continuam com pessoas:**')
 w('- Decisões institucionais (triagem, avaliação do ativo, arquivamento, validação final do pedido e do certificado), atos oficiais no SEI, assinatura da DV com certificado ICP-Brasil e o pagamento exigem responsabilidade de servidor.')
 w('- O envio ao INPI continua humano: não há API, e a responsabilidade é da AGIR.')
 w('- O interessado mantém o que só ele pode fazer: fornecer os dados e confirmá-los.')
-w('- **Nenhuma decisão foi transferida para a plataforma:** os gateways de decisão humana ("Atende aos requisitos?", "Avaliação positiva?", "Arquivar?", "Preenchimento correto?", "Origem do erro") ficam nas raias de servidor ou bolsista. Os gateways da plataforma só verificam fatos objetivos (validação de formato, integração ok, publicação encontrada, divergência encontrada).\n')
+w('- **Nenhuma decisão foi transferida para a plataforma:** os gateways de decisão humana ("Atende aos requisitos?", "Avaliação positiva?", "Arquivar?", "Preenchimento correto?") ficam na raia da AGIR, e a origem de um erro no certificado é avaliada pela equipe em "Pedir a correção ao INPI". Os gateways da plataforma só verificam fatos objetivos (validação de formato, integração ok, publicação encontrada, divergência encontrada).\n')
 
 w('## 5. Tratamento de exceções\n')
 w('| Exceção | Mecanismo no modelo | Recuperação |')
 w('|---|---|---|')
 for x in [
-    ('Interessado não responde (horário, formulário, aceite)', 'Eventos de borda: lembretes automáticos (5 e 10 dias úteis, não interruptivo) e "30 dias sem resposta" (interruptivo)', 'O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade)'),
-    ('Interessado não comparece à reunião', 'Gateway "O interessado compareceu?"', 'A ausência é registrada e novos horários são oferecidos'),
-    ('Documentação incompleta ou inconsistente', 'Validação automática ("Dados consistentes?") e conferência do bolsista ("Conferência ok?")', 'Apontamentos objetivos e volta ao formulário'),
+    ('Interessado não responde (horário, formulário, aceite)', 'Eventos de borda: lembretes automáticos (5 e 10 dias úteis, não interruptivo) e "30 dias sem resposta" (interruptivo). No aceite, a mesma regra vem indicada em anotação', 'O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade)'),
+    ('Interessado não comparece à reunião', 'Gateway "Interessado compareceu?" + link "Oferecer novos horários"', 'Novos horários são oferecidos'),
+    ('Documentação incompleta ou inconsistente', 'Validação automática ("Dados consistentes?") e conferência do bolsista ("Conferência ok?")', 'Pendências apontadas no portal e volta ao formulário'),
     ('Dados não confirmados pelo interessado', 'Gateway "Dados confirmados?"', 'Volta ao formulário para ajuste'),
     ('Erro de preenchimento no e-Software', 'Validação final do servidor ("Preenchimento correto?")', 'Devolução ao bolsista com apontamentos, antes de enviar'),
-    ('SEI indisponível ou integração não aprovada', 'Gateways "Integração com o SEI ok?" (Etapas 1 e 3) e anotação na Etapa 4', 'Contingência: o bolsista lança no SEI e vincula o número na plataforma'),
-    ('e-INPI indisponível', 'Gateway "e-INPI disponível?" + timer "Nova tentativa"', 'Novas tentativas em intervalo parametrizável'),
+    ('SEI indisponível ou integração não aprovada', 'Evento de borda de erro "Falha na integração com o SEI" (Etapa 1); vale a mesma regra nas demais inclusões no SEI', 'Contingência: o bolsista lança no SEI e vincula o número na plataforma'),
+    ('e-INPI indisponível', 'Evento de borda de erro "e-INPI indisponível" + timer "Nova tentativa"', 'Novas tentativas em intervalo parametrizável'),
     ('Triagem atrasada', 'Evento de borda "Prazo de triagem vencido" (não interruptivo)', 'Alerta à equipe e ao servidor'),
-    ('INPI sem novidade no prazo', 'Timer "Prazo de acompanhamento vencido" no gateway de eventos', 'Com 10 dias, consulta do bolsista no Busca Web; com 15 dias, escala ao servidor'),
+    ('INPI sem novidade no prazo', 'Timer "10 dias sem novidade (15: escala)" no gateway de eventos', 'Com 10 dias, consulta do bolsista no Busca Web; com 15 dias, escala ao servidor'),
     ('Pedido não conhecido (742)', 'Ramo "742" do gateway "Despacho"', 'Encerramento com despacho e comunicação ao interessado (conforme o AS-IS confirmado)'),
-    ('Certificado com divergência', 'Comparação automática + "Origem do erro"', 'Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido'),
+    ('Certificado com divergência', 'Comparação automática + "Pedir a correção ao INPI"', 'Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido'),
 ]:
     w(f'| {x[0]} | {x[1]} | {x[2]} |')
 
@@ -159,7 +166,7 @@ w('\n## 6. Aderência às restrições institucionais\n')
 w('| Restrição | Como o TO-BE atende |')
 w('|---|---|')
 w('| SEI obrigatório | O SEI continua como registro oficial em todas as etapas: abertura, documentos, comprovante, recibo, certificado e despachos. A plataforma **espelha** no SEI e não o substitui; se a integração falhar, há caminho manual |')
-w('| Sem ampliação da equipe | As raias humanas são as mesmas (servidores e bolsistas atuais). As tarefas de controle (prazos, lembretes, notificações, consultas periódicas, conferências mecânicas) passam para a plataforma, liberando a equipe para as decisões |')
+w('| Sem ampliação da equipe | A AGIR atua com os mesmos servidores e bolsistas de hoje. As tarefas de controle (prazos, lembretes, notificações, consultas periódicas, conferências mecânicas) passam para a plataforma, liberando a equipe para as decisões |')
 w('| Investimento em tecnologia | Plataforma sob medida financiada pelo Novo PAC (seção 3), com módulos ligados a cada gargalo |')
 w('| Exigências legais e do INPI preservadas | Nenhuma etapa obrigatória foi removida: GRU paga antes do pedido, DV assinada com ICP-Brasil (e-CNPJ da UFF com procuração), protocolo no e-Software, despachos no SEI, registros patrimonial e contábil, parecer jurídico e assinaturas do Contrato de Ajuste (Etapa 7 igual ao AS-IS) |')
 w('| Responsabilidade da AGIR | Decisões e validações ficam nas raias de servidor e bolsista (seção 4) |')
@@ -174,9 +181,13 @@ for k, e in sorted(etapas.items()):
     ta = [n for n in acts if n['etapa'] == k]
     au = [n for n in ta if n['lane'] == 'L_PLAT']
     w(f'| {k}. {e["nome"]} | {k}. {asis_names[k - 1]} | {asis_count(k)} | {len(ta)} | {len(au)} |')
-w('\nO número de atividades **cresce** no TO-BE, porque controles, notificações e validações que hoje são informais (ou não existem) passam a ser explícitos, '
-  'e a maior parte desse acréscimo é **automática**. Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, '
-  'e em menos retrabalho (correções de dados e de certificados).\n')
+tot_asis = sum(asis_count(k) for k in etapas)
+w(f'\n**Total:** {tot_asis} atividades no AS-IS, todas manuais, contra {len(acts)} no TO-BE, das quais **{len(human)} humanas** '
+  f'e **{len(auto)} automáticas**. As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. '
+  'O TO-BE fica praticamente do mesmo tamanho do AS-IS e ganha controles que hoje não existem: prazos, lembretes, '
+  'validação automática, aceite do interessado, conferência do certificado e acompanhamento do INPI. '
+  'Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, e em ter menos retrabalho '
+  '(correções de dados e de certificados).\n')
 
 w('## 8. Indicadores de desempenho (sem metas)\n')
 w('As metas ficam a cargo da AGIR. Todos os indicadores podem ser medidos pela plataforma a partir do histórico de cada pedido.\n')

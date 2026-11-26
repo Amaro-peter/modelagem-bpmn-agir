@@ -5,7 +5,9 @@ Estado **futuro** do processo, redesenhado para resolver os sete gargalos levant
 **Legenda:**
 - 🟩 verde = atividade nova ou alterada em relação ao [AS-IS](../);
 - sem cor = mantida igual;
+- raia **AGIR (servidores e bolsistas)**: o papel de cada tarefa está no documento;
 - raia lilás = **Plataforma de Gestão de PI** (atividades automáticas);
+- eventos com envelope = notificações automáticas;
 - pool azul = INPI; pool cinza = SEI.
 
 **Documento completo:** [to-be-registro-software.md](docs/to-be-registro-software.md). Ele traz:

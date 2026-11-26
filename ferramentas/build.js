@@ -179,7 +179,7 @@ async function buildWithLanes() {
   const diagrams = [];
   // plano principal
   {
-    const L = layoutDiagram(pools, def.messageFlows || [], { poolBand: multi, groups: pools.flatMap(p => p.groups || []) });
+    const L = layoutDiagram(pools, def.messageFlows || [], { poolBand: multi, groups: pools.flatMap(p => p.groups || []), compact: !!def.compacto });
     const pe = [];
     pools.forEach((p, i) => {
       if (multi) {

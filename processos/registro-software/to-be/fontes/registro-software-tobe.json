@@ -1,36 +1,37 @@
 {
   "id": "ToBe_Registro_Software",
   "name": "TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF",
+  "compacto": true,
   "etapas": [
     {
       "n": 1,
       "nome": "Solicitação e triagem",
       "slug": "solicitacao-triagem",
-      "dono": "L_BOLS"
+      "dono": "L_AGIR"
     },
     {
       "n": 2,
       "nome": "Reunião inicial e avaliação",
       "slug": "reuniao-avaliacao",
-      "dono": "L_SERV"
+      "dono": "L_AGIR"
     },
     {
       "n": 3,
       "nome": "Coleta estruturada e validação",
       "slug": "coleta-validacao",
-      "dono": "L_BOLS"
+      "dono": "L_INT"
     },
     {
       "n": 4,
       "nome": "Pagamento da GRU",
       "slug": "pagamento",
-      "dono": "L_SERV"
+      "dono": "L_AGIR"
     },
     {
       "n": 5,
       "nome": "Protocolo assistido no INPI",
       "slug": "protocolo",
-      "dono": "L_SERV"
+      "dono": "L_AGIR"
     },
     {
       "n": 6,
@@ -42,7 +43,7 @@
       "n": 7,
       "nome": "Registros internos, cotitularidade e encerramento",
       "slug": "registros-encerramento",
-      "dono": "L_SERV"
+      "dono": "L_AGIR"
     }
   ],
   "pools": [
@@ -62,12 +63,8 @@
           "name": "INTERESSADO (portal)"
         },
         {
-          "id": "L_SERV",
-          "name": "AGIR – Servidor administrativo"
-        },
-        {
-          "id": "L_BOLS",
-          "name": "AGIR – Bolsista"
+          "id": "L_AGIR",
+          "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_UFF",
@@ -75,7 +72,7 @@
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI (sistema)",
+          "name": "Plataforma de Gestão de PI",
           "color": {
             "fill": "#f3eefa",
             "stroke": "#6a3d9a"
@@ -86,82 +83,62 @@
         {
           "id": "e1_ini",
           "type": "start",
-          "name": "Necessidade de registrar o software",
           "lane": "L_INT",
           "etapa": 1,
+          "name": "Necessidade de registrar o software",
           "status": "nova"
         },
         {
           "id": "t_sol",
           "type": "user",
-          "name": "Preencher a solicitação inicial no portal (formulário estruturado)",
           "lane": "L_INT",
           "etapa": 1,
+          "name": "Enviar a solicitação pelo portal (formulário estruturado)",
           "status": "nova"
         },
         {
           "id": "t_reg",
           "type": "service",
-          "name": "Registrar a solicitação e gerar o protocolo de acompanhamento",
           "lane": "L_PLAT",
           "etapa": 1,
-          "status": "nova"
-        },
-        {
-          "id": "t_sei1",
-          "type": "service",
-          "name": "Abrir o processo no SEI e incluir o requerimento (Web Service)",
-          "lane": "L_PLAT",
-          "etapa": 1,
+          "name": "Registrar a solicitação, abrir o processo no SEI e notificar o interessado",
           "status": "nova",
-          "note": "Integração pelos Web Services do SEI: depende de aprovação da STI/UFF"
+          "note": "Web Services do SEI: dependem de aprovação da STI/UFF"
         },
         {
-          "id": "g_sei1",
-          "type": "xor",
-          "name": "Integração com o SEI ok?",
-          "lane": "L_PLAT",
+          "id": "t_reg_err",
+          "type": "boundary",
+          "attachedTo": "t_reg",
+          "event": "error",
+          "interrupting": true,
+          "name": "Falha na integração com o SEI",
           "etapa": 1,
           "status": "nova"
         },
         {
-          "id": "t_sei1m",
+          "id": "t_reg_man",
           "type": "user",
-          "name": "Abrir o processo no SEI e vincular o número (contingência)",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 1,
-          "status": "nova"
+          "name": "Abrir o processo no SEI manualmente e vincular (contingência)",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
-          "id": "j_sei1",
+          "id": "j_tri",
           "type": "xor",
-          "lane": "L_PLAT",
-          "etapa": 1,
-          "status": "nova"
-        },
-        {
-          "id": "t_not1",
-          "type": "send",
-          "name": "Notificar o interessado: solicitação recebida",
-          "lane": "L_PLAT",
-          "etapa": 1,
-          "status": "nova"
-        },
-        {
-          "id": "t_fila",
-          "type": "service",
-          "name": "Distribuir na fila de triagem e iniciar o prazo de atendimento",
-          "lane": "L_PLAT",
+          "lane": "L_AGIR",
           "etapa": 1,
           "status": "nova"
         },
         {
           "id": "t_tri",
           "type": "user",
-          "name": "Fazer a triagem da solicitação (requisitos iniciais)",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 1,
-          "status": "nova"
+          "name": "Fazer a triagem (requisitos iniciais)",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
           "id": "t_tri_b",
@@ -169,58 +146,45 @@
           "attachedTo": "t_tri",
           "event": "timer",
           "interrupting": false,
-          "timer": "P2D",
           "name": "Prazo de triagem vencido",
           "etapa": 1,
-          "status": "nova"
+          "status": "nova",
+          "timer": "P2D"
         },
         {
           "id": "t_tri_alerta",
-          "type": "send",
-          "name": "Alertar a equipe e o servidor sobre a triagem atrasada",
-          "lane": "L_PLAT",
-          "etapa": 1,
-          "status": "nova"
-        },
-        {
-          "id": "t_tri_alerta_fim",
           "type": "end",
-          "name": "Alerta registrado",
           "lane": "L_PLAT",
           "etapa": 1,
-          "status": "nova"
+          "name": "Equipe e servidor alertados",
+          "status": "nova",
+          "event": "message"
         },
         {
           "id": "g_req",
           "type": "xor",
-          "name": "Atende aos requisitos iniciais?",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 1,
+          "name": "Atende aos requisitos?",
           "status": "nova"
         },
         {
           "id": "t_enc1",
           "type": "user",
-          "name": "Confirmar o encerramento e assinar o despacho (SEI)",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 1,
-          "status": "nova"
-        },
-        {
-          "id": "t_not_enc1",
-          "type": "send",
-          "name": "Notificar o interessado com a justificativa",
-          "lane": "L_PLAT",
-          "etapa": 1,
-          "status": "nova"
+          "name": "Assinar o despacho de encerramento (SEI)",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "e1_fim",
           "type": "end",
-          "name": "Encerrado na triagem",
           "lane": "L_PLAT",
           "etapa": 1,
+          "name": "Encerrado na triagem (interessado notificado)",
           "status": "nova",
+          "event": "message",
           "desfecho": true
         },
         {
@@ -233,9 +197,9 @@
         {
           "id": "t_hor",
           "type": "send",
-          "name": "Oferecer ao interessado os horários livres da agenda da equipe",
           "lane": "L_PLAT",
           "etapa": 2,
+          "name": "Oferecer ao interessado os horários livres da equipe",
           "status": "nova"
         },
         {
@@ -248,178 +212,154 @@
         {
           "id": "t_esc",
           "type": "user",
-          "name": "Escolher o horário da reunião no portal",
           "lane": "L_INT",
           "etapa": 2,
+          "name": "Escolher o horário da reunião no portal",
           "status": "nova"
         },
         {
           "id": "t_conf",
           "type": "service",
-          "name": "Confirmar a reunião: convite de calendário e lembrete na véspera",
           "lane": "L_PLAT",
           "etapa": 2,
+          "name": "Confirmar a reunião (convite e lembrete na véspera)",
           "status": "nova"
         },
         {
           "id": "c_data",
           "type": "catch",
-          "name": "Data e hora da reunião",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 2,
+          "name": "Data da reunião",
           "status": "nova",
           "event": "timer"
         },
         {
           "id": "g_comp",
           "type": "xor",
-          "name": "O interessado compareceu?",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 2,
-          "status": "nova"
-        },
-        {
-          "id": "t_falta",
-          "type": "send",
-          "name": "Registrar a ausência e notificar o interessado",
-          "lane": "L_PLAT",
-          "etapa": 2,
+          "name": "Interessado compareceu?",
           "status": "nova"
         },
         {
           "id": "t_reuniao",
           "type": "user",
-          "name": "Conduzir a reunião inicial e avaliar o ativo",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 2,
-          "status": "nova"
-        },
-        {
-          "id": "t_ata",
-          "type": "user",
-          "name": "Registrar a ata e o parecer na plataforma",
-          "lane": "L_BOLS",
-          "etapa": 2,
-          "status": "nova"
+          "name": "Conduzir a reunião, avaliar o ativo e registrar a ata",
+          "status": "nova",
+          "papel": "servidor (ata: bolsista)"
         },
         {
           "id": "g_aval",
           "type": "xor",
-          "name": "Avaliação positiva para a continuidade?",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 2,
+          "name": "Avaliação positiva?",
           "status": "nova"
         },
         {
           "id": "t_enc2",
           "type": "user",
+          "lane": "L_AGIR",
+          "etapa": 2,
           "name": "Assinar o despacho de encerramento (SEI)",
-          "lane": "L_SERV",
-          "etapa": 2,
-          "status": "nova"
-        },
-        {
-          "id": "t_not_enc2",
-          "type": "send",
-          "name": "Notificar o interessado com a justificativa",
-          "lane": "L_PLAT",
-          "etapa": 2,
-          "status": "nova"
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "e2_fim",
           "type": "end",
-          "name": "Encerrado: avaliação negativa",
           "lane": "L_PLAT",
           "etapa": 2,
+          "name": "Encerrado: avaliação negativa (interessado notificado)",
           "status": "nova",
+          "event": "message",
           "desfecho": true
         },
         {
-          "id": "i2_b_lem",
+          "id": "lk_hor_out",
+          "type": "throw",
+          "lane": "L_AGIR",
+          "etapa": 2,
+          "name": "Oferecer novos horários",
+          "status": "nova",
+          "event": "link"
+        },
+        {
+          "id": "lk_hor_in",
+          "type": "catch",
+          "lane": "L_PLAT",
+          "etapa": 2,
+          "name": "Oferecer novos horários",
+          "status": "nova",
+          "event": "link"
+        },
+        {
+          "id": "i2_lem",
           "type": "boundary",
           "attachedTo": "t_esc",
           "event": "timer",
           "interrupting": false,
-          "timer": "P5D",
-          "name": "Lembretes: 5 e 10 dias úteis",
+          "name": "Lembretes (5 e 10 dias úteis)",
           "etapa": 2,
-          "status": "nova"
-        },
-        {
-          "id": "i2_lem",
-          "type": "send",
-          "name": "Enviar lembrete automático ao interessado",
-          "lane": "L_PLAT",
-          "etapa": 2,
-          "status": "nova"
+          "status": "nova",
+          "timer": "P5D"
         },
         {
           "id": "i2_lem_fim",
           "type": "end",
-          "name": "Lembrete enviado",
           "lane": "L_PLAT",
           "etapa": 2,
-          "status": "nova"
+          "name": "Lembrete enviado",
+          "status": "nova",
+          "event": "message"
         },
         {
-          "id": "i2_b_30",
+          "id": "i2_30",
           "type": "boundary",
           "attachedTo": "t_esc",
           "event": "timer",
           "interrupting": true,
-          "timer": "P30D",
           "name": "30 dias sem resposta",
           "etapa": 2,
-          "status": "nova"
+          "status": "nova",
+          "timer": "P30D"
         },
         {
           "id": "i2_dec",
           "type": "user",
-          "name": "Decidir: arquivar ou prorrogar o prazo",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 2,
-          "status": "nova"
+          "name": "Decidir: arquivar (despacho no SEI) ou prorrogar",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "i2_gw",
           "type": "xor",
+          "lane": "L_AGIR",
+          "etapa": 2,
           "name": "Arquivar?",
-          "lane": "L_SERV",
-          "etapa": 2,
-          "status": "nova"
-        },
-        {
-          "id": "i2_arq",
-          "type": "user",
-          "name": "Assinar despacho de arquivamento (SEI)",
-          "lane": "L_SERV",
-          "etapa": 2,
-          "status": "nova"
-        },
-        {
-          "id": "i2_not",
-          "type": "send",
-          "name": "Notificar o interessado do arquivamento",
-          "lane": "L_PLAT",
-          "etapa": 2,
           "status": "nova"
         },
         {
           "id": "i2_fim",
           "type": "end",
-          "name": "Arquivado por falta de resposta",
           "lane": "L_PLAT",
           "etapa": 2,
+          "name": "Arquivado por falta de resposta (interessado notificado)",
           "status": "nova",
+          "event": "message",
           "desfecho": true
         },
         {
           "id": "t_lib",
           "type": "send",
-          "name": "Liberar o formulário de registro e notificar o interessado",
           "lane": "L_PLAT",
           "etapa": 3,
+          "name": "Liberar o formulário de registro ao interessado",
           "status": "nova"
         },
         {
@@ -432,445 +372,263 @@
         {
           "id": "t_form",
           "type": "user",
-          "name": "Preencher o formulário de registro e anexar os documentos",
           "lane": "L_INT",
           "etapa": 3,
+          "name": "Preencher o formulário de registro e anexar os documentos",
           "status": "nova",
           "note": "Autores, titulares, datas, linguagens, campo de aplicação e tipo de programa"
         },
         {
-          "id": "t_hash",
-          "type": "service",
-          "name": "Calcular o hash SHA-512 no navegador do interessado",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova",
-          "note": "O código-fonte não sai do computador do interessado; a plataforma guarda só o hash"
-        },
-        {
           "id": "t_valida",
           "type": "service",
-          "name": "Validar campos, formatos, CPFs e coerência dos dados",
           "lane": "L_PLAT",
           "etapa": 3,
-          "status": "nova"
+          "name": "Calcular o hash SHA-512 no navegador e validar os dados",
+          "status": "nova",
+          "note": "O código-fonte não sai do computador do interessado"
         },
         {
           "id": "g_valida",
           "type": "xor",
+          "lane": "L_PLAT",
+          "etapa": 3,
           "name": "Dados consistentes?",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "t_apont",
-          "type": "send",
-          "name": "Apontar as pendências ao interessado (portal e e-mail)",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "t_sei3",
-          "type": "service",
-          "name": "Incluir o formulário e os documentos no SEI (Web Service)",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "g_sei3",
-          "type": "xor",
-          "name": "Integração com o SEI ok?",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "t_sei3m",
-          "type": "user",
-          "name": "Incluir os documentos no SEI (contingência)",
-          "lane": "L_BOLS",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "j_sei3",
-          "type": "xor",
-          "lane": "L_PLAT",
-          "etapa": 3,
           "status": "nova"
         },
         {
           "id": "t_confere",
           "type": "user",
-          "name": "Conferir o formulário com os documentos apresentados",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 3,
-          "status": "nova"
+          "name": "Conferir o formulário com os documentos",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
           "id": "g_confere",
           "type": "xor",
+          "lane": "L_AGIR",
+          "etapa": 3,
           "name": "Conferência ok?",
-          "lane": "L_BOLS",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "t_corr",
-          "type": "send",
-          "name": "Enviar ao interessado o pedido de correção, com os pontos a ajustar",
-          "lane": "L_PLAT",
-          "etapa": 3,
           "status": "nova"
         },
         {
           "id": "t_resumo",
           "type": "service",
-          "name": "Gerar o resumo dos dados para confirmação",
           "lane": "L_PLAT",
           "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "j_aceite",
-          "type": "xor",
-          "lane": "L_INT",
-          "etapa": 3,
+          "name": "Incluir o formulário no SEI e pedir o aceite ao interessado",
           "status": "nova"
         },
         {
           "id": "t_aceite",
           "type": "user",
-          "name": "Revisar os dados e dar o aceite eletrônico",
           "lane": "L_INT",
           "etapa": 3,
-          "status": "nova"
+          "name": "Revisar os dados e dar o aceite eletrônico",
+          "status": "nova",
+          "note": "Mesmos lembretes e prazo de inatividade do formulário"
         },
         {
           "id": "g_aceite",
           "type": "xor",
-          "name": "Dados confirmados?",
           "lane": "L_INT",
           "etapa": 3,
+          "name": "Dados confirmados?",
           "status": "nova"
         },
         {
           "id": "t_congela",
           "type": "service",
-          "name": "Registrar a versão aprovada dos dados (base das conferências seguintes)",
           "lane": "L_PLAT",
           "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "t_not3",
-          "type": "send",
-          "name": "Notificar o interessado e a equipe: dados aprovados",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3_b_lem",
-          "type": "boundary",
-          "attachedTo": "t_form",
-          "event": "timer",
-          "interrupting": false,
-          "timer": "P5D",
-          "name": "Lembretes: 5 e 10 dias úteis",
-          "etapa": 3,
+          "name": "Congelar a versão aprovada dos dados e notificar",
           "status": "nova"
         },
         {
           "id": "i3_lem",
-          "type": "send",
-          "name": "Enviar lembrete automático ao interessado",
-          "lane": "L_PLAT",
+          "type": "boundary",
+          "attachedTo": "t_form",
+          "event": "timer",
+          "interrupting": false,
+          "name": "Lembretes (5 e 10 dias úteis)",
           "etapa": 3,
-          "status": "nova"
+          "status": "nova",
+          "timer": "P5D"
         },
         {
           "id": "i3_lem_fim",
           "type": "end",
-          "name": "Lembrete enviado",
           "lane": "L_PLAT",
           "etapa": 3,
-          "status": "nova"
+          "name": "Lembrete enviado",
+          "status": "nova",
+          "event": "message"
         },
         {
-          "id": "i3_b_30",
+          "id": "i3_30",
           "type": "boundary",
           "attachedTo": "t_form",
           "event": "timer",
           "interrupting": true,
-          "timer": "P30D",
           "name": "30 dias sem resposta",
           "etapa": 3,
-          "status": "nova"
+          "status": "nova",
+          "timer": "P30D"
         },
         {
           "id": "i3_dec",
           "type": "user",
-          "name": "Decidir: arquivar ou prorrogar o prazo",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 3,
-          "status": "nova"
+          "name": "Decidir: arquivar (despacho no SEI) ou prorrogar",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "i3_gw",
           "type": "xor",
+          "lane": "L_AGIR",
+          "etapa": 3,
           "name": "Arquivar?",
-          "lane": "L_SERV",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3_arq",
-          "type": "user",
-          "name": "Assinar despacho de arquivamento (SEI)",
-          "lane": "L_SERV",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3_not",
-          "type": "send",
-          "name": "Notificar o interessado do arquivamento",
-          "lane": "L_PLAT",
-          "etapa": 3,
           "status": "nova"
         },
         {
           "id": "i3_fim",
           "type": "end",
-          "name": "Arquivado por falta de resposta",
           "lane": "L_PLAT",
           "etapa": 3,
+          "name": "Arquivado por falta de resposta (interessado notificado)",
           "status": "nova",
-          "desfecho": true
-        },
-        {
-          "id": "i3b_b_lem",
-          "type": "boundary",
-          "attachedTo": "t_aceite",
-          "event": "timer",
-          "interrupting": false,
-          "timer": "P5D",
-          "name": "Lembretes: 5 e 10 dias úteis",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_lem",
-          "type": "send",
-          "name": "Enviar lembrete automático ao interessado",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_lem_fim",
-          "type": "end",
-          "name": "Lembrete enviado",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_b_30",
-          "type": "boundary",
-          "attachedTo": "t_aceite",
-          "event": "timer",
-          "interrupting": true,
-          "timer": "P30D",
-          "name": "30 dias sem resposta",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_dec",
-          "type": "user",
-          "name": "Decidir: arquivar ou prorrogar o prazo",
-          "lane": "L_SERV",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_gw",
-          "type": "xor",
-          "name": "Arquivar?",
-          "lane": "L_SERV",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_arq",
-          "type": "user",
-          "name": "Assinar despacho de arquivamento (SEI)",
-          "lane": "L_SERV",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_not",
-          "type": "send",
-          "name": "Notificar o interessado do arquivamento",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova"
-        },
-        {
-          "id": "i3b_fim",
-          "type": "end",
-          "name": "Arquivado por falta de resposta",
-          "lane": "L_PLAT",
-          "etapa": 3,
-          "status": "nova",
+          "event": "message",
           "desfecho": true
         },
         {
           "id": "j_gru",
           "type": "xor",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 4,
           "status": "nova"
         },
         {
           "id": "t_gru",
           "type": "user",
-          "name": "Emitir a GRU 730 no e-INPI (cadastro da UFF)",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 4,
-          "status": "nova"
+          "name": "Emitir a GRU 730 no e-INPI (cadastro da UFF)",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
-          "id": "g_einpi",
-          "type": "xor",
-          "name": "e-INPI disponível?",
-          "lane": "L_BOLS",
+          "id": "t_gru_err",
+          "type": "boundary",
+          "attachedTo": "t_gru",
+          "event": "error",
+          "interrupting": true,
+          "name": "e-INPI indisponível",
           "etapa": 4,
           "status": "nova"
         },
         {
           "id": "c_retry",
           "type": "catch",
-          "name": "Nova tentativa (intervalo parametrizável)",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 4,
+          "name": "Nova tentativa",
           "status": "nova",
           "event": "timer"
         },
         {
           "id": "t_pagar",
           "type": "user",
+          "lane": "L_AGIR",
+          "etapa": 4,
           "name": "Efetuar o pagamento da GRU",
-          "lane": "L_SERV",
-          "etapa": 4
+          "papel": "servidor"
         },
         {
           "id": "c_comp",
           "type": "catch",
-          "name": "Compensação do pagamento (cerca de 24 h)",
           "lane": "L_PLAT",
           "etapa": 4,
+          "name": "Compensação (cerca de 24 h)",
           "status": "nova",
           "event": "timer"
         },
         {
           "id": "t_comp",
           "type": "service",
-          "name": "Registrar o pagamento e anexar o comprovante ao SEI (Web Service)",
           "lane": "L_PLAT",
           "etapa": 4,
-          "status": "nova",
-          "note": "Se o SEI estiver indisponível: contingência manual pelo bolsista, como nas Etapas 1 e 3"
+          "name": "Anexar o comprovante de pagamento ao SEI",
+          "status": "nova"
         },
         {
           "id": "t_ficha",
           "type": "service",
-          "name": "Gerar a ficha de preenchimento do e-Software (versão aprovada)",
           "lane": "L_PLAT",
           "etapa": 5,
+          "name": "Gerar a ficha de preenchimento do e-Software",
           "status": "nova"
         },
         {
           "id": "t_dv",
           "type": "user",
-          "name": "Baixar a Declaração de Veracidade (DV) vinculada à GRU",
-          "lane": "L_BOLS",
-          "etapa": 5
-        },
-        {
-          "id": "t_dv_ass",
-          "type": "user",
-          "name": "Assinar a DV digitalmente (certificado ICP-Brasil)",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 5,
+          "name": "Baixar e assinar a DV (ICP-Brasil)",
+          "status": "nova",
+          "papel": "bolsista baixa; servidor assina",
           "note": "Representante da AGIR que utiliza e-CNPJ da UFF com procuração."
         },
         {
           "id": "j_fill",
           "type": "xor",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 5,
           "status": "nova"
         },
         {
           "id": "t_fill",
           "type": "user",
-          "name": "Preencher o e-Software pela ficha e conferir campo a campo (sem enviar)",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 5,
-          "status": "nova"
+          "name": "Preencher o e-Software pela ficha e conferir campo a campo",
+          "status": "nova",
+          "papel": "bolsista"
         },
         {
           "id": "t_valfinal",
           "type": "user",
-          "name": "Validar o preenchimento final contra a ficha aprovada",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 5,
-          "status": "nova"
+          "name": "Validar o preenchimento final",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "g_valfinal",
           "type": "xor",
-          "name": "Preenchimento correto?",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 5,
+          "name": "Preenchimento correto?",
           "status": "nova"
         },
         {
           "id": "t_envia",
           "type": "send",
-          "name": "Enviar o pedido de registro ao INPI",
-          "lane": "L_SERV",
-          "etapa": 5
-        },
-        {
-          "id": "t_recibo",
-          "type": "user",
-          "name": "Registrar o número do pedido e o recibo na plataforma",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 5,
-          "status": "nova"
+          "name": "Enviar o pedido ao INPI e registrar o número",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "t_monit",
           "type": "service",
-          "name": "Anexar o recibo ao SEI e iniciar o acompanhamento do pedido",
           "lane": "L_PLAT",
           "etapa": 5,
-          "status": "nova"
-        },
-        {
-          "id": "t_not5",
-          "type": "send",
-          "name": "Notificar o interessado: pedido protocolado",
-          "lane": "L_PLAT",
-          "etapa": 5,
+          "name": "Anexar o recibo ao SEI, iniciar o acompanhamento e notificar",
           "status": "nova"
         },
         {
@@ -883,26 +641,26 @@
         {
           "id": "g_mon",
           "type": "event",
-          "name": "Aguardar novidade do pedido",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Aguardar novidade",
           "status": "nova"
         },
         {
           "id": "c_email",
           "type": "catch",
-          "name": "E-mail \"Meus Pedidos\" do INPI recebido",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "E-mail \"Meus Pedidos\"",
           "status": "nova",
           "event": "message"
         },
         {
           "id": "c_rpi",
           "type": "catch",
-          "name": "Terça-feira: nova RPI publicada",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Terça: nova RPI",
           "status": "nova",
           "event": "timer",
           "cycle": "R/P7D"
@@ -910,16 +668,15 @@
         {
           "id": "c_prazo",
           "type": "catch",
-          "name": "Prazo de acompanhamento vencido (10 dias; 15 dias escala)",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "10 dias sem novidade (15: escala)",
           "status": "nova",
           "event": "timer"
         },
         {
-          "id": "t_email",
-          "type": "service",
-          "name": "Interpretar o e-mail e registrar o despacho",
+          "id": "j_pub",
+          "type": "xor",
           "lane": "L_PLAT",
           "etapa": 6,
           "status": "nova"
@@ -927,26 +684,19 @@
         {
           "id": "t_rpi",
           "type": "service",
-          "name": "Ler a RPI e procurar o número do pedido",
           "lane": "L_PLAT",
           "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_alerta",
-          "type": "send",
-          "name": "Alertar o bolsista (10 dias) ou escalar ao servidor (15 dias)",
-          "lane": "L_PLAT",
-          "etapa": 6,
+          "name": "Ler a RPI ou o e-mail e registrar o despacho",
           "status": "nova"
         },
         {
           "id": "t_consulta",
           "type": "user",
-          "name": "Consultar o pedido no Busca Web do INPI e registrar o resultado",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 6,
-          "status": "nova"
+          "name": "Consultar o pedido no Busca Web e registrar",
+          "status": "nova",
+          "papel": "bolsista (servidor após 15 dias)"
         },
         {
           "id": "j_res",
@@ -958,168 +708,105 @@
         {
           "id": "g_res",
           "type": "xor",
-          "name": "Há despacho publicado?",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Há despacho?",
           "status": "nova"
         },
         {
           "id": "g_desp",
           "type": "xor",
-          "name": "Despacho",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Despacho",
           "status": "nova"
         },
         {
           "id": "t_enc742",
           "type": "user",
-          "name": "Assinar o despacho de encerramento: pedido não conhecido (SEI)",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_not742",
-          "type": "send",
-          "name": "Notificar o interessado: pedido não conhecido, com orientações",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_rec742",
-          "type": "user",
-          "name": "Receber a comunicação no portal e por e-mail",
-          "lane": "L_INT",
-          "etapa": 6,
-          "status": "nova"
+          "name": "Assinar o despacho de encerramento (SEI)",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "e6_742",
           "type": "end",
-          "name": "Encerrado: pedido não conhecido",
-          "lane": "L_INT",
+          "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Encerrado: pedido não conhecido (interessado notificado)",
           "status": "nova",
+          "event": "message",
           "desfecho": true
         },
         {
           "id": "t_cert",
           "type": "user",
-          "name": "Baixar o certificado de registro no portal do INPI",
-          "lane": "L_BOLS",
-          "etapa": 6
+          "lane": "L_AGIR",
+          "etapa": 6,
+          "name": "Baixar o certificado no portal do INPI",
+          "papel": "bolsista"
         },
         {
           "id": "t_compara",
           "type": "service",
-          "name": "Extrair os dados do certificado e comparar com a versão aprovada",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Comparar o certificado com a versão aprovada",
           "status": "nova"
         },
         {
           "id": "g_div",
           "type": "xor",
-          "name": "Há divergências?",
           "lane": "L_PLAT",
           "etapa": 6,
+          "name": "Divergências?",
           "status": "nova"
         },
         {
-          "id": "t_origem",
+          "id": "t_corr",
           "type": "user",
-          "name": "Classificar a origem da divergência",
-          "lane": "L_BOLS",
+          "lane": "L_AGIR",
           "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "g_origem",
-          "type": "xor",
-          "name": "Origem do erro",
-          "lane": "L_BOLS",
-          "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_747",
-          "type": "user",
-          "name": "Pedir a correção pelo serviço 747 do INPI (nova GRU)",
-          "lane": "L_SERV",
-          "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_fale",
-          "type": "user",
-          "name": "Solicitar a correção pelo Fale Conosco do INPI",
-          "lane": "L_BOLS",
-          "etapa": 6,
+          "name": "Pedir a correção ao INPI",
           "status": "nova",
-          "shift": 1
+          "papel": "bolsista; servidor no serviço 747",
+          "note": "Erro nos dados da AGIR: serviço 747 (nova GRU). Erro do INPI: Fale Conosco"
         },
         {
-          "id": "j_corr",
-          "type": "xor",
+          "id": "c_corr",
+          "type": "throw",
           "lane": "L_PLAT",
           "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_notcorr",
-          "type": "send",
-          "name": "Notificar o interessado: correção do certificado em andamento",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "status": "nova"
+          "name": "Interessado notificado: correção em andamento",
+          "status": "nova",
+          "event": "message"
         },
         {
           "id": "t_valcert",
           "type": "user",
-          "name": "Validar o certificado (conferência final)",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 6,
-          "status": "nova"
+          "name": "Validar o certificado",
+          "status": "nova",
+          "papel": "servidor"
         },
         {
           "id": "t_envcert",
-          "type": "send",
+          "type": "service",
+          "lane": "L_PLAT",
+          "etapa": 6,
           "name": "Anexar o certificado ao SEI e enviá-lo ao interessado",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "g_par",
-          "type": "and",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "t_reccert",
-          "type": "user",
-          "name": "Receber o certificado no portal e por e-mail",
-          "lane": "L_INT",
-          "etapa": 6,
-          "status": "nova"
-        },
-        {
-          "id": "e6_int",
-          "type": "end",
-          "name": "Interessado ciente do registro",
-          "lane": "L_INT",
-          "etapa": 6,
           "status": "nova"
         },
         {
           "id": "t_desp_encam",
           "type": "user",
+          "lane": "L_AGIR",
+          "etapa": 6,
           "name": "Elaborar despacho de encaminhamento",
-          "lane": "L_SERV",
-          "etapa": 6
+          "papel": "servidor"
         },
         {
           "id": "uff_registros",
@@ -1132,21 +819,22 @@
           "id": "a_gw_cotitular",
           "type": "xor",
           "name": "O ativo possui cotitularidade?",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 7
         },
         {
           "id": "a_desp_enc_sem_cot",
           "type": "task",
           "name": "Elaborar despacho de encerramento",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "a_fim_sem_cot",
           "type": "end",
           "name": "Encerrado: registro concluído",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 7,
           "desfecho": true
         },
@@ -1154,15 +842,17 @@
           "id": "a_minuta",
           "type": "task",
           "name": "Anexar minuta do Contrato de Ajuste de Propriedade Intelectual",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "a_desp_encam_proger",
           "type": "task",
           "name": "Elaborar despacho de encaminhamento",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "uff_parecer",
@@ -1175,35 +865,39 @@
           "id": "a_contrato",
           "type": "task",
           "name": "Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "a_email_cadastro",
           "type": "send",
           "name": "Enviar e-mail com orientações sobre o cadastro de usuários externos",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "a_disp_contrato",
           "type": "task",
           "name": "Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "a_and_assinaturas",
           "type": "and",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 7
         },
         {
           "id": "a_assinar_contrato",
           "type": "user",
           "name": "Assinar o Contrato de Ajuste (AGIR)",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "uff_assinar_contrato",
@@ -1217,27 +911,28 @@
           "type": "catch",
           "event": "message",
           "name": "Assinaturas dos cotitulares externos concluídas",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 7
         },
         {
           "id": "a_and_assinaturas_fim",
           "type": "and",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 7
         },
         {
           "id": "a_desp_enc_cot",
           "type": "task",
           "name": "Elaborar despacho de encerramento",
-          "lane": "L_SERV",
-          "etapa": 7
+          "lane": "L_AGIR",
+          "etapa": 7,
+          "papel": "servidor"
         },
         {
           "id": "a_fim_cot",
           "type": "end",
           "name": "Encerrado: contrato disponibilizado",
-          "lane": "L_SERV",
+          "lane": "L_AGIR",
           "etapa": 7,
           "desfecho": true
         }
@@ -1253,36 +948,18 @@
         ],
         [
           "t_reg",
-          "t_sei1"
+          "j_tri"
         ],
         [
-          "t_sei1",
-          "g_sei1"
+          "t_reg_err",
+          "t_reg_man"
         ],
         [
-          "g_sei1",
-          "j_sei1",
-          "Sim"
+          "t_reg_man",
+          "j_tri"
         ],
         [
-          "g_sei1",
-          "t_sei1m",
-          "Não"
-        ],
-        [
-          "t_sei1m",
-          "j_sei1"
-        ],
-        [
-          "j_sei1",
-          "t_not1"
-        ],
-        [
-          "t_not1",
-          "t_fila"
-        ],
-        [
-          "t_fila",
+          "j_tri",
           "t_tri"
         ],
         [
@@ -1294,20 +971,12 @@
           "t_tri_alerta"
         ],
         [
-          "t_tri_alerta",
-          "t_tri_alerta_fim"
-        ],
-        [
           "g_req",
           "t_enc1",
           "Não"
         ],
         [
           "t_enc1",
-          "t_not_enc1"
-        ],
-        [
-          "t_not_enc1",
           "e1_fim"
         ],
         [
@@ -1341,11 +1010,11 @@
         ],
         [
           "g_comp",
-          "t_falta",
+          "lk_hor_out",
           "Não"
         ],
         [
-          "t_falta",
+          "lk_hor_in",
           "j_hor"
         ],
         [
@@ -1355,10 +1024,6 @@
         ],
         [
           "t_reuniao",
-          "t_ata"
-        ],
-        [
-          "t_ata",
           "g_aval"
         ],
         [
@@ -1368,22 +1033,14 @@
         ],
         [
           "t_enc2",
-          "t_not_enc2"
-        ],
-        [
-          "t_not_enc2",
           "e2_fim"
-        ],
-        [
-          "i2_b_lem",
-          "i2_lem"
         ],
         [
           "i2_lem",
           "i2_lem_fim"
         ],
         [
-          "i2_b_30",
+          "i2_30",
           "i2_dec"
         ],
         [
@@ -1392,16 +1049,8 @@
         ],
         [
           "i2_gw",
-          "i2_arq",
+          "i2_fim",
           "Sim"
-        ],
-        [
-          "i2_arq",
-          "i2_not"
-        ],
-        [
-          "i2_not",
-          "i2_fim"
         ],
         [
           "i2_gw",
@@ -1423,10 +1072,6 @@
         ],
         [
           "t_form",
-          "t_hash"
-        ],
-        [
-          "t_hash",
           "t_valida"
         ],
         [
@@ -1435,39 +1080,13 @@
         ],
         [
           "g_valida",
-          "t_apont",
-          "Não"
-        ],
-        [
-          "t_apont",
-          "j_form"
+          "j_form",
+          "Não: pendências no portal"
         ],
         [
           "g_valida",
-          "t_sei3",
+          "t_confere",
           "Sim"
-        ],
-        [
-          "t_sei3",
-          "g_sei3"
-        ],
-        [
-          "g_sei3",
-          "j_sei3",
-          "Sim"
-        ],
-        [
-          "g_sei3",
-          "t_sei3m",
-          "Não"
-        ],
-        [
-          "t_sei3m",
-          "j_sei3"
-        ],
-        [
-          "j_sei3",
-          "t_confere"
         ],
         [
           "t_confere",
@@ -1475,12 +1094,8 @@
         ],
         [
           "g_confere",
-          "t_corr",
-          "Não"
-        ],
-        [
-          "t_corr",
-          "j_form"
+          "j_form",
+          "Não: pedido de correção"
         ],
         [
           "g_confere",
@@ -1489,10 +1104,6 @@
         ],
         [
           "t_resumo",
-          "j_aceite"
-        ],
-        [
-          "j_aceite",
           "t_aceite"
         ],
         [
@@ -1502,7 +1113,7 @@
         [
           "g_aceite",
           "j_form",
-          "Não, pedir ajuste"
+          "Não: ajustar"
         ],
         [
           "g_aceite",
@@ -1510,19 +1121,11 @@
           "Sim"
         ],
         [
-          "t_congela",
-          "t_not3"
-        ],
-        [
-          "i3_b_lem",
-          "i3_lem"
-        ],
-        [
           "i3_lem",
           "i3_lem_fim"
         ],
         [
-          "i3_b_30",
+          "i3_30",
           "i3_dec"
         ],
         [
@@ -1531,16 +1134,8 @@
         ],
         [
           "i3_gw",
-          "i3_arq",
+          "i3_fim",
           "Sim"
-        ],
-        [
-          "i3_arq",
-          "i3_not"
-        ],
-        [
-          "i3_not",
-          "i3_fim"
         ],
         [
           "i3_gw",
@@ -1548,41 +1143,7 @@
           "Não, prorrogar"
         ],
         [
-          "i3b_b_lem",
-          "i3b_lem"
-        ],
-        [
-          "i3b_lem",
-          "i3b_lem_fim"
-        ],
-        [
-          "i3b_b_30",
-          "i3b_dec"
-        ],
-        [
-          "i3b_dec",
-          "i3b_gw"
-        ],
-        [
-          "i3b_gw",
-          "i3b_arq",
-          "Sim"
-        ],
-        [
-          "i3b_arq",
-          "i3b_not"
-        ],
-        [
-          "i3b_not",
-          "i3b_fim"
-        ],
-        [
-          "i3b_gw",
-          "j_aceite",
-          "Não, prorrogar"
-        ],
-        [
-          "t_not3",
+          "t_congela",
           "j_gru"
         ],
         [
@@ -1591,21 +1152,7 @@
         ],
         [
           "t_gru",
-          "g_einpi"
-        ],
-        [
-          "g_einpi",
-          "c_retry",
-          "Não"
-        ],
-        [
-          "c_retry",
-          "j_gru"
-        ],
-        [
-          "g_einpi",
-          "t_pagar",
-          "Sim"
+          "t_pagar"
         ],
         [
           "t_pagar",
@@ -1614,6 +1161,14 @@
         [
           "c_comp",
           "t_comp"
+        ],
+        [
+          "t_gru_err",
+          "c_retry"
+        ],
+        [
+          "c_retry",
+          "j_gru"
         ],
         [
           "t_comp",
@@ -1625,10 +1180,6 @@
         ],
         [
           "t_dv",
-          "t_dv_ass"
-        ],
-        [
-          "t_dv_ass",
           "j_fill"
         ],
         [
@@ -1646,7 +1197,7 @@
         [
           "g_valfinal",
           "j_fill",
-          "Não, devolver com apontamentos"
+          "Não"
         ],
         [
           "g_valfinal",
@@ -1655,18 +1206,10 @@
         ],
         [
           "t_envia",
-          "t_recibo"
-        ],
-        [
-          "t_recibo",
           "t_monit"
         ],
         [
           "t_monit",
-          "t_not5"
-        ],
-        [
-          "t_not5",
           "j_mon"
         ],
         [
@@ -1679,11 +1222,7 @@
         ],
         [
           "c_email",
-          "t_email"
-        ],
-        [
-          "t_email",
-          "j_res"
+          "j_pub"
         ],
         [
           "g_mon",
@@ -1691,6 +1230,10 @@
         ],
         [
           "c_rpi",
+          "j_pub"
+        ],
+        [
+          "j_pub",
           "t_rpi"
         ],
         [
@@ -1703,10 +1246,6 @@
         ],
         [
           "c_prazo",
-          "t_alerta"
-        ],
-        [
-          "t_alerta",
           "t_consulta"
         ],
         [
@@ -1730,24 +1269,16 @@
         [
           "g_desp",
           "t_enc742",
-          "742 – não conhecido"
+          "742"
         ],
         [
           "t_enc742",
-          "t_not742"
-        ],
-        [
-          "t_not742",
-          "t_rec742"
-        ],
-        [
-          "t_rec742",
           "e6_742"
         ],
         [
           "g_desp",
           "t_cert",
-          "730 – concedido"
+          "730"
         ],
         [
           "t_cert",
@@ -1759,37 +1290,15 @@
         ],
         [
           "g_div",
-          "t_origem",
+          "t_corr",
           "Sim"
         ],
         [
-          "t_origem",
-          "g_origem"
+          "t_corr",
+          "c_corr"
         ],
         [
-          "g_origem",
-          "t_747",
-          "Dados enviados pela AGIR"
-        ],
-        [
-          "g_origem",
-          "t_fale",
-          "Erro do INPI"
-        ],
-        [
-          "t_747",
-          "j_corr"
-        ],
-        [
-          "t_fale",
-          "j_corr"
-        ],
-        [
-          "j_corr",
-          "t_notcorr"
-        ],
-        [
-          "t_notcorr",
+          "c_corr",
           "j_mon"
         ],
         [
@@ -1803,18 +1312,6 @@
         ],
         [
           "t_envcert",
-          "g_par"
-        ],
-        [
-          "g_par",
-          "t_reccert"
-        ],
-        [
-          "t_reccert",
-          "e6_int"
-        ],
-        [
-          "g_par",
           "t_desp_encam"
         ],
         [
@@ -1902,7 +1399,6 @@
           "name": "Realizar registro junto ao INPI",
           "nodes": [
             "t_dv",
-            "t_dv_ass",
             "t_fill",
             "t_valfinal",
             "t_envia"
@@ -1921,7 +1417,7 @@
     },
     {
       "id": "Pool_SEI",
-      "name": "SEI – Sistema Eletrônico de Informações (registro oficial da UFF)",
+      "name": "SEI – registro oficial da UFF",
       "blackbox": true,
       "color": {
         "fill": "#f1f1f1",
@@ -1946,14 +1442,14 @@
       "Contrato assinado"
     ],
     [
-      "t_sei1",
+      "t_reg",
       "Pool_SEI",
       "Gerar processo"
     ],
     [
-      "t_sei3",
+      "t_resumo",
       "Pool_SEI",
-      "Incluir documentos"
+      "Incluir formulário"
     ],
     [
       "t_comp",
@@ -1991,14 +1487,9 @@
       "RPI semanal"
     ],
     [
-      "t_747",
+      "t_corr",
       "Pool_INPI",
-      "Petição 747"
-    ],
-    [
-      "t_fale",
-      "Pool_INPI",
-      "Fale Conosco"
+      "Pedido de correção"
     ]
   ]
 }
