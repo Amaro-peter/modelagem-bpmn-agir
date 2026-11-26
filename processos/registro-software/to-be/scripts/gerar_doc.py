@@ -52,12 +52,17 @@ for k, e in sorted(etapas.items()):
 w('\n**Participantes:**')
 w('- **Interessado**, que passa a usar o portal.')
 w('- **AGIR (servidores e bolsistas)**, numa raia só. A divisão "bolsista opera, servidor decide" está registrada em cada tarefa e aparece na tabela da seção 4.')
-w('- **Outras unidades da UFF** cuidam dos registros patrimonial e contábil, do parecer jurídico e da assinatura da Reitoria.')
 w('- **Plataforma de Gestão de PI** executa as atividades automáticas.')
 w('- **Participantes externos:**')
 w('  - **INPI** (e-INPI/GRU, e-Software, RPI, Busca Web, "Meus Pedidos", Fale Conosco);')
-w('  - **SEI** (registro oficial: as mensagens representam a integração automática; tarefas humanas feitas no SEI trazem "(SEI)" no nome);')
-w('  - **Cotitulares externos**.\n')
+w('  - **SEI** (registro oficial: as mensagens representam a integração automática; tarefas humanas feitas no SEI trazem "(SEI)" no nome).')
+w('- Na **Etapa 7**, reaproveitada do AS-IS, atuam também as **Outras unidades da UFF** e os **Cotitulares externos**, exatamente como no AS-IS.\n')
+w('### Escopo do diagrama: o que foi simplificado\n')
+w('Para manter o TO-BE enxuto, o diagrama **detalha só as melhorias prioritárias**: atendimento e agenda (3.1/3.2), coleta e validação de dados (3.4/3.5) e acompanhamento do INPI (3.3/3.6). O restante continua valendo e está descrito neste documento:\n')
+w('- **Etapa 7** (registros internos, cotitularidade e encerramento) **não muda**. No TO-BE ela é uma *call activity* que chama o processo da [Etapa 7 do AS-IS](../../etapas/07-registros.bpmn).')
+w('- **Etapa 4** (pagamento), que não está entre os gargalos, aparece simplificada: emitir e pagar a GRU, e a Plataforma anexa o comprovante ao SEI. A nova tentativa automática quando o e-INPI está fora do ar e a espera pela compensação estão só no texto (seção 5).')
+w('- **Conferência do certificado** (3.7) é uma atividade única no diagrama. A comparação automática com os dados aprovados e a correção (serviço 747 ou Fale Conosco) estão descritas nas seções 2 e 5.')
+w('- **Exceções desenhadas uma vez:** a regra de inatividade do interessado aparece no formulário (Etapa 3); na escolha de horário e no aceite, ela vem indicada em anotação. A contingência do SEI aparece na Etapa 1 e vale para todas as inclusões no SEI.\n')
 
 w('## 2. Gargalos do AS-IS × melhorias do TO-BE\n')
 w('| Gargalo (AS-IS) | O que muda no TO-BE | Onde está no modelo |')
@@ -83,7 +88,7 @@ for g in [
      'Notificações automáticas da Plataforma (tarefas e eventos de mensagem) em todas as etapas'),
     ('3.7 Certificados com erro e correções posteriores',
      'Antes do protocolo: validação automática, conferência humana, aceite do interessado e validação final. Depois da emissão: comparação automática do certificado com a versão aprovada e validação do servidor. Em caso de divergência, a correção segue a origem do erro (serviço 747 se veio dos dados da AGIR, Fale Conosco se o erro é do INPI).',
-     'Etapas 3 e 5 (prevenção); Etapa 6 ("Comparar o certificado com a versão aprovada", "Pedir a correção ao INPI")'),
+     'Etapas 3 e 5 (prevenção); Etapa 6 ("Baixar e conferir o certificado com os dados aprovados": atividade única no diagrama, mecanismo descrito aqui)'),
 ]:
     w(f'| {g[0]} | {g[1]} | {g[2]} |')
 
@@ -148,17 +153,17 @@ w('## 5. Tratamento de exceções\n')
 w('| Exceção | Mecanismo no modelo | Recuperação |')
 w('|---|---|---|')
 for x in [
-    ('Interessado não responde (horário, formulário, aceite)', 'Eventos de borda: lembretes automáticos (5 e 10 dias úteis, não interruptivo) e "30 dias sem resposta" (interruptivo). No aceite, a mesma regra vem indicada em anotação', 'O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade)'),
+    ('Interessado não responde (horário, formulário, aceite)', 'Desenhado no formulário (Etapa 3): lembretes automáticos (5 e 10 dias úteis, borda não interruptiva) e "30 dias sem resposta" (borda interruptiva). Na escolha de horário e no aceite, a regra vem indicada em anotação', 'O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade)'),
     ('Interessado não comparece à reunião', 'Gateway "Interessado compareceu?" + link "Oferecer novos horários"', 'Novos horários são oferecidos'),
     ('Documentação incompleta ou inconsistente', 'Validação automática ("Dados consistentes?") e conferência do bolsista ("Conferência ok?")', 'Pendências apontadas no portal e volta ao formulário'),
     ('Dados não confirmados pelo interessado', 'Gateway "Dados confirmados?"', 'Volta ao formulário para ajuste'),
     ('Erro de preenchimento no e-Software', 'Validação final do servidor ("Preenchimento correto?")', 'Devolução ao bolsista com apontamentos, antes de enviar'),
     ('SEI indisponível ou integração não aprovada', 'Evento de borda de erro "Falha na integração com o SEI" (Etapa 1); vale a mesma regra nas demais inclusões no SEI', 'Contingência: o bolsista lança no SEI e vincula o número na plataforma'),
-    ('e-INPI indisponível', 'Evento de borda de erro "e-INPI indisponível" + timer "Nova tentativa"', 'Novas tentativas em intervalo parametrizável'),
+    ('e-INPI indisponível', '**Só no documento** (Etapa 4 simplificada no diagrama)', 'A Plataforma agenda novas tentativas em intervalo parametrizável e avisa o bolsista'),
     ('Triagem atrasada', 'Evento de borda "Prazo de triagem vencido" (não interruptivo)', 'Alerta à equipe e ao servidor'),
     ('INPI sem novidade no prazo', 'Timer "10 dias sem novidade (15: escala)" no gateway de eventos', 'Com 10 dias, consulta do bolsista no Busca Web; com 15 dias, escala ao servidor'),
     ('Pedido não conhecido (742)', 'Ramo "742" do gateway "Despacho"', 'Encerramento com despacho e comunicação ao interessado (conforme o AS-IS confirmado)'),
-    ('Certificado com divergência', 'Comparação automática + "Pedir a correção ao INPI"', 'Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido'),
+    ('Certificado com divergência', '**Só no documento**: a comparação automática faz parte de "Baixar e conferir o certificado com os dados aprovados"', 'Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido'),
 ]:
     w(f'| {x[0]} | {x[1]} | {x[2]} |')
 
@@ -181,13 +186,16 @@ for k, e in sorted(etapas.items()):
     ta = [n for n in acts if n['etapa'] == k]
     au = [n for n in ta if n['lane'] == 'L_PLAT']
     w(f'| {k}. {e["nome"]} | {k}. {asis_names[k - 1]} | {asis_count(k)} | {len(ta)} | {len(au)} |')
-tot_asis = sum(asis_count(k) for k in etapas)
-w(f'\n**Total:** {tot_asis} atividades no AS-IS, todas manuais, contra {len(acts)} no TO-BE, das quais **{len(human)} humanas** '
-  f'e **{len(auto)} automáticas**. As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. '
-  'O TO-BE fica praticamente do mesmo tamanho do AS-IS e ganha controles que hoje não existem: prazos, lembretes, '
-  'validação automática, aceite do interessado, conferência do certificado e acompanhamento do INPI. '
-  'Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, e em ter menos retrabalho '
-  '(correções de dados e de certificados).\n')
+last = max(etapas)
+tot_asis = sum(asis_count(k) for k in etapas if k != last)
+tot_tobe = [n for n in acts if n['etapa'] != last]
+w(f'\nA Etapa {last} **reaproveita o AS-IS** por uma *call activity*: as {asis_count(last)} atividades dela continuam valendo e não foram redesenhadas.\n')
+w(f'**Total das Etapas 1 a {last - 1}:** {tot_asis} atividades no AS-IS, todas manuais, contra {len(tot_tobe)} no TO-BE, das quais '
+  f'**{sum(1 for n in tot_tobe if n["lane"] != "L_PLAT")} humanas** e **{sum(1 for n in tot_tobe if n["lane"] == "L_PLAT")} automáticas**. '
+  'As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. '
+  'Com menos atividades, o TO-BE ganha controles que hoje não existem: prazos, lembretes, validação automática, aceite do interessado, '
+  'conferência do certificado e acompanhamento do INPI. Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas '
+  'manualmente, e em ter menos retrabalho (correções de dados e de certificados).\n')
 
 w('## 8. Indicadores de desempenho (sem metas)\n')
 w('As metas ficam a cargo da AGIR. Todos os indicadores podem ser medidos pela plataforma a partir do histórico de cada pedido.\n')

@@ -4,7 +4,7 @@
   "pools": [
     {
       "id": "Pool_PROPPI",
-      "name": "PROPPI/AGIR – TO-BE – Etapa 4 – Pagamento da GRU",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 4",
       "processId": "ToBe_Registro_Software_Etapa4",
       "lanes": [
         {
@@ -22,50 +22,12 @@
       ],
       "nodes": [
         {
-          "id": "j_gru",
-          "type": "xor",
-          "lane": "L_AGIR",
-          "status": "nova"
-        },
-        {
           "id": "t_gru",
           "type": "user",
           "lane": "L_AGIR",
-          "name": "Emitir a GRU 730 no e-INPI (cadastro da UFF)",
+          "name": "Emitir e pagar a GRU 730 (e-INPI, cadastro da UFF)",
           "status": "nova",
-          "papel": "bolsista"
-        },
-        {
-          "id": "t_gru_err",
-          "type": "boundary",
-          "attachedTo": "t_gru",
-          "event": "error",
-          "interrupting": true,
-          "name": "e-INPI indisponível",
-          "status": "nova"
-        },
-        {
-          "id": "c_retry",
-          "type": "catch",
-          "lane": "L_AGIR",
-          "name": "Nova tentativa",
-          "status": "nova",
-          "event": "timer"
-        },
-        {
-          "id": "t_pagar",
-          "type": "user",
-          "lane": "L_AGIR",
-          "name": "Efetuar o pagamento da GRU",
-          "papel": "servidor"
-        },
-        {
-          "id": "c_comp",
-          "type": "catch",
-          "lane": "L_PLAT",
-          "name": "Compensação (cerca de 24 h)",
-          "status": "nova",
-          "event": "timer"
+          "papel": "bolsista emite; servidor paga"
         },
         {
           "id": "t_comp",
@@ -75,7 +37,7 @@
           "status": "nova"
         },
         {
-          "id": "ini_j_gru_e3",
+          "id": "ini_t_gru_e3",
           "type": "start",
           "name": "(Etapa 3 – Coleta estruturada e validação)",
           "lane": "L_AGIR"
@@ -89,32 +51,12 @@
       ],
       "flows": [
         [
-          "ini_j_gru_e3",
-          "j_gru"
-        ],
-        [
-          "j_gru",
+          "ini_t_gru_e3",
           "t_gru"
         ],
         [
           "t_gru",
-          "t_pagar"
-        ],
-        [
-          "t_pagar",
-          "c_comp"
-        ],
-        [
-          "c_comp",
           "t_comp"
-        ],
-        [
-          "t_gru_err",
-          "c_retry"
-        ],
-        [
-          "c_retry",
-          "j_gru"
         ],
         [
           "t_comp",

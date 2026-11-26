@@ -10,6 +10,8 @@ Estado **futuro** do processo, redesenhado para resolver os sete gargalos levant
 - eventos com envelope = notificações automáticas;
 - pool azul = INPI; pool cinza = SEI.
 
+**Foco:** o diagrama detalha as melhorias prioritárias (atendimento e agenda, coleta e validação de dados, acompanhamento do INPI). O pagamento e a conferência do certificado aparecem simplificados, e a Etapa 7 reaproveita o AS-IS. Os detalhes estão no documento (seção "Escopo do diagrama").
+
 **Documento completo:** [to-be-registro-software.md](docs/to-be-registro-software.md). Ele traz:
 - gargalos × melhorias;
 - sistemas e viabilidade;
@@ -33,10 +35,10 @@ Estado **futuro** do processo, redesenhado para resolver os sete gargalos levant
 | 1 | Solicitação e triagem | Abertura do pedido | [bpmn](etapas/01-solicitacao-triagem.bpmn) · [imagem](etapas/01-solicitacao-triagem.png) |
 | 2 | Reunião inicial e avaliação | Avaliação do ativo | [bpmn](etapas/02-reuniao-avaliacao.bpmn) · [imagem](etapas/02-reuniao-avaliacao.png) |
 | 3 | Coleta estruturada e validação | Instrução documental | [bpmn](etapas/03-coleta-validacao.bpmn) · [imagem](etapas/03-coleta-validacao.png) |
-| 4 | Pagamento da GRU | Pagamento da GRU | [bpmn](etapas/04-pagamento.bpmn) · [imagem](etapas/04-pagamento.png) |
+| 4 | Pagamento da GRU (simplificada) | Pagamento da GRU | [bpmn](etapas/04-pagamento.bpmn) · [imagem](etapas/04-pagamento.png) |
 | 5 | Protocolo assistido no INPI | Depósito do pedido no INPI | [bpmn](etapas/05-protocolo.bpmn) · [imagem](etapas/05-protocolo.png) |
 | 6 | Acompanhamento do INPI e conferência do certificado | Resultado do INPI | [bpmn](etapas/06-acompanhamento-certificado.bpmn) · [imagem](etapas/06-acompanhamento-certificado.png) |
-| 7 | Registros internos, cotitularidade e encerramento | Registros internos e cotitularidade (sem mudanças) | [bpmn](etapas/07-registros-encerramento.bpmn) · [imagem](etapas/07-registros-encerramento.png) |
+| 7 | Registros internos, cotitularidade e encerramento | **Reaproveita o AS-IS**: call activity que chama a [Etapa 7 do AS-IS](../etapas/07-registros.bpmn) | [bpmn](etapas/07-registros-encerramento.bpmn) · [imagem](etapas/07-registros-encerramento.png) |
 
 ## TO-BE completo
 

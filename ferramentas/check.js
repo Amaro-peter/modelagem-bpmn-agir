@@ -57,12 +57,16 @@ for (const p of pools) {
   for (const n of p.nodes || []) poolOf[n.id] = p.id;
   if (!p.blackbox) checkContainer(p.id, p);
 }
-// call activities: o processo chamado deve existir num JSON da mesma pasta
+// call activities: o processo chamado deve existir num JSON da mesma pasta ou em outra pasta de "processos/"
 const calls = pools.flatMap(p => (p.nodes || []).filter(n => n.type === 'call'));
 if (calls.length) {
-  const dir = path.dirname(process.argv[2]);
-  const known = new Set(fs.readdirSync(dir).filter(f => f.endsWith('.json')).flatMap(f => {
-    const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+  let base = path.resolve(path.dirname(process.argv[2]));
+  while (path.basename(base) !== 'processos' && path.dirname(base) !== base) base = path.dirname(base);
+  if (path.basename(base) !== 'processos') base = path.resolve(path.dirname(process.argv[2]));
+  const walk = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(e =>
+    e.isDirectory() ? walk(path.join(dir, e.name)) : e.name.endsWith('.json') ? [path.join(dir, e.name)] : []);
+  const known = new Set(walk(base).flatMap(f => {
+    const d = JSON.parse(fs.readFileSync(f, 'utf8'));
     return (d.pools || []).map(p => p.processId).filter(Boolean);
   }));
   for (const n of calls) if (!known.has(n.calls)) problems.push(`${n.id}: chama processo inexistente "${n.calls}"`);

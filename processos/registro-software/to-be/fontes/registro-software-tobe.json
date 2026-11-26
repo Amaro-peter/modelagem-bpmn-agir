@@ -48,11 +48,6 @@
   ],
   "pools": [
     {
-      "id": "Pool_COTIT",
-      "name": "Cotitulares externos",
-      "blackbox": true
-    },
-    {
       "id": "Pool_PROPPI",
       "name": "PROPPI/AGIR – Registro de Programa de Computador (Software) – TO-BE",
       "nomeCurto": "PROPPI/AGIR – TO-BE",
@@ -65,10 +60,6 @@
         {
           "id": "L_AGIR",
           "name": "AGIR (servidores e bolsistas)"
-        },
-        {
-          "id": "L_UFF",
-          "name": "Outras unidades da UFF"
         },
         {
           "id": "L_PLAT",
@@ -203,19 +194,13 @@
           "status": "nova"
         },
         {
-          "id": "j_esc",
-          "type": "xor",
-          "lane": "L_INT",
-          "etapa": 2,
-          "status": "nova"
-        },
-        {
           "id": "t_esc",
           "type": "user",
           "lane": "L_INT",
           "etapa": 2,
           "name": "Escolher o horário da reunião no portal",
-          "status": "nova"
+          "status": "nova",
+          "note": "Mesma regra de inatividade do formulário (Etapa 3)"
         },
         {
           "id": "t_conf",
@@ -295,64 +280,6 @@
           "name": "Oferecer novos horários",
           "status": "nova",
           "event": "link"
-        },
-        {
-          "id": "i2_lem",
-          "type": "boundary",
-          "attachedTo": "t_esc",
-          "event": "timer",
-          "interrupting": false,
-          "name": "Lembretes (5 e 10 dias úteis)",
-          "etapa": 2,
-          "status": "nova",
-          "timer": "P5D"
-        },
-        {
-          "id": "i2_lem_fim",
-          "type": "end",
-          "lane": "L_PLAT",
-          "etapa": 2,
-          "name": "Lembrete enviado",
-          "status": "nova",
-          "event": "message"
-        },
-        {
-          "id": "i2_30",
-          "type": "boundary",
-          "attachedTo": "t_esc",
-          "event": "timer",
-          "interrupting": true,
-          "name": "30 dias sem resposta",
-          "etapa": 2,
-          "status": "nova",
-          "timer": "P30D"
-        },
-        {
-          "id": "i2_dec",
-          "type": "user",
-          "lane": "L_AGIR",
-          "etapa": 2,
-          "name": "Decidir: arquivar (despacho no SEI) ou prorrogar",
-          "status": "nova",
-          "papel": "servidor"
-        },
-        {
-          "id": "i2_gw",
-          "type": "xor",
-          "lane": "L_AGIR",
-          "etapa": 2,
-          "name": "Arquivar?",
-          "status": "nova"
-        },
-        {
-          "id": "i2_fim",
-          "type": "end",
-          "lane": "L_PLAT",
-          "etapa": 2,
-          "name": "Arquivado por falta de resposta (interessado notificado)",
-          "status": "nova",
-          "event": "message",
-          "desfecho": true
         },
         {
           "id": "t_lib",
@@ -504,56 +431,13 @@
           "desfecho": true
         },
         {
-          "id": "j_gru",
-          "type": "xor",
-          "lane": "L_AGIR",
-          "etapa": 4,
-          "status": "nova"
-        },
-        {
           "id": "t_gru",
           "type": "user",
           "lane": "L_AGIR",
           "etapa": 4,
-          "name": "Emitir a GRU 730 no e-INPI (cadastro da UFF)",
+          "name": "Emitir e pagar a GRU 730 (e-INPI, cadastro da UFF)",
           "status": "nova",
-          "papel": "bolsista"
-        },
-        {
-          "id": "t_gru_err",
-          "type": "boundary",
-          "attachedTo": "t_gru",
-          "event": "error",
-          "interrupting": true,
-          "name": "e-INPI indisponível",
-          "etapa": 4,
-          "status": "nova"
-        },
-        {
-          "id": "c_retry",
-          "type": "catch",
-          "lane": "L_AGIR",
-          "etapa": 4,
-          "name": "Nova tentativa",
-          "status": "nova",
-          "event": "timer"
-        },
-        {
-          "id": "t_pagar",
-          "type": "user",
-          "lane": "L_AGIR",
-          "etapa": 4,
-          "name": "Efetuar o pagamento da GRU",
-          "papel": "servidor"
-        },
-        {
-          "id": "c_comp",
-          "type": "catch",
-          "lane": "L_PLAT",
-          "etapa": 4,
-          "name": "Compensação (cerca de 24 h)",
-          "status": "nova",
-          "event": "timer"
+          "papel": "bolsista emite; servidor paga"
         },
         {
           "id": "t_comp",
@@ -745,52 +629,10 @@
           "type": "user",
           "lane": "L_AGIR",
           "etapa": 6,
-          "name": "Baixar o certificado no portal do INPI",
-          "papel": "bolsista"
-        },
-        {
-          "id": "t_compara",
-          "type": "service",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "name": "Comparar o certificado com a versão aprovada",
-          "status": "nova"
-        },
-        {
-          "id": "g_div",
-          "type": "xor",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "name": "Divergências?",
-          "status": "nova"
-        },
-        {
-          "id": "t_corr",
-          "type": "user",
-          "lane": "L_AGIR",
-          "etapa": 6,
-          "name": "Pedir a correção ao INPI",
+          "name": "Baixar e conferir o certificado com os dados aprovados",
           "status": "nova",
-          "papel": "bolsista; servidor no serviço 747",
-          "note": "Erro nos dados da AGIR: serviço 747 (nova GRU). Erro do INPI: Fale Conosco"
-        },
-        {
-          "id": "c_corr",
-          "type": "throw",
-          "lane": "L_PLAT",
-          "etapa": 6,
-          "name": "Interessado notificado: correção em andamento",
-          "status": "nova",
-          "event": "message"
-        },
-        {
-          "id": "t_valcert",
-          "type": "user",
-          "lane": "L_AGIR",
-          "etapa": 6,
-          "name": "Validar o certificado",
-          "status": "nova",
-          "papel": "servidor"
+          "papel": "bolsista confere; servidor valida",
+          "note": "A Plataforma compara automaticamente. Divergência: serviço 747 (erro da AGIR) ou Fale Conosco (erro do INPI)"
         },
         {
           "id": "t_envcert",
@@ -809,131 +651,20 @@
           "papel": "servidor"
         },
         {
-          "id": "uff_registros",
-          "type": "task",
-          "name": "Realizar os registros patrimonial e contábil para devolver à AGIR",
-          "lane": "L_UFF",
-          "etapa": 7
-        },
-        {
-          "id": "a_gw_cotitular",
-          "type": "xor",
-          "name": "O ativo possui cotitularidade?",
-          "lane": "L_AGIR",
-          "etapa": 7
-        },
-        {
-          "id": "a_desp_enc_sem_cot",
-          "type": "task",
-          "name": "Elaborar despacho de encerramento",
+          "id": "t_e7",
+          "type": "call",
           "lane": "L_AGIR",
           "etapa": 7,
-          "papel": "servidor"
+          "name": "Registros internos, cotitularidade e encerramento (AS-IS, Etapa 7)",
+          "calls": "Etapa7_Registros",
+          "papel": "servidor (com outras unidades da UFF e cotitulares, como no AS-IS)"
         },
         {
-          "id": "a_fim_sem_cot",
+          "id": "e7_fim",
           "type": "end",
-          "name": "Encerrado: registro concluído",
           "lane": "L_AGIR",
           "etapa": 7,
-          "desfecho": true
-        },
-        {
-          "id": "a_minuta",
-          "type": "task",
-          "name": "Anexar minuta do Contrato de Ajuste de Propriedade Intelectual",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "a_desp_encam_proger",
-          "type": "task",
-          "name": "Elaborar despacho de encaminhamento",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "uff_parecer",
-          "type": "task",
-          "name": "Emitir parecer jurídico sobre o Contrato de Ajuste e devolver à AGIR",
-          "lane": "L_UFF",
-          "etapa": 7
-        },
-        {
-          "id": "a_contrato",
-          "type": "task",
-          "name": "Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "a_email_cadastro",
-          "type": "send",
-          "name": "Enviar e-mail com orientações sobre o cadastro de usuários externos",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "a_disp_contrato",
-          "type": "task",
-          "name": "Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "a_and_assinaturas",
-          "type": "and",
-          "lane": "L_AGIR",
-          "etapa": 7
-        },
-        {
-          "id": "a_assinar_contrato",
-          "type": "user",
-          "name": "Assinar o Contrato de Ajuste (AGIR)",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "uff_assinar_contrato",
-          "type": "user",
-          "name": "Assinar o Contrato de Ajuste (Reitoria)",
-          "lane": "L_UFF",
-          "etapa": 7
-        },
-        {
-          "id": "a_ass_externas",
-          "type": "catch",
-          "event": "message",
-          "name": "Assinaturas dos cotitulares externos concluídas",
-          "lane": "L_AGIR",
-          "etapa": 7
-        },
-        {
-          "id": "a_and_assinaturas_fim",
-          "type": "and",
-          "lane": "L_AGIR",
-          "etapa": 7
-        },
-        {
-          "id": "a_desp_enc_cot",
-          "type": "task",
-          "name": "Elaborar despacho de encerramento",
-          "lane": "L_AGIR",
-          "etapa": 7,
-          "papel": "servidor"
-        },
-        {
-          "id": "a_fim_cot",
-          "type": "end",
-          "name": "Encerrado: contrato disponibilizado",
-          "lane": "L_AGIR",
-          "etapa": 7,
+          "name": "Processo concluído",
           "desfecho": true
         }
       ],
@@ -990,10 +721,6 @@
         ],
         [
           "t_hor",
-          "j_esc"
-        ],
-        [
-          "j_esc",
           "t_esc"
         ],
         [
@@ -1034,28 +761,6 @@
         [
           "t_enc2",
           "e2_fim"
-        ],
-        [
-          "i2_lem",
-          "i2_lem_fim"
-        ],
-        [
-          "i2_30",
-          "i2_dec"
-        ],
-        [
-          "i2_dec",
-          "i2_gw"
-        ],
-        [
-          "i2_gw",
-          "i2_fim",
-          "Sim"
-        ],
-        [
-          "i2_gw",
-          "j_esc",
-          "Não, prorrogar"
         ],
         [
           "g_aval",
@@ -1144,31 +849,11 @@
         ],
         [
           "t_congela",
-          "j_gru"
-        ],
-        [
-          "j_gru",
           "t_gru"
         ],
         [
           "t_gru",
-          "t_pagar"
-        ],
-        [
-          "t_pagar",
-          "c_comp"
-        ],
-        [
-          "c_comp",
           "t_comp"
-        ],
-        [
-          "t_gru_err",
-          "c_retry"
-        ],
-        [
-          "c_retry",
-          "j_gru"
         ],
         [
           "t_comp",
@@ -1282,32 +967,6 @@
         ],
         [
           "t_cert",
-          "t_compara"
-        ],
-        [
-          "t_compara",
-          "g_div"
-        ],
-        [
-          "g_div",
-          "t_corr",
-          "Sim"
-        ],
-        [
-          "t_corr",
-          "c_corr"
-        ],
-        [
-          "c_corr",
-          "j_mon"
-        ],
-        [
-          "g_div",
-          "t_valcert",
-          "Não"
-        ],
-        [
-          "t_valcert",
           "t_envcert"
         ],
         [
@@ -1315,82 +974,12 @@
           "t_desp_encam"
         ],
         [
-          "uff_registros",
-          "a_gw_cotitular"
-        ],
-        [
-          "a_gw_cotitular",
-          "a_desp_enc_sem_cot",
-          "Não"
-        ],
-        [
-          "a_desp_enc_sem_cot",
-          "a_fim_sem_cot"
-        ],
-        [
-          "a_gw_cotitular",
-          "a_minuta",
-          "Sim"
-        ],
-        [
-          "a_minuta",
-          "a_desp_encam_proger"
-        ],
-        [
-          "a_desp_encam_proger",
-          "uff_parecer"
-        ],
-        [
-          "uff_parecer",
-          "a_contrato"
-        ],
-        [
-          "a_contrato",
-          "a_email_cadastro"
-        ],
-        [
-          "a_email_cadastro",
-          "a_disp_contrato"
-        ],
-        [
-          "a_disp_contrato",
-          "a_and_assinaturas"
-        ],
-        [
-          "a_and_assinaturas",
-          "a_assinar_contrato"
-        ],
-        [
-          "a_and_assinaturas",
-          "uff_assinar_contrato"
-        ],
-        [
-          "a_and_assinaturas",
-          "a_ass_externas"
-        ],
-        [
-          "a_assinar_contrato",
-          "a_and_assinaturas_fim"
-        ],
-        [
-          "uff_assinar_contrato",
-          "a_and_assinaturas_fim"
-        ],
-        [
-          "a_ass_externas",
-          "a_and_assinaturas_fim"
-        ],
-        [
-          "a_and_assinaturas_fim",
-          "a_desp_enc_cot"
-        ],
-        [
-          "a_desp_enc_cot",
-          "a_fim_cot"
-        ],
-        [
           "t_desp_encam",
-          "uff_registros"
+          "t_e7"
+        ],
+        [
+          "t_e7",
+          "e7_fim"
         ]
       ],
       "groups": [
@@ -1426,21 +1015,6 @@
     }
   ],
   "messageFlows": [
-    [
-      "a_email_cadastro",
-      "Pool_COTIT",
-      "Orientações de cadastro no SEI"
-    ],
-    [
-      "a_disp_contrato",
-      "Pool_COTIT",
-      "Contrato para assinatura (SEI)"
-    ],
-    [
-      "Pool_COTIT",
-      "a_ass_externas",
-      "Contrato assinado"
-    ],
     [
       "t_reg",
       "Pool_SEI",
@@ -1485,11 +1059,6 @@
       "Pool_INPI",
       "t_rpi",
       "RPI semanal"
-    ],
-    [
-      "t_corr",
-      "Pool_INPI",
-      "Pedido de correção"
     ]
   ]
 }

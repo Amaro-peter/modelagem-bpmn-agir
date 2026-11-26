@@ -4,7 +4,7 @@
   "pools": [
     {
       "id": "Pool_PROPPI",
-      "name": "PROPPI/AGIR – TO-BE – Etapa 2 – Reunião inicial e avaliação",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 2",
       "processId": "ToBe_Registro_Software_Etapa2",
       "lanes": [
         {
@@ -39,17 +39,12 @@
           "status": "nova"
         },
         {
-          "id": "j_esc",
-          "type": "xor",
-          "lane": "L_INT",
-          "status": "nova"
-        },
-        {
           "id": "t_esc",
           "type": "user",
           "lane": "L_INT",
           "name": "Escolher o horário da reunião no portal",
-          "status": "nova"
+          "status": "nova",
+          "note": "Mesma regra de inatividade do formulário (Etapa 3)"
         },
         {
           "id": "t_conf",
@@ -121,57 +116,6 @@
           "event": "link"
         },
         {
-          "id": "i2_lem",
-          "type": "boundary",
-          "attachedTo": "t_esc",
-          "event": "timer",
-          "interrupting": false,
-          "name": "Lembretes (5 e 10 dias úteis)",
-          "status": "nova",
-          "timer": "P5D"
-        },
-        {
-          "id": "i2_lem_fim",
-          "type": "end",
-          "lane": "L_PLAT",
-          "name": "Lembrete enviado",
-          "status": "nova",
-          "event": "message"
-        },
-        {
-          "id": "i2_30",
-          "type": "boundary",
-          "attachedTo": "t_esc",
-          "event": "timer",
-          "interrupting": true,
-          "name": "30 dias sem resposta",
-          "status": "nova",
-          "timer": "P30D"
-        },
-        {
-          "id": "i2_dec",
-          "type": "user",
-          "lane": "L_AGIR",
-          "name": "Decidir: arquivar (despacho no SEI) ou prorrogar",
-          "status": "nova",
-          "papel": "servidor"
-        },
-        {
-          "id": "i2_gw",
-          "type": "xor",
-          "lane": "L_AGIR",
-          "name": "Arquivar?",
-          "status": "nova"
-        },
-        {
-          "id": "i2_fim",
-          "type": "end",
-          "lane": "L_PLAT",
-          "name": "Arquivado por falta de resposta (interessado notificado)",
-          "status": "nova",
-          "event": "message"
-        },
-        {
           "id": "ini_j_hor_e1",
           "type": "start",
           "name": "(Etapa 1 – Solicitação e triagem)",
@@ -195,10 +139,6 @@
         ],
         [
           "t_hor",
-          "j_esc"
-        ],
-        [
-          "j_esc",
           "t_esc"
         ],
         [
@@ -239,28 +179,6 @@
         [
           "t_enc2",
           "e2_fim"
-        ],
-        [
-          "i2_lem",
-          "i2_lem_fim"
-        ],
-        [
-          "i2_30",
-          "i2_dec"
-        ],
-        [
-          "i2_dec",
-          "i2_gw"
-        ],
-        [
-          "i2_gw",
-          "i2_fim",
-          "Sim"
-        ],
-        [
-          "i2_gw",
-          "j_esc",
-          "Não, prorrogar"
         ],
         [
           "g_aval",

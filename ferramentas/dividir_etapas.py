@@ -6,7 +6,7 @@ A fonte precisa de:
 - "etapas": [{"n": 1, "nome": "...", "slug": "...", "dono": "<id da raia>"}, ...]
 - "etapa": N em cada nó (eventos de borda herdam a etapa da atividade).
 - "desfecho": true nos eventos de fim que encerram o processo (vão para o macro).
-- (opcional) "nomeCurto" na pool principal: usado no nome da pool das vistas por etapa.
+- (opcional) "nomeCurto" na pool principal: nas vistas por etapa, a pool se chama "<nomeCurto> – Etapa N".
 - (opcional) "compacto": true no topo: repassado às etapas e ao macro (colunas com largura adaptável).
 
 Saída: <pasta>/00-macro.json e <pasta>/NN-<slug>.json.
@@ -67,7 +67,8 @@ for k in sorted(etapas):
     used_lanes = {lane_of(n) if n['type'] != 'boundary' else lane_of(nodes[n['attachedTo']]) for n in snodes}
     msgs = [m for m in d.get('messageFlows', []) if m[0] in ids or m[1] in ids]
     ext_ids = {x for m in msgs for x in m[:2] if x in externals}
-    smain = {'id': main['id'], 'name': f'{main.get("nomeCurto", main["name"])} – {title(k)}', 'processId': proc_id(k),
+    nome_pool = f'{main["nomeCurto"]} – Etapa {k}' if main.get('nomeCurto') else f'{main["name"]} – {title(k)}'
+    smain = {'id': main['id'], 'name': nome_pool, 'processId': proc_id(k),
              'lanes': [copy.deepcopy(l) for l in main['lanes'] if l['id'] in used_lanes],
              'nodes': snodes, 'flows': sflows}
     groups = [g for g in main.get('groups', []) if set(g['nodes']) <= set(ids)]

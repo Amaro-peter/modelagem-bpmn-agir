@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:collaboration id="Collab_ToBe_Registro_Software_Etapa3">
-    <bpmn:participant id="Pool_PROPPI" name="PROPPI/AGIR – TO-BE – Etapa 3 – Coleta estruturada e validação" processRef="ToBe_Registro_Software_Etapa3" />
+    <bpmn:participant id="Pool_PROPPI" name="PROPPI/AGIR – TO-BE – Etapa 3" processRef="ToBe_Registro_Software_Etapa3" />
     <bpmn:participant id="Pool_SEI" name="SEI – registro oficial da UFF" />
     <bpmn:messageFlow id="Msg_1" name="Incluir formulário" sourceRef="t_resumo" targetRef="Pool_SEI" />
   </bpmn:collaboration>
-  <bpmn:process id="ToBe_Registro_Software_Etapa3" name="PROPPI/AGIR – TO-BE – Etapa 3 – Coleta estruturada e validação" isExecutable="false">
+  <bpmn:process id="ToBe_Registro_Software_Etapa3" name="PROPPI/AGIR – TO-BE – Etapa 3" isExecutable="false">
     <bpmn:laneSet id="ToBe_Registro_Software_Etapa3_lanes">
       <bpmn:lane id="L_INT" name="INTERESSADO (portal)">
         <bpmn:flowNodeRef>j_form</bpmn:flowNodeRef>

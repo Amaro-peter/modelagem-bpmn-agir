@@ -26,12 +26,20 @@ Modelo do **estado futuro** do processo, elaborado a partir do diagnóstico AS-I
 **Participantes:**
 - **Interessado**, que passa a usar o portal.
 - **AGIR (servidores e bolsistas)**, numa raia só. A divisão "bolsista opera, servidor decide" está registrada em cada tarefa e aparece na tabela da seção 4.
-- **Outras unidades da UFF** cuidam dos registros patrimonial e contábil, do parecer jurídico e da assinatura da Reitoria.
 - **Plataforma de Gestão de PI** executa as atividades automáticas.
 - **Participantes externos:**
   - **INPI** (e-INPI/GRU, e-Software, RPI, Busca Web, "Meus Pedidos", Fale Conosco);
-  - **SEI** (registro oficial: as mensagens representam a integração automática; tarefas humanas feitas no SEI trazem "(SEI)" no nome);
-  - **Cotitulares externos**.
+  - **SEI** (registro oficial: as mensagens representam a integração automática; tarefas humanas feitas no SEI trazem "(SEI)" no nome).
+- Na **Etapa 7**, reaproveitada do AS-IS, atuam também as **Outras unidades da UFF** e os **Cotitulares externos**, exatamente como no AS-IS.
+
+### Escopo do diagrama: o que foi simplificado
+
+Para manter o TO-BE enxuto, o diagrama **detalha só as melhorias prioritárias**: atendimento e agenda (3.1/3.2), coleta e validação de dados (3.4/3.5) e acompanhamento do INPI (3.3/3.6). O restante continua valendo e está descrito neste documento:
+
+- **Etapa 7** (registros internos, cotitularidade e encerramento) **não muda**. No TO-BE ela é uma *call activity* que chama o processo da [Etapa 7 do AS-IS](../../etapas/07-registros.bpmn).
+- **Etapa 4** (pagamento), que não está entre os gargalos, aparece simplificada: emitir e pagar a GRU, e a Plataforma anexa o comprovante ao SEI. A nova tentativa automática quando o e-INPI está fora do ar e a espera pela compensação estão só no texto (seção 5).
+- **Conferência do certificado** (3.7) é uma atividade única no diagrama. A comparação automática com os dados aprovados e a correção (serviço 747 ou Fale Conosco) estão descritas nas seções 2 e 5.
+- **Exceções desenhadas uma vez:** a regra de inatividade do interessado aparece no formulário (Etapa 3); na escolha de horário e no aceite, ela vem indicada em anotação. A contingência do SEI aparece na Etapa 1 e vale para todas as inclusões no SEI.
 
 ## 2. Gargalos do AS-IS × melhorias do TO-BE
 
@@ -43,7 +51,7 @@ Modelo do **estado futuro** do processo, elaborado a partir do diagnóstico AS-I
 | 3.4 Interpretação das informações enviadas pelo interessado | Formulário estruturado com campos obrigatórios, orientações, validação automática (formatos, CPF, coerência) e hash calculado no navegador. Inconsistências voltam com apontamentos objetivos. | Etapa 3 (formulário, hash e validação automática, pendências apontadas no portal) |
 | 3.5 Erros de preenchimento no e-Software | Ficha de preenchimento gerada da versão aprovada pelo interessado. O bolsista preenche e confere campo a campo, e o servidor valida antes de enviar. É uma dupla conferência que não depende de API do INPI. | Etapa 3 (aceite eletrônico e versão aprovada); Etapa 5 (ficha, conferência, validação final) |
 | 3.6 Demora na comunicação do andamento | Notificações automáticas em cada mudança de situação (recebimento, agendamento, pendências, aprovação dos dados, protocolo, decisão do INPI, correção, certificado), além do painel no portal. | Notificações automáticas da Plataforma (tarefas e eventos de mensagem) em todas as etapas |
-| 3.7 Certificados com erro e correções posteriores | Antes do protocolo: validação automática, conferência humana, aceite do interessado e validação final. Depois da emissão: comparação automática do certificado com a versão aprovada e validação do servidor. Em caso de divergência, a correção segue a origem do erro (serviço 747 se veio dos dados da AGIR, Fale Conosco se o erro é do INPI). | Etapas 3 e 5 (prevenção); Etapa 6 ("Comparar o certificado com a versão aprovada", "Pedir a correção ao INPI") |
+| 3.7 Certificados com erro e correções posteriores | Antes do protocolo: validação automática, conferência humana, aceite do interessado e validação final. Depois da emissão: comparação automática do certificado com a versão aprovada e validação do servidor. Em caso de divergência, a correção segue a origem do erro (serviço 747 se veio dos dados da AGIR, Fale Conosco se o erro é do INPI). | Etapas 3 e 5 (prevenção); Etapa 6 ("Baixar e conferir o certificado com os dados aprovados": atividade única no diagrama, mecanismo descrito aqui) |
 
 ## 3. Sistemas envolvidos
 
@@ -74,7 +82,7 @@ Modelo do **estado futuro** do processo, elaborado a partir do diagnóstico AS-I
 
 ## 4. Automação × atividades humanas
 
-O TO-BE tem **48 atividades**: **13 automáticas** (Plataforma) e **35 humanas**.
+O TO-BE tem **33 atividades**: **12 automáticas** (Plataforma) e **21 humanas**.
 
 ### Atividades automatizadas (raia da Plataforma)
 | Etapa | Atividade | Tipo |
@@ -90,7 +98,6 @@ O TO-BE tem **48 atividades**: **13 automáticas** (Plataforma) e **35 humanas**
 | 5 | Gerar a ficha de preenchimento do e-Software | serviço (service) |
 | 5 | Anexar o recibo ao SEI, iniciar o acompanhamento e notificar | serviço (service) |
 | 6 | Ler a RPI ou o e-mail e registrar o despacho | serviço (service) |
-| 6 | Comparar o certificado com a versão aprovada | serviço (service) |
 | 6 | Anexar o certificado ao SEI e enviá-lo ao interessado | serviço (service) |
 
 **Por que essas atividades foram automatizadas:**
@@ -101,9 +108,7 @@ O TO-BE tem **48 atividades**: **13 automáticas** (Plataforma) e **35 humanas**
 ### Atividades mantidas sob responsabilidade humana
 **INTERESSADO (portal)** (4): Enviar a solicitação pelo portal (formulário estruturado); Escolher o horário da reunião no portal; Preencher o formulário de registro e anexar os documentos; Revisar os dados e dar o aceite eletrônico.
 
-**Outras unidades da UFF** (3): Realizar os registros patrimonial e contábil para devolver à AGIR; Emitir parecer jurídico sobre o Contrato de Ajuste e devolver à AGIR; Assinar o Contrato de Ajuste (Reitoria).
-
-**AGIR (servidores e bolsistas)** (28). Quem faz o quê:
+**AGIR (servidores e bolsistas)** (17). Quem faz o quê:
 
 | Etapa | Atividade | Papel |
 |---|---|---|
@@ -112,29 +117,18 @@ O TO-BE tem **48 atividades**: **13 automáticas** (Plataforma) e **35 humanas**
 | 1 | Assinar o despacho de encerramento (SEI) | servidor |
 | 2 | Conduzir a reunião, avaliar o ativo e registrar a ata | servidor (ata: bolsista) |
 | 2 | Assinar o despacho de encerramento (SEI) | servidor |
-| 2 | Decidir: arquivar (despacho no SEI) ou prorrogar | servidor |
 | 3 | Conferir o formulário com os documentos | bolsista |
 | 3 | Decidir: arquivar (despacho no SEI) ou prorrogar | servidor |
-| 4 | Emitir a GRU 730 no e-INPI (cadastro da UFF) | bolsista |
-| 4 | Efetuar o pagamento da GRU | servidor |
+| 4 | Emitir e pagar a GRU 730 (e-INPI, cadastro da UFF) | bolsista emite; servidor paga |
 | 5 | Baixar e assinar a DV (ICP-Brasil) | bolsista baixa; servidor assina |
 | 5 | Preencher o e-Software pela ficha e conferir campo a campo | bolsista |
 | 5 | Validar o preenchimento final | servidor |
 | 5 | Enviar o pedido ao INPI e registrar o número | servidor |
 | 6 | Consultar o pedido no Busca Web e registrar | bolsista (servidor após 15 dias) |
 | 6 | Assinar o despacho de encerramento (SEI) | servidor |
-| 6 | Baixar o certificado no portal do INPI | bolsista |
-| 6 | Pedir a correção ao INPI | bolsista; servidor no serviço 747 |
-| 6 | Validar o certificado | servidor |
+| 6 | Baixar e conferir o certificado com os dados aprovados | bolsista confere; servidor valida |
 | 6 | Elaborar despacho de encaminhamento | servidor |
-| 7 | Elaborar despacho de encerramento | servidor |
-| 7 | Anexar minuta do Contrato de Ajuste de Propriedade Intelectual | servidor |
-| 7 | Elaborar despacho de encaminhamento | servidor |
-| 7 | Incluir o Contrato de Ajuste de Propriedade Intelectual, de acordo com parecer da PROGER | servidor |
-| 7 | Enviar e-mail com orientações sobre o cadastro de usuários externos | servidor |
-| 7 | Disponibilizar Contrato de Ajuste de Propriedade Intelectual para assinaturas externas | servidor |
-| 7 | Assinar o Contrato de Ajuste (AGIR) | servidor |
-| 7 | Elaborar despacho de encerramento | servidor |
+| 7 | Registros internos, cotitularidade e encerramento (AS-IS, Etapa 7) | servidor (com outras unidades da UFF e cotitulares, como no AS-IS) |
 
 **Por que essas atividades continuam com pessoas:**
 - Decisões institucionais (triagem, avaliação do ativo, arquivamento, validação final do pedido e do certificado), atos oficiais no SEI, assinatura da DV com certificado ICP-Brasil e o pagamento exigem responsabilidade de servidor.
@@ -146,17 +140,17 @@ O TO-BE tem **48 atividades**: **13 automáticas** (Plataforma) e **35 humanas**
 
 | Exceção | Mecanismo no modelo | Recuperação |
 |---|---|---|
-| Interessado não responde (horário, formulário, aceite) | Eventos de borda: lembretes automáticos (5 e 10 dias úteis, não interruptivo) e "30 dias sem resposta" (interruptivo). No aceite, a mesma regra vem indicada em anotação | O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade) |
+| Interessado não responde (horário, formulário, aceite) | Desenhado no formulário (Etapa 3): lembretes automáticos (5 e 10 dias úteis, borda não interruptiva) e "30 dias sem resposta" (borda interruptiva). Na escolha de horário e no aceite, a regra vem indicada em anotação | O servidor decide **arquivar** (despacho no SEI + notificação) ou **prorrogar** (volta à mesma atividade) |
 | Interessado não comparece à reunião | Gateway "Interessado compareceu?" + link "Oferecer novos horários" | Novos horários são oferecidos |
 | Documentação incompleta ou inconsistente | Validação automática ("Dados consistentes?") e conferência do bolsista ("Conferência ok?") | Pendências apontadas no portal e volta ao formulário |
 | Dados não confirmados pelo interessado | Gateway "Dados confirmados?" | Volta ao formulário para ajuste |
 | Erro de preenchimento no e-Software | Validação final do servidor ("Preenchimento correto?") | Devolução ao bolsista com apontamentos, antes de enviar |
 | SEI indisponível ou integração não aprovada | Evento de borda de erro "Falha na integração com o SEI" (Etapa 1); vale a mesma regra nas demais inclusões no SEI | Contingência: o bolsista lança no SEI e vincula o número na plataforma |
-| e-INPI indisponível | Evento de borda de erro "e-INPI indisponível" + timer "Nova tentativa" | Novas tentativas em intervalo parametrizável |
+| e-INPI indisponível | **Só no documento** (Etapa 4 simplificada no diagrama) | A Plataforma agenda novas tentativas em intervalo parametrizável e avisa o bolsista |
 | Triagem atrasada | Evento de borda "Prazo de triagem vencido" (não interruptivo) | Alerta à equipe e ao servidor |
 | INPI sem novidade no prazo | Timer "10 dias sem novidade (15: escala)" no gateway de eventos | Com 10 dias, consulta do bolsista no Busca Web; com 15 dias, escala ao servidor |
 | Pedido não conhecido (742) | Ramo "742" do gateway "Despacho" | Encerramento com despacho e comunicação ao interessado (conforme o AS-IS confirmado) |
-| Certificado com divergência | Comparação automática + "Pedir a correção ao INPI" | Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido |
+| Certificado com divergência | **Só no documento**: a comparação automática faz parte de "Baixar e conferir o certificado com os dados aprovados" | Serviço 747 (dados da AGIR) ou Fale Conosco (erro do INPI). O interessado é notificado e o acompanhamento continua até o certificado corrigido |
 
 ## 6. Aderência às restrições institucionais
 
@@ -174,14 +168,16 @@ O TO-BE tem **48 atividades**: **13 automáticas** (Plataforma) e **35 humanas**
 | Etapa TO-BE | Etapa AS-IS correspondente | Atividades AS-IS | Atividades TO-BE | Automáticas no TO-BE |
 |---|---|---|---|---|
 | 1. Solicitação e triagem | 1. Abertura do pedido | 4 | 5 | 1 |
-| 2. Reunião inicial e avaliação | 2. Avaliação do ativo | 6 | 6 | 2 |
+| 2. Reunião inicial e avaliação | 2. Avaliação do ativo | 6 | 5 | 2 |
 | 3. Coleta estruturada e validação | 3. Instrução documental | 8 | 8 | 4 |
-| 4. Pagamento da GRU | 4. Pagamento da GRU | 4 | 3 | 1 |
+| 4. Pagamento da GRU | 4. Pagamento da GRU | 4 | 2 | 1 |
 | 5. Protocolo assistido no INPI | 5. Depósito do pedido no INPI | 7 | 6 | 2 |
-| 6. Acompanhamento do INPI e conferência do certificado | 6. Resultado do INPI | 9 | 9 | 3 |
-| 7. Registros internos, cotitularidade e encerramento | 7. Registros internos e cotitularidade | 11 | 11 | 0 |
+| 6. Acompanhamento do INPI e conferência do certificado | 6. Resultado do INPI | 9 | 6 | 2 |
+| 7. Registros internos, cotitularidade e encerramento | 7. Registros internos e cotitularidade | 11 | 1 | 0 |
 
-**Total:** 49 atividades no AS-IS, todas manuais, contra 48 no TO-BE, das quais **35 humanas** e **13 automáticas**. As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. O TO-BE fica praticamente do mesmo tamanho do AS-IS e ganha controles que hoje não existem: prazos, lembretes, validação automática, aceite do interessado, conferência do certificado e acompanhamento do INPI. Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, e em ter menos retrabalho (correções de dados e de certificados).
+A Etapa 7 **reaproveita o AS-IS** por uma *call activity*: as 11 atividades dela continuam valendo e não foram redesenhadas.
+
+**Total das Etapas 1 a 6:** 38 atividades no AS-IS, todas manuais, contra 32 no TO-BE, das quais **20 humanas** e **12 automáticas**. As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. Com menos atividades, o TO-BE ganha controles que hoje não existem: prazos, lembretes, validação automática, aceite do interessado, conferência do certificado e acompanhamento do INPI. Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, e em ter menos retrabalho (correções de dados e de certificados).
 
 ## 8. Indicadores de desempenho (sem metas)
 

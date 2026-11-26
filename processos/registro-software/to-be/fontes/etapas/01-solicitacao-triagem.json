@@ -4,7 +4,7 @@
   "pools": [
     {
       "id": "Pool_PROPPI",
-      "name": "PROPPI/AGIR – TO-BE – Etapa 1 – Solicitação e triagem",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 1",
       "processId": "ToBe_Registro_Software_Etapa1",
       "lanes": [
         {

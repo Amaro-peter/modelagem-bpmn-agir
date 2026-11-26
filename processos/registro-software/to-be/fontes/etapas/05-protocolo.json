@@ -4,7 +4,7 @@
   "pools": [
     {
       "id": "Pool_PROPPI",
-      "name": "PROPPI/AGIR – TO-BE – Etapa 5 – Protocolo assistido no INPI",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 5",
       "processId": "ToBe_Registro_Software_Etapa5",
       "lanes": [
         {

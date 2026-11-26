@@ -4,7 +4,7 @@
   "pools": [
     {
       "id": "Pool_PROPPI",
-      "name": "PROPPI/AGIR – TO-BE – Etapa 6 – Acompanhamento do INPI e conferência do certificado",
+      "name": "PROPPI/AGIR – TO-BE – Etapa 6",
       "processId": "ToBe_Registro_Software_Etapa6",
       "lanes": [
         {
@@ -120,47 +120,10 @@
           "id": "t_cert",
           "type": "user",
           "lane": "L_AGIR",
-          "name": "Baixar o certificado no portal do INPI",
-          "papel": "bolsista"
-        },
-        {
-          "id": "t_compara",
-          "type": "service",
-          "lane": "L_PLAT",
-          "name": "Comparar o certificado com a versão aprovada",
-          "status": "nova"
-        },
-        {
-          "id": "g_div",
-          "type": "xor",
-          "lane": "L_PLAT",
-          "name": "Divergências?",
-          "status": "nova"
-        },
-        {
-          "id": "t_corr",
-          "type": "user",
-          "lane": "L_AGIR",
-          "name": "Pedir a correção ao INPI",
+          "name": "Baixar e conferir o certificado com os dados aprovados",
           "status": "nova",
-          "papel": "bolsista; servidor no serviço 747",
-          "note": "Erro nos dados da AGIR: serviço 747 (nova GRU). Erro do INPI: Fale Conosco"
-        },
-        {
-          "id": "c_corr",
-          "type": "throw",
-          "lane": "L_PLAT",
-          "name": "Interessado notificado: correção em andamento",
-          "status": "nova",
-          "event": "message"
-        },
-        {
-          "id": "t_valcert",
-          "type": "user",
-          "lane": "L_AGIR",
-          "name": "Validar o certificado",
-          "status": "nova",
-          "papel": "servidor"
+          "papel": "bolsista confere; servidor valida",
+          "note": "A Plataforma compara automaticamente. Divergência: serviço 747 (erro da AGIR) ou Fale Conosco (erro do INPI)"
         },
         {
           "id": "t_envcert",
@@ -264,32 +227,6 @@
         ],
         [
           "t_cert",
-          "t_compara"
-        ],
-        [
-          "t_compara",
-          "g_div"
-        ],
-        [
-          "g_div",
-          "t_corr",
-          "Sim"
-        ],
-        [
-          "t_corr",
-          "c_corr"
-        ],
-        [
-          "c_corr",
-          "j_mon"
-        ],
-        [
-          "g_div",
-          "t_valcert",
-          "Não"
-        ],
-        [
-          "t_valcert",
           "t_envcert"
         ],
         [
@@ -336,11 +273,6 @@
       "Pool_INPI",
       "t_rpi",
       "RPI semanal"
-    ],
-    [
-      "t_corr",
-      "Pool_INPI",
-      "Pedido de correção"
     ]
   ],
   "compacto": true
