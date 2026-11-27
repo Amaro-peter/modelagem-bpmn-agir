@@ -1,11 +1,10 @@
-// Apresentação da aula no modelo "Mapeamento dos processos – TO-BE" (até 15 slides):
+// Apresentação da aula no modelo "Mapeamento dos processos – TO-BE" (14 slides):
 // título; resumo (processo, método de análise, heurísticas); análise qualitativa (resultados e conclusões);
 // redesenho TO-BE (novo diagrama e melhorias). Conteúdo revisado pelo grupo em apresentacao/aula/conteudo.md.
-// Uso: npm run aula   →   apresentacao/aula/apresentacao-aula-to-be.html e .pdf
+// Uso: npm run aula (14 slides)   →   apresentacao/aula/apresentacao-aula-to-be.html e .pdf
 import fs from 'node:fs';
 import { RS, P, esc, diagramas, nomesEtapas, icone, marca, seta, fluxoCapa, AUTORES, htmlRestricoesSolucao, criarApresentacao } from '../comum.mjs';
 
-const asis = { modelo: 'AS-IS', rotulo: 'Modelo completo', arquivo: `${RS}/as-is/registro-software-asis.bpmn` };
 const tobe = { modelo: 'TO-BE', rotulo: 'Modelo completo', arquivo: `${RS}/to-be/registro-software-tobe.bpmn` };
 const { add, slideDiagrama, slidesRecorte, gravar, total } = criarApresentacao();
 const titulo = (cinza, preto, top = 48) => `<h2 class="rt at" style="top:${top}px">${cinza} <b>${preto}</b></h2>`;
@@ -114,17 +113,14 @@ add('Resumo: heurísticas de redesenho', `  ${fundoPontos}${marca()}
     <article class="hc c3 heur">${icone('centro')}<span class="dim flex">Flexibilidade</span><h3>Centralização</h3><p>Uma plataforma única reúne solicitações, comunicações, dados, prazos e o acompanhamento do INPI. Servidores e bolsistas trabalham numa fila comum.</p></article>
   </div>`);
 
-// 5. Análise qualitativa: o processo AS-IS
-slideDiagrama(asis, 'Análise qualitativa · o processo AS-IS');
-
-// 6. Resultados: registro de problemas
+// 5. Resultados: registro de problemas
 add('Resultados: registro de problemas', `  ${marca()}
   ${titulo('Resultados ·', 'registro de problemas', 40)}
   <table class="tab prob"><thead><tr><th>#</th><th>Problema</th><th>Descrição</th><th>Impacto</th></tr></thead><tbody>
   ${problemas.map((p, i) => `<tr><td><span class="n">${i + 1}</span></td><td><b>${esc(p[0])}</b></td><td>${esc(p[1])}</td><td>${esc(p[2])}</td></tr>`).join('\n  ')}
   </tbody></table>`);
 
-// 7. Resultados: análise de valor agregado
+// 6. Resultados: análise de valor agregado
 const v = valorPorEtapa();
 const nomesAsis = nomesEtapas(diagramas(RS, 'AS-IS'));
 const tot = { VA: 0, BVA: 0, NVA: 0 };
@@ -139,7 +135,7 @@ add('Resultados: valor agregado', `  ${marca()}
   <div class="vcard"><div class="vleg"><span><i class="va"></i>VA ${tot.VA}</span><span><i class="bva"></i>BVA ${tot.BVA}</span><span><i class="nva"></i>NVA ${tot.NVA}</span><em>${v.total} atividades do AS-IS (sem as do INPI)</em></div>${barras}</div>
   <div class="ncard"><span class="kick-c">NVA: só movem informação</span><ul>${NVA.map(id => `<li>${esc(v.nomes[id])}</li>`).join('')}<li class="esp">Espera sem rotina pela publicação na RPI</li></ul></div>`);
 
-// 8. Resultados: diagrama de Ishikawa
+// 7. Resultados: diagrama de Ishikawa
 function espinha() {
   const W = 1368, cx = [200, 560, 920], yS = 360, cardH = 200, OFF = 120;
   const ossos = [...ishikawa.cima.map((c, i) => ({ c, x: cx[i], cima: true })), ...ishikawa.baixo.map((c, i) => ({ c, x: cx[i], cima: false }))];
@@ -152,24 +148,24 @@ add('Resultados: diagrama de Ishikawa', `  ${marca()}
   ${titulo('Resultados ·', 'diagrama de Ishikawa', 28)}
   ${espinha()}`);
 
-// 9. Conclusões
+// 8. Conclusões
 add('Conclusões', `  ${fundoPontos}${marca()}
   ${titulo('Análise qualitativa ·', 'conclusões')}
   <div class="cards concl">${conclusoes.map((c, i) => `<article class="hc"><span class="num">${i + 1}</span><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p></article>`).join('')}</div>`);
 
-// 10. Redesenho: restrições e solução
+// 9. Redesenho: restrições e solução
 add('Redesenho: restrições e solução', htmlRestricoesSolucao('Redesenho · <b>restrições e solução</b>'));
 
-// 11. Novo diagrama TO-BE   12–14. por trechos
+// 10. Novo diagrama TO-BE   11–13. por trechos
 slideDiagrama(tobe, 'Redesenho · o novo processo TO-BE');
 await slidesRecorte(tobe, `${RS}/to-be/fontes/etapas`, [[1, 2], [3, 4], [5, 6, 7]], nomesEtapas(diagramas(`${RS}/to-be`, 'TO-BE')));
 
-// 15. Principais melhorias e justificativas
+// 14. Principais melhorias e justificativas
 add('Principais melhorias e justificativas', `  ${marca()}
   ${titulo('Redesenho ·', 'principais melhorias e justificativas', 40)}
   <table class="tab melh"><thead><tr><th>Problema (AS-IS)</th><th>Melhoria no TO-BE</th><th>Heurística</th></tr></thead><tbody>
   ${melhorias.map((m, i) => `<tr><td><span class="n">${i + 1}</span><b>${esc(m[0])}</b></td><td>${esc(m[1])}</td><td>${m[2].map(h => `<span class="hpill ${h}">${H[h]}</span>`).join('')}</td></tr>`).join('\n  ')}
   </tbody></table>`);
 
-if (total() > 15) throw new Error(`a apresentação da aula tem ${total()} slides (máximo 15)`);
+if (total() > 14) throw new Error(`a apresentação da aula tem ${total()} slides (máximo 14)`);
 await gravar({ titulo: 'Mapeamento dos processos – TO-BE | Registro de software AGIR/UFF', html: 'apresentacao/aula/apresentacao-aula-to-be.html', pdf: 'apresentacao/aula/apresentacao-aula-to-be.pdf' });

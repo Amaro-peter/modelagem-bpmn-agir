@@ -1,6 +1,6 @@
 # Conteúdo da apresentação da aula (rascunho para revisão do grupo)
 
-Modelo seguido: "Modelo de apresentação do mapeamento dos processos – TO-BE" (título; resumo; análise qualitativa; redesenho TO-BE). Até 15 slides.
+Modelo seguido: "Modelo de apresentação do mapeamento dos processos – TO-BE" (título; resumo; análise qualitativa; redesenho TO-BE). 14 slides (sem o slide do diagrama AS-IS).
 Fontes: enunciado do TO-BE (gargalos 3.1 a 3.7 e restrições), `processos/registro-software/docs/relatorio-asis.md`, `processos/registro-software/to-be/docs/to-be-registro-software.md` e as atividades do modelo AS-IS.
 
 ## 1. Resumo
