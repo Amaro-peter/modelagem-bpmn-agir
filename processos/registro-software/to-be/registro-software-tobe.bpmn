@@ -571,7 +571,7 @@
       <bpmndi:BPMNShape id="g_comp_di" bpmnElement="g_comp" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
         <dc:Bounds x="1982" y="474" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1942" y="442" width="130" height="28" />
+          <dc:Bounds x="1942" y="442" width="130" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_reuniao_di" bpmnElement="t_reuniao" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
@@ -613,7 +613,7 @@
       <bpmndi:BPMNShape id="g_confere_di" bpmnElement="g_confere" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
         <dc:Bounds x="3322" y="474" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3376" y="460" width="115" height="14" />
+          <dc:Bounds x="3342" y="463" width="115" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_resumo_di" bpmnElement="t_resumo" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
@@ -733,6 +733,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_envcert_di" bpmnElement="t_envcert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
         <dc:Bounds x="6928" y="1004" width="120" height="125" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_desp_encam_di" bpmnElement="t_desp_encam">
         <dc:Bounds x="7108" y="452" width="120" height="95" />
@@ -1033,6 +1034,9 @@
         <di:waypoint x="3057" y="107" />
         <di:waypoint x="2587" y="107" />
         <di:waypoint x="2587" y="162" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3704" y="82" width="72" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f42_di" bpmnElement="ToBe_Registro_Software_f42">
         <di:waypoint x="3962" y="861" />

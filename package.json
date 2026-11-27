@@ -9,7 +9,8 @@
     "lint": "bpmnlint",
     "editor": "node ferramentas/serve.js",
     "registro-software": "node processos/registro-software/scripts/gerar_tudo.js",
-    "validar": "node ferramentas/validar.js"
+    "validar": "node ferramentas/validar.js",
+    "comparar": "node ferramentas/comparar.mjs"
   },
   "type": "module",
   "dependencies": {
