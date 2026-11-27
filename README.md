@@ -68,6 +68,16 @@ O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Goog
 
 Os diagramas são os próprios `.bpmn` do projeto, desenhados em vetor. Use a roda do mouse para zoom, arraste para mover e o botão **Ajustar** para enquadrar de novo. Para navegar, use as setas do teclado ou a barra inferior; **F** liga a tela cheia. Há também a versão em PDF, [`apresentacao/apresentacao-bpmn-agir.pdf`](apresentacao/apresentacao-bpmn-agir.pdf), sem partes interativas: os diagramas entram como imagens estáticas em vetor, nítidas em qualquer zoom do leitor de PDF. Depois de mudar algum diagrama, gere as duas versões de novo com `npm run apresentacao`.
 
+### Apresentação da aula (modelo "Mapeamento dos processos – TO-BE")
+
+[`apresentacao/aula/apresentacao-aula-to-be.pdf`](apresentacao/aula/apresentacao-aula-to-be.pdf) (e o [`.html`](apresentacao/aula/apresentacao-aula-to-be.html) interativo) tem 15 slides e segue o modelo da disciplina:
+- **Título e integrantes.**
+- **Resumo:** o processo escolhido, os métodos de análise qualitativa (registro de problemas, análise de valor agregado e diagrama de Ishikawa) e as heurísticas de redesenho (eliminação de atividades, empoderamento e centralização), cada um com o porquê.
+- **Análise qualitativa:** resultados e conclusões.
+- **Redesenho TO-BE:** restrições e solução, o novo diagrama e os recortes, e as principais melhorias com justificativa.
+
+O conteúdo revisado pelo grupo está em [`apresentacao/aula/conteudo.md`](apresentacao/aula/conteudo.md). Para gerar de novo, use `npm run aula`.
+
 ## Processos
 
 | Processo | Situação | Conteúdo |
@@ -101,6 +111,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npx bpmnlint <arquivo.bpmn>` | Valida as regras BPMN (configuração em `.bpmnlintrc`) |
 | `npm run render -- <arquivo.bpmn>` | Gera SVG e PNG, um por plano (inclusive drill-downs) |
 | `npm run editor` | Editor visual local com gravação no projeto |
+| `npm run aula` | Gera a apresentação da aula (HTML e PDF, 15 slides) em `apresentacao/aula/` |
 | `npm run apresentacao` | Gera a apresentação em HTML (interativa) e em PDF (imagens estáticas) com os diagramas atuais; o layout fica em `apresentacao/recursos/` |
 | `npm run comparar -- <antes.bpmn> <depois.bpmn>` | Mostra o que mudou entre duas versões de um diagrama (elementos, nomes, ligações, raias e posições) |
 | `python3 -I ferramentas/dividir_etapas.py <fonte.json> <pasta>` | Gera os diagramas por etapa e o macroprocesso a partir de uma fonte com `"etapa"` em cada nó |

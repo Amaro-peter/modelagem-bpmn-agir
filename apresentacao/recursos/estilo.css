@@ -121,3 +121,72 @@ body{ margin:0; height:100%; background:var(--surround); color:var(--ink); font-
   .slide{ display:block !important; position:relative; width:1456px; height:819px; break-after:page; }
   *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 }
+
+/* ---------- apresentação da aula (modelo "Mapeamento dos processos – TO-BE") ---------- */
+.rt.at{ font-size:50px; line-height:64px; }
+.sub.at{ top:132px; font-size:26px; line-height:36px; }
+.cards.at{ top:226px; height:559px; }
+.kick-capa{ position:absolute; left:60px; top:72px; background:var(--ink); color:#fff; font-size:18px; line-height:38px; font-weight:700; padding:0 16px; border-radius:8px; letter-spacing:.04em; text-transform:uppercase; }
+.kick-c{ display:inline-block; align-self:flex-start; background:var(--teal); color:#fff; font-size:15px; line-height:30px; font-weight:700; padding:0 12px; border-radius:6px; letter-spacing:.05em; text-transform:uppercase; }
+/* resumo: processo */
+.lcard.proc{ top:150px; height:635px; width:560px; display:flex; flex-direction:column; }
+.lcard.proc h3{ margin-top:22px !important; font-size:44px; line-height:52px; font-weight:700; letter-spacing:-.02em; }
+.lcard.proc p{ margin-top:auto; font-size:25px; line-height:37px; }
+.rcard.porque{ left:628px; top:150px; width:792px; height:635px; padding:36px 40px; display:flex; flex-direction:column; }
+.rcard.porque h3{ font-size:26px; line-height:34px; font-weight:700; }
+.rcard.porque ul{ grid-template-columns:1fr; height:auto; flex:1; margin-top:16px !important; gap:10px; }
+.rcard.porque li{ font-size:24px; line-height:30px; gap:18px; }
+.rcard.porque li .n{ width:42px; height:42px; font-size:21px; }
+/* resumo: heurísticas */
+.hc.heur .dim{ align-self:flex-start; background:var(--ink); color:#fff; font-size:15px; line-height:30px; font-weight:700; padding:0 12px; border-radius:6px; letter-spacing:.05em; text-transform:uppercase; margin-bottom:14px; }
+.hc.heur .dim.flex{ background:var(--teal); }
+.hc.heur p, .cards.at .hc p{ font-size:23px; line-height:33px; }
+/* tabelas */
+.tab{ position:absolute; left:52px; top:128px; width:1368px; border-collapse:separate; border-spacing:0 8px; }
+.tab th{ text-align:left; font-size:15px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--grey-h); padding:0 16px; }
+.tab td{ background:var(--sky); padding:9px 16px; font-size:18px; line-height:24px; vertical-align:middle; }
+.tab td:first-child{ border-radius:10px 0 0 10px; } .tab td:last-child{ border-radius:0 10px 10px 0; }
+.tab .n{ display:inline-grid; place-items:center; width:34px; height:34px; border-radius:7px; background:var(--teal); color:#fff; font-size:17px; font-weight:700; margin-right:12px; vertical-align:middle; }
+.tab.prob th:nth-child(1){ width:66px; } .tab.prob th:nth-child(2){ width:300px; } .tab.prob th:nth-child(3){ width:560px; }
+.tab.melh th:nth-child(1){ width:370px; } .tab.melh th:nth-child(3){ width:330px; }
+.tab.melh td{ padding:12px 16px; font-size:19px; line-height:26px; }
+.hpill{ display:inline-block; margin:3px 6px 3px 0; padding:0 10px; border-radius:6px; font-size:14px; line-height:26px; font-weight:700; white-space:nowrap; }
+.hpill.elim{ background:var(--ink); color:#fff; } .hpill.emp{ background:var(--teal); color:#fff; } .hpill.cent{ background:#fff; color:var(--ink); box-shadow:inset 0 0 0 2px var(--teal); }
+/* valor agregado */
+.vcard{ position:absolute; left:52px; top:132px; width:850px; height:653px; background:var(--sky); border-radius:12px; padding:30px 32px; display:flex; flex-direction:column; justify-content:space-between; }
+.vleg{ display:flex; align-items:center; gap:22px; font-size:20px; font-weight:700; }
+.vleg i, .vbar i{ display:inline-block; } .vleg i{ width:18px; height:18px; border-radius:4px; margin-right:8px; vertical-align:-2px; }
+.vleg em{ margin-left:auto; font-style:normal; font-weight:400; font-size:16px; color:#2c3b40; }
+.vrow{ display:grid; grid-template-columns:290px 1fr; align-items:center; gap:16px; }
+.vlab{ font-size:17px; line-height:21px; } .vlab b{ display:block; font-size:15px; text-transform:uppercase; letter-spacing:.04em; }
+.vbar{ display:flex; height:40px; background:#fff; border-radius:6px; overflow:hidden; }
+.vbar i{ display:grid; place-items:center; color:#fff; font-style:normal; font-size:16px; font-weight:700; }
+.va{ background:var(--teal); } .bva{ background:var(--ink); } .nva{ background:#EA552B; }
+.ncard{ position:absolute; left:918px; top:132px; width:502px; height:653px; background:var(--ink); color:#fff; border-radius:12px; padding:30px 30px; }
+.ncard .kick-c{ background:#EA552B; }
+.ncard ul{ list-style:none; padding:0; margin-top:20px !important; display:grid; gap:11px; }
+.ncard li{ position:relative; padding-left:26px; font-size:19px; line-height:25px; }
+.ncard li::before{ content:""; position:absolute; left:0; top:7px; width:12px; height:12px; border-radius:3px; background:#EA552B; }
+.ncard li.esp{ color:#cfd9dc; font-style:italic; }
+/* Ishikawa */
+.ishi{ position:absolute; left:52px; top:92px; width:1368px; height:720px; }
+.ishi svg{ position:absolute; inset:0; width:100%; height:100%; }
+.ibox{ position:absolute; width:350px; background:var(--sky); border-radius:10px; padding:14px 18px; }
+.ibox h4{ margin:0; font-size:21px; line-height:26px; font-weight:700; }
+.ibox ul{ list-style:none; padding:0; margin:8px 0 0; display:grid; gap:6px; }
+.ibox li{ position:relative; padding-left:20px; font-size:17px; line-height:22px; }
+.ibox li::before{ content:""; position:absolute; left:0; top:6px; width:10px; height:10px; border-radius:2px; background:var(--teal); }
+.ihead{ position:absolute; left:1112px; width:256px; height:170px; background:var(--ink); color:#fff; border-radius:12px; padding:18px 20px; display:flex; flex-direction:column; justify-content:center; gap:10px; font-size:23px; line-height:29px; font-weight:700; }
+/* conclusões */
+.cards.concl{ top:150px; height:635px; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:14px; }
+.cards.concl .num{ display:grid; place-items:center; width:48px; height:48px; border-radius:9px; background:var(--teal); color:#fff; font-size:24px; font-weight:700; margin-bottom:16px; }
+.cards.concl h3{ font-size:34px; line-height:42px; font-weight:700; max-width:100%; }
+.cards.concl p{ font-size:24px; line-height:34px; }
+/* ajustes finos da aula */
+.hc.heur .ico{ width:56px; height:56px; }
+.hc.heur h3{ font-size:38px; line-height:46px; max-width:calc(100% - 64px); }
+.tab.melh th:nth-child(1){ width:340px; } .tab.melh th:nth-child(3){ width:420px; }
+.tab.melh td{ padding:10px 16px; }
+.cards.concl .hc{ padding:32px 34px; }
+.cards.concl .num{ position:absolute; right:30px; top:30px; margin:0; }
+.cards.concl h3{ max-width:calc(100% - 70px); }
