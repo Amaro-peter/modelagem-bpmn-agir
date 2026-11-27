@@ -62,6 +62,12 @@ npm run registro-software   # regera AS-IS, macro, etapas, imagens e documentaç
 
 O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Google Chrome ou o Microsoft Edge instalados. Se não houver nenhum dos dois, rode `npx playwright install chromium`.
 
+## Apresentação
+
+[`apresentacao/apresentacao-bpmn-agir.html`](apresentacao/apresentacao-bpmn-agir.html) é a apresentação da modelagem, num arquivo único que funciona sem internet: baixe e abra no navegador. Os slides seguem esta ordem: capa, AS-IS remodelado, macroprocesso e etapas do AS-IS, contexto do TO-BE, gargalos, restrições e solução, TO-BE, macroprocesso e etapas do TO-BE.
+
+Os diagramas são os próprios `.bpmn` do projeto, desenhados em vetor. Use a roda do mouse para zoom, arraste para mover e o botão **Ajustar** para enquadrar de novo. Para navegar, use as setas do teclado ou a barra inferior; **F** liga a tela cheia. Para gerar um PDF, imprima (Ctrl+P → Salvar como PDF): sai um slide por página. Depois de mudar algum diagrama, gere de novo com `npm run apresentacao`.
+
 ## Processos
 
 | Processo | Situação | Conteúdo |
@@ -80,6 +86,7 @@ processos/
     ├── fontes/     definições JSON das quais os .bpmn são gerados
     ├── scripts/    geração das etapas e da documentação deste processo
     └── to-be/      estado futuro: completo, macro/, etapas/, docs/, fontes/, scripts/
+apresentacao/       apresentação HTML dos modelos (gerador e recursos de layout)
 ferramentas/        gerador, layout com raias, divisão em etapas, validação, renderização e editor
 ```
 
@@ -94,6 +101,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npx bpmnlint <arquivo.bpmn>` | Valida as regras BPMN (configuração em `.bpmnlintrc`) |
 | `npm run render -- <arquivo.bpmn>` | Gera SVG e PNG, um por plano (inclusive drill-downs) |
 | `npm run editor` | Editor visual local com gravação no projeto |
+| `npm run apresentacao` | Gera a apresentação HTML (layout em `apresentacao/recursos/`) com os diagramas atuais |
 | `npm run comparar -- <antes.bpmn> <depois.bpmn>` | Mostra o que mudou entre duas versões de um diagrama (elementos, nomes, ligações, raias e posições) |
 | `python3 -I ferramentas/dividir_etapas.py <fonte.json> <pasta>` | Gera os diagramas por etapa e o macroprocesso a partir de uma fonte com `"etapa"` em cada nó |
 
