@@ -1,7 +1,7 @@
 (function () {
   var slides = [].slice.call(document.querySelectorAll('.slide'));
   var stage = document.getElementById('stage'), vp = document.getElementById('vp');
-  var count = document.getElementById('count'), nameEl = document.getElementById('name');
+  var count = document.getElementById('count');
   var i = 0;
 
   // ---------- diagramas (bpmn-js) ----------
@@ -95,7 +95,6 @@
     i = Math.max(0, Math.min(slides.length - 1, n));
     slides.forEach(function (s, k) { s.classList.toggle('on', k === i); });
     count.textContent = (i + 1) + ' / ' + slides.length;
-    nameEl.textContent = slides[i].getAttribute('aria-label') || '';
     try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
     mostrarDiagramas(slides[i]);
   }

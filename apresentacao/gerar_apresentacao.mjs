@@ -205,7 +205,6 @@ ${slides.join('\n')}
   <button id="prev" aria-label="Slide anterior">&larr;</button>
   <span class="count" id="count" aria-live="polite">1 / 1</span>
   <button id="next" aria-label="Próximo slide">&rarr;</button>
-  <span class="name" id="name"></span>
   <button id="fs" aria-label="Tela cheia">Tela cheia</button>
 </nav>
 ${xmls.join('\n')}
