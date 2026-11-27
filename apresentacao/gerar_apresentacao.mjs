@@ -168,10 +168,9 @@ add('Restrições e solução', `  ${marca()}
     <ul class="mods">${modulos.map(m => `<li>${m}</li>`).join('')}</ul>
   </div>`);
 
-// 7. TO-BE completo   8. macro + etapas TO-BE
+// 7. TO-BE completo e seus recortes (sem macroprocesso e etapas do TO-BE, a pedido)
 slideDiagrama(tobe);
 await slidesRecorte(tobe, `${RS}/to-be/fontes/etapas`, [[1, 2], [3, 4], [5, 6, 7]], nomesEtapas(etapasTobe));
-etapasTobe.forEach(slideDiagrama);
 
 // ---------- montagem ----------
 const fonte = fs.readFileSync(P('apresentacao/recursos/Inter.woff2')).toString('base64');
