@@ -8,7 +8,7 @@ const moddle = new BpmnModdle();
 
 async function load(file) {
   const { rootElement } = await moddle.fromXML(fs.readFileSync(file, 'utf8'));
-  const els = {}, di = {};
+  const els = {}, di = {}, lab = {}, way = {};
   const walk = (e, parent) => {
     if (!e || typeof e !== 'object') return;
     if (e.id && e.$type?.startsWith('bpmn:')) {
@@ -33,9 +33,13 @@ async function load(file) {
   for (const r of rootElement.rootElements || []) walkLanes(r);
   for (const [id, v] of Object.entries(els)) v.lane = laneOf[id];
   for (const d of rootElement.diagrams || []) for (const pe of d.plane.planeElement || []) {
-    if (pe.bounds) di[pe.bpmnElement?.id] = [pe.bounds.x, pe.bounds.y, pe.bounds.width, pe.bounds.height].map(Math.round);
+    const id = pe.bpmnElement?.id;
+    if (pe.bounds) di[id] = [pe.bounds.x, pe.bounds.y, pe.bounds.width, pe.bounds.height].map(Math.round);
+    const lb = pe.label?.bounds;
+    lab[id] = lb ? [lb.x, lb.y, lb.width, lb.height].map(Math.round).join(',') : '';
+    if (pe.waypoint) way[id] = pe.waypoint.map(w => `${Math.round(w.x)},${Math.round(w.y)}`).join(' ');
   }
-  return { els, di };
+  return { els, di, lab, way };
 }
 
 const [A, B] = await Promise.all([load(process.argv[2]), load(process.argv[3])]);
@@ -56,4 +60,10 @@ for (const id of Object.keys(A.els)) {
   if (ch.length) console.log(' ~', id, ch.join(' | '));
 }
 const moved = Object.keys(B.di).filter(id => A.di[id] && JSON.stringify(A.di[id]) !== JSON.stringify(B.di[id]));
-console.log(`== DIAGRAMA: ${moved.length} formas movidas/redimensionadas`);
+const labels = Object.keys(B.lab).filter(id => id in A.lab && A.lab[id] !== B.lab[id]);
+const edges = Object.keys(B.way).filter(id => A.way[id] && A.way[id] !== B.way[id]);
+const nome = id => B.els[id]?.name ? ` ${JSON.stringify(B.els[id].name)}` : '';
+console.log(`== DIAGRAMA: ${moved.length} formas movidas/redimensionadas, ${labels.length} rótulos movidos, ${edges.length} setas redesenhadas`);
+moved.forEach(id => console.log('   forma :', id + nome(id)));
+labels.forEach(id => console.log('   rótulo:', id + nome(id)));
+edges.forEach(id => console.log('   seta  :', id + nome(id)));
