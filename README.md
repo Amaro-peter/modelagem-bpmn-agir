@@ -115,6 +115,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npx bpmnlint <arquivo.bpmn>` | Valida as regras BPMN (configuração em `.bpmnlintrc`) |
 | `npm run render -- <arquivo.bpmn>` | Gera SVG e PNG, um por plano (inclusive drill-downs) |
 | `npm run editor` | Editor visual local com gravação no projeto |
+| `npm run nota` | Gera a nota de um parágrafo da entrega (AS-IS corrigido e TO-BE) em `apresentacao/nota/nota-entrega.pdf` |
 | `npm run apresentacao-asis` | Gera a apresentação do AS-IS remodelado (HTML e PDF, 7 slides) em `apresentacao/as-is/` |
 | `npm run aula` | Gera a apresentação da aula (HTML e PDF, 14 slides) em `apresentacao/aula/` |
 | `npm run apresentacao` | Gera a apresentação em HTML (interativa) e em PDF (imagens estáticas) com os diagramas atuais; o layout fica em `apresentacao/recursos/` |

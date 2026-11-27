@@ -13,7 +13,8 @@
     "comparar": "node ferramentas/comparar.mjs",
     "apresentacao": "node apresentacao/gerar_apresentacao.mjs",
     "aula": "node apresentacao/aula/gerar_aula.mjs",
-    "apresentacao-asis": "node apresentacao/as-is/gerar_asis.mjs"
+    "apresentacao-asis": "node apresentacao/as-is/gerar_asis.mjs",
+    "nota": "node apresentacao/nota/gerar_nota.mjs"
   },
   "type": "module",
   "dependencies": {
