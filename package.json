@@ -12,7 +12,8 @@
     "validar": "node ferramentas/validar.js",
     "comparar": "node ferramentas/comparar.mjs",
     "apresentacao": "node apresentacao/gerar_apresentacao.mjs",
-    "aula": "node apresentacao/aula/gerar_aula.mjs"
+    "aula": "node apresentacao/aula/gerar_aula.mjs",
+    "apresentacao-asis": "node apresentacao/as-is/gerar_asis.mjs"
   },
   "type": "module",
   "dependencies": {

@@ -68,6 +68,10 @@ O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Goog
 
 Os diagramas são os próprios `.bpmn` do projeto, desenhados em vetor. Use a roda do mouse para zoom, arraste para mover e o botão **Ajustar** para enquadrar de novo. Para navegar, use as setas do teclado ou a barra inferior; **F** liga a tela cheia. Há também a versão em PDF, [`apresentacao/apresentacao-bpmn-agir.pdf`](apresentacao/apresentacao-bpmn-agir.pdf), sem partes interativas: os diagramas entram como imagens estáticas em vetor, nítidas em qualquer zoom do leitor de PDF. Depois de mudar algum diagrama, gere as duas versões de novo com `npm run apresentacao`.
 
+### Apresentação do AS-IS remodelado
+
+[`apresentacao/as-is/apresentacao-as-is.pdf`](apresentacao/as-is/apresentacao-as-is.pdf) (e o [`.html`](apresentacao/as-is/apresentacao-as-is.html) interativo) tem 7 slides: capa; o aviso de que o AS-IS foi remodelado corretamente na notação BPMN; o AS-IS inteiro; e o AS-IS em 4 partes. Para gerar de novo, use `npm run apresentacao-asis`.
+
 ### Apresentação da aula (modelo "Mapeamento dos processos – TO-BE")
 
 [`apresentacao/aula/apresentacao-aula-to-be.pdf`](apresentacao/aula/apresentacao-aula-to-be.pdf) (e o [`.html`](apresentacao/aula/apresentacao-aula-to-be.html) interativo) tem 14 slides e segue o modelo da disciplina:
@@ -111,6 +115,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npx bpmnlint <arquivo.bpmn>` | Valida as regras BPMN (configuração em `.bpmnlintrc`) |
 | `npm run render -- <arquivo.bpmn>` | Gera SVG e PNG, um por plano (inclusive drill-downs) |
 | `npm run editor` | Editor visual local com gravação no projeto |
+| `npm run apresentacao-asis` | Gera a apresentação do AS-IS remodelado (HTML e PDF, 7 slides) em `apresentacao/as-is/` |
 | `npm run aula` | Gera a apresentação da aula (HTML e PDF, 14 slides) em `apresentacao/aula/` |
 | `npm run apresentacao` | Gera a apresentação em HTML (interativa) e em PDF (imagens estáticas) com os diagramas atuais; o layout fica em `apresentacao/recursos/` |
 | `npm run comparar -- <antes.bpmn> <depois.bpmn>` | Mostra o que mudou entre duas versões de um diagrama (elementos, nomes, ligações, raias e posições) |

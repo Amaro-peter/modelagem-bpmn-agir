@@ -190,3 +190,17 @@ body{ margin:0; height:100%; background:var(--surround); color:var(--ink); font-
 .cards.concl .hc{ padding:32px 34px; }
 .cards.concl .num{ position:absolute; right:30px; top:30px; margin:0; }
 .cards.concl h3{ max-width:calc(100% - 70px); }
+
+/* ---------- apresentação do AS-IS remodelado ---------- */
+.remod{ position:absolute; top:150px; height:635px; border-radius:12px; padding:36px 40px; display:flex; flex-direction:column; }
+.remod h3{ margin-top:18px !important; font-weight:700; letter-spacing:-.02em; }
+.remod.antes{ left:52px; width:440px; background:var(--ink); color:#fff; }
+.remod.antes .kick-c{ background:#EA552B; }
+.remod.antes h3{ font-size:40px; line-height:48px; }
+.remod.antes p{ margin-top:auto; font-size:23px; line-height:33px; color:#d9d8cf; }
+.remod.agora{ left:508px; width:912px; background:var(--sky); }
+.remod.agora h3{ font-size:36px; line-height:44px; }
+.remod.agora ul{ list-style:none; padding:0; margin-top:24px !important; flex:1; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.remod.agora li{ background:#fff; border-radius:10px; padding:12px 16px; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+.remod.agora li b{ font-size:19px; line-height:24px; }
+.remod.agora li span{ font-size:16px; line-height:21px; color:#3a3a32; }
