@@ -5,7 +5,7 @@ import { P, AUTORES, esc } from '../comum.mjs';
 import { abrirNavegador } from '../../ferramentas/navegador.js';
 
 const paragrafo = 'Estes slides apresentam a modelagem do processo de Registro de Programa de Computador (Software) da Agência de Inovação da UFF (AGIR). '
-  + 'Eles trazem a modelagem correta do AS-IS, refeita na notação BPMN 2.0 para corrigir os erros da entrega anterior: participantes e raias por ator, eventos com os desfechos do INPI, gateways, tarefas tipadas, fluxos de mensagem e o subprocesso de pagamento, com o modelo validado pelas regras do bpmnlint. '
+  + 'Eles trazem a modelagem correta do AS-IS, refeita com a notação BPMN para corrigir os erros da entrega anterior: participantes e raias por ator, eventos com os desfechos do INPI, gateways, tarefas tipadas, fluxos de mensagem e o subprocesso de pagamento. '
   + 'Trazem também a modelagem do TO-BE, o estado futuro do processo, que usa a Plataforma de Gestão de PI da AGIR para resolver os gargalos levantados com o dono e os sponsors do processo, mantendo o SEI como registro oficial e a mesma equipe.';
 
 const fonte = fs.readFileSync(P('apresentacao/recursos/Inter.woff2')).toString('base64');
