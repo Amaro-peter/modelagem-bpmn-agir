@@ -4,6 +4,7 @@
 // Uso: npm run apresentacao   →   apresentacao/apresentacao-bpmn-agir.html e .pdf
 import fs from 'node:fs';
 import { abrirNavegador } from '../ferramentas/navegador.js';
+import { calcularRecortes } from './recortes.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -75,6 +76,41 @@ function slideDiagrama(d) {
   </div>`, '', pdf);
 }
 
+// ---------- recortes do modelo completo por trechos do fluxo ----------
+// O SVG completo de cada modelo entra uma vez (variável CSS) e cada recorte o enquadra com
+// background-size/position: vetor nítido na tela e no PDF, sem repetir o diagrama no arquivo.
+const fundos = [];
+const AREA = { w: 1352, h: 677 };            // área branca do painel (ver .dpanel/.dinner no CSS)
+const FAIXA = 104, PAD = 16, GAP = 8;        // coluna com os nomes das raias à esquerda do recorte
+async function slidesRecorte(d, pastaEtapas, grupos, nomes) {
+  const svgPath = d.arquivo.replace(/\.bpmn$/, '.svg');
+  const svg = read(svgPath).replace(/<!--[\s\S]*?-->/g, '');
+  const [vx, vy, vw, vh] = svg.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number);
+  const nomeVar = `--svg-${d.modelo.toLowerCase().replace(/[^a-z]/g, '')}`;
+  fundos.push(`${nomeVar}:url("data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}");`);
+  const partes = await calcularRecortes(P(d.arquivo), P(pastaEtapas), grupos);
+  const MINI_W = 280, mini = MINI_W / vw;
+  partes.forEach((pt, k) => {
+    const { x, y, w, h } = pt.recorte;
+    const aw = AREA.w - 2 * PAD - FAIXA - GAP, ah = AREA.h - 2 * PAD;
+    const s = Math.min(aw / w, ah / h, 1.5);
+    const bw = w * s, bh = h * s;
+    const left = PAD + FAIXA + GAP + (aw - bw) / 2, top = PAD + (ah - bh) / 2;
+    const px = v => `${Math.round(v * 100) / 100}px`;
+    const faixas = pt.faixas.map(f => `<div class="rfaixa" style="left:${px(left - GAP - FAIXA)};top:${px(top + (f.y0 - y) * s)};height:${px((f.y1 - f.y0) * s)}"><span>${esc(f.nome)}</span></div>`).join('');
+    const e = pt.etapas;
+    const titulo = e.length === 1 ? `Etapa ${e[0]}` : e.length === 2 ? `Etapas ${e[0]} e ${e[1]}` : `Etapas ${e[0]} a ${e[e.length - 1]}`;
+    const sub = e.map(n => nomes[n]).join(' → ');
+    const html = `  ${marca()}
+  <header class="dhead rhead"><span class="tag ${d.modelo === 'TO-BE' ? 'tobe' : ''}">${d.modelo}</span>
+    <div class="rtit"><h2>${titulo} <span class="rpart">· parte ${k + 1} de ${partes.length}</span></h2><p>${esc(sub)}</p></div>
+    <div class="rmini" style="width:${MINI_W}px;height:${px(vh * mini)};background-image:var(${nomeVar})" title="Posição no modelo completo"><i style="left:${px((x - vx) * mini)};top:${px((y - vy) * mini)};width:${px(w * mini)};height:${px(h * mini)}"></i></div></header>
+  <div class="dpanel"><div class="dinner rec">${faixas}<div class="rimg${pt.continua.esq ? ' c-esq' : ''}${pt.continua.dir ? ' c-dir' : ''}" style="left:${px(left)};top:${px(top)};width:${px(bw)};height:${px(bh)};background-image:var(${nomeVar});background-size:${px(vw * s)} ${px(vh * s)};background-position:${px(-(x - vx) * s)} ${px(-(y - vy) * s)}"></div></div></div>`;
+    add(`${d.modelo} · Modelo completo · Parte ${k + 1} de ${partes.length}`, html);
+  });
+}
+const nomesEtapas = lista => Object.fromEntries(lista.filter(d => d.rotulo.startsWith('Etapa ')).map(d => [Number(d.rotulo.slice(6)), d.titulo]));
+
 // 1. Capa
 add('Capa', `  ${marca()}
   <h1 class="big">Modelagem BPMN do processo de registro de software feita pela AGIR</h1>
@@ -92,6 +128,7 @@ add('Capa', `  ${marca()}
 
 // 2. AS-IS completo   3. macro + etapas AS-IS
 slideDiagrama(asis);
+await slidesRecorte(asis, `${RS}/fontes/etapas`, [[1, 2], [3, 4], [5, 6], [7]], nomesEtapas(etapasAsis));
 etapasAsis.forEach(slideDiagrama);
 
 // 4. Contexto do TO-BE
@@ -133,11 +170,12 @@ add('Restrições e solução', `  ${marca()}
 
 // 7. TO-BE completo   8. macro + etapas TO-BE
 slideDiagrama(tobe);
+await slidesRecorte(tobe, `${RS}/to-be/fontes/etapas`, [[1, 2], [3, 4], [5, 6, 7]], nomesEtapas(etapasTobe));
 etapasTobe.forEach(slideDiagrama);
 
 // ---------- montagem ----------
 const fonte = fs.readFileSync(P('apresentacao/recursos/Inter.woff2')).toString('base64');
-const css = read('apresentacao/recursos/estilo.css').replace('INTER_WOFF2', fonte);
+const css = read('apresentacao/recursos/estilo.css').replace('INTER_WOFF2', fonte) + `\n:root{ ${fundos.join(' ')} }\n`;
 const bpmnCss = ['node_modules/bpmn-js/dist/assets/diagram-js.css', 'node_modules/bpmn-js/dist/assets/bpmn-js.css',
   'node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css'].map(f => read(f)).join('\n');
 const viewer = read('node_modules/bpmn-js/dist/bpmn-navigated-viewer.production.min.js').replace(/<\/script/gi, '<\\/script');
@@ -206,9 +244,10 @@ await page.evaluate(() => document.fonts.ready);
 // títulos dos diagramas numa linha: reduz a fonte até caber (mesma regra da versão interativa)
 await page.emulateMedia({ media: 'print' });
 await page.evaluate(() => {
-  for (const el of document.querySelectorAll('.dhead h2')) {
+  for (const el of document.querySelectorAll('.dhead h2, .rtit p')) {
     let f = parseFloat(getComputedStyle(el).fontSize);
-    while (el.scrollWidth > el.clientWidth + 1 && f > 26) { f -= 1; el.style.fontSize = f + 'px'; }
+    const min = el.tagName === 'P' ? 12 : 26;
+    while (el.scrollWidth > el.clientWidth + 1 && f > min) { f -= 1; el.style.fontSize = f + 'px'; }
   }
 });
 const saidaPdf = P('apresentacao/apresentacao-bpmn-agir.pdf');

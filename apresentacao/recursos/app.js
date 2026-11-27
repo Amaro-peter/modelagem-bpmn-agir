@@ -60,19 +60,20 @@
     return d;
   }
 
-  // títulos de diagrama numa linha: reduz a fonte até caber (mínimo 26px)
+  // títulos de diagrama (e subtítulos dos recortes) numa linha: reduz a fonte até caber
   function caberTitulos(slide) {
-    [].forEach.call(slide.querySelectorAll('.dhead h2'), function (el) {
+    [].forEach.call(slide.querySelectorAll('.dhead h2, .rtit p'), function (el) {
+      var min = el.tagName === 'P' ? 12 : 26;
       if (!el.dataset.f0) el.dataset.f0 = el.style.fontSize || getComputedStyle(el).fontSize;
       el.style.fontSize = el.dataset.f0;
       var f = parseFloat(el.dataset.f0);
-      while (el.scrollWidth > el.clientWidth + 1 && f > 26) { f -= 1; el.style.fontSize = f + 'px'; }
+      while (el.scrollWidth > el.clientWidth + 1 && f > min) { f -= 1; el.style.fontSize = f + 'px'; }
     });
   }
 
   function mostrarDiagramas(slide) {
     caberTitulos(slide);
-    [].forEach.call(slide.querySelectorAll('.dpanel'), function (p) {
+    [].forEach.call(slide.querySelectorAll('.dpanel[data-diag]'), function (p) {
       var d = preparar(p);
       d.ready.then(function () { ajustar(d.viewer); });
     });
@@ -140,7 +141,7 @@
   var h = parseInt((location.hash || '').slice(1), 10);
   show(isNaN(h) ? 0 : h - 1);
   // importa os demais diagramas em segundo plano (prontos para navegar e imprimir)
-  var pend = [].slice.call(document.querySelectorAll('.dpanel'));
+  var pend = [].slice.call(document.querySelectorAll('.dpanel[data-diag]'));
   (function proximo() {
     var p = pend.shift(); if (!p) return;
     preparar(p).ready.then(function () { setTimeout(proximo, 30); });
