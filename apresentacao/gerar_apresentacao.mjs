@@ -1,7 +1,9 @@
 // Gera a apresentação (HTML único, funciona offline) da modelagem BPMN do registro de software da AGIR.
 // Os diagramas são os .bpmn do projeto, desenhados pelo bpmn-js (vetor, com zoom e arraste).
-// Uso: npm run apresentacao   →   apresentacao/apresentacao-bpmn-agir.html
+// Também gera a versão em PDF, com os diagramas como imagens estáticas (os SVG exportados de cada .bpmn).
+// Uso: npm run apresentacao   →   apresentacao/apresentacao-bpmn-agir.html e .pdf
 import fs from 'node:fs';
+import { abrirNavegador } from '../ferramentas/navegador.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -42,8 +44,18 @@ const marca = (w = '') => `<svg class="mark${w}" viewBox="0 0 26 26" aria-hidden
 const seta = '<span class="sq"><svg viewBox="0 0 76 76" aria-hidden="true"><path d="M17 59 L57 19 M25 18 H58 V51" fill="none" stroke="#16160C" stroke-width="4.2" stroke-linecap="square"/></svg></span>';
 
 // ---------- slides ----------
-const slides = [];
-const add = (label, html, cls = '') => slides.push(`<section class="slide ${cls}" aria-label="${esc(label)}">\n${html}\n</section>`);
+// slides: versão interativa (HTML); slidesPdf: versão estática (PDF). Só os slides de diagrama diferem.
+const slides = [], slidesPdf = [];
+const secao = (label, html, cls) => `<section class="slide ${cls}" aria-label="${esc(label)}">\n${html}\n</section>`;
+const add = (label, html, cls = '', htmlPdf = html) => { slides.push(secao(label, html, cls)); slidesPdf.push(secao(label, htmlPdf, cls)); };
+
+// imagem estática do diagrama: o SVG exportado pelo projeto (sem a marca d'água do visualizador)
+function imagemSvg(bpmn) {
+  const svg = read(bpmn.replace(/\.bpmn$/, '.svg')).replace(/<!--[\s\S]*?-->/g, '');
+  const [, w, h] = svg.match(/<svg[^>]*\swidth="([\d.]+)"[^>]*\sheight="([\d.]+)"/);
+  // diagramas pequenos não passam de 1,5× o tamanho natural (como na versão interativa)
+  return `<img src="data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}" alt="" style="max-width:${Math.round(w * 1.5)}px;max-height:${Math.round(h * 1.5)}px">`;
+}
 
 let nDiag = 0;
 const xmls = [];
@@ -52,12 +64,15 @@ function slideDiagrama(d) {
   xmls.push(`<script type="text/xml" id="${id}-xml">${read(d.arquivo)}</script>`);
   const titulo = d.rotulo === 'Modelo completo' ? d.titulo : `${d.rotulo}${d.rotulo === 'Macroprocesso' ? '' : ' – ' + d.titulo}`;
   const tag = `<span class="tag ${d.modelo === 'TO-BE' ? 'tobe' : ''}">${d.modelo}</span>`;
+  const pdf = `  ${marca()}
+  <header class="dhead">${tag}<h2>${esc(titulo)}</h2></header>
+  <div class="dpanel"><div class="dinner estatico">${imagemSvg(d.arquivo)}</div></div>`;
   add(`${d.modelo} · ${titulo}`, `  ${marca()}
   <header class="dhead">${tag}<h2>${esc(titulo)}</h2>
     <div class="dctl" data-for="${id}"><span class="dhint">Roda do mouse: zoom<br>Arraste: mover</span><button data-z="-1" aria-label="Diminuir zoom">−</button><button data-z="1" aria-label="Aumentar zoom">+</button><button data-z="0" aria-label="Ajustar ao painel">Ajustar</button></div></header>
   <div class="dpanel" data-diag="${id}" data-file="${esc(d.arquivo)}">
     <div class="dinner"><div class="dhost"></div></div>
-  </div>`);
+  </div>`, '', pdf);
 }
 
 // 1. Capa
@@ -165,4 +180,38 @@ ${app}
 `;
 const saida = P('apresentacao/apresentacao-bpmn-agir.html');
 fs.writeFileSync(saida, html);
-console.log(`✔ ${path.relative(ROOT, saida)}: ${slides.length} slides, ${nDiag} diagramas, ${(html.length / 1024 / 1024).toFixed(1)} MB`);
+console.log(`✔ ${path.relative(ROOT, saida)}: ${slides.length} slides, ${nDiag} diagramas interativos, ${(html.length / 1024 / 1024).toFixed(1)} MB`);
+
+// ---------- versão em PDF: sem partes interativas, diagramas como imagens ----------
+const htmlPdf = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Modelagem BPMN do registro de software | AGIR/UFF</title>
+<style>
+${css}
+</style>
+</head>
+<body>
+<main class="viewport"><div class="stage">
+${slidesPdf.join('\n')}
+</div></main>
+</body>
+</html>
+`;
+const browser = await abrirNavegador();
+const page = await browser.newPage({ viewport: { width: 1456, height: 819 } });
+await page.setContent(htmlPdf, { waitUntil: 'load' });
+await page.evaluate(() => document.fonts.ready);
+// títulos dos diagramas numa linha: reduz a fonte até caber (mesma regra da versão interativa)
+await page.emulateMedia({ media: 'print' });
+await page.evaluate(() => {
+  for (const el of document.querySelectorAll('.dhead h2')) {
+    let f = parseFloat(getComputedStyle(el).fontSize);
+    while (el.scrollWidth > el.clientWidth + 1 && f > 26) { f -= 1; el.style.fontSize = f + 'px'; }
+  }
+});
+const saidaPdf = P('apresentacao/apresentacao-bpmn-agir.pdf');
+await page.pdf({ path: saidaPdf, preferCSSPageSize: true, printBackground: true });
+await browser.close();
+console.log(`✔ ${path.relative(ROOT, saidaPdf)}: ${slidesPdf.length} páginas, ${(fs.statSync(saidaPdf).size / 1024 / 1024).toFixed(1)} MB`);

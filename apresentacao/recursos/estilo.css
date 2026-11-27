@@ -89,6 +89,9 @@ body{ margin:0; height:100%; background:var(--surround); color:var(--ink); font-
 /* o diagrama anula a escala do palco: o bpmn-js trabalha em pixels de tela (zoom e arraste exatos) */
 .dhost{ position:absolute; left:0; top:0; width:calc(100% * var(--s,1)); height:calc(100% * var(--s,1)); transform:scale(var(--inv,1)); transform-origin:0 0; }
 .dhost .djs-container{ cursor:grab; }
+/* versão em PDF: o diagrama é uma imagem estática enquadrada no painel */
+.dinner.estatico{ display:flex; align-items:center; justify-content:center; padding:24px; }
+.dinner.estatico img{ display:block; width:100%; height:100%; object-fit:contain; }
 .dctl{ margin-left:auto; flex:none; display:flex; align-items:center; gap:8px; }
 .dctl button{ appearance:none; border:0; background:var(--ink); color:#fff; font:700 20px/1 "Inter",Arial,sans-serif; height:42px; min-width:46px; padding:0 14px; border-radius:8px; cursor:pointer; }
 .dctl button[data-z="0"]{ font-size:16px; }
