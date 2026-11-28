@@ -1379,8 +1379,8 @@
         <di:waypoint x="6970" y="1634" />
         <di:waypoint x="6970" y="1610" />
         <di:waypoint x="7231" y="1610" />
-        <di:waypoint x="7231" y="833" />
-        <di:waypoint x="7180" y="833" />
+        <di:waypoint x="7231" y="839" />
+        <di:waypoint x="7180" y="839" />
         <di:waypoint x="7180" y="817" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="6863" y="1610" width="102" height="14" />
@@ -1388,9 +1388,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_3_di" bpmnElement="Msg_3">
         <di:waypoint x="6970" y="1484" />
-        <di:waypoint x="6970" y="847" />
-        <di:waypoint x="7171" y="847" />
-        <di:waypoint x="7171" y="815" />
+        <di:waypoint x="6970" y="839" />
+        <di:waypoint x="7180" y="839" />
+        <di:waypoint x="7180" y="817" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="6975" y="1446" width="130" height="28" />
         </bpmndi:BPMNLabel>

@@ -172,7 +172,8 @@ function custoVisual(L) {
     const naForma = q => Object.values(L.__formas).some(b => q.x >= b.x - 4 && q.x <= b.x + b.width + 4 && q.y >= b.y - 4 && q.y <= b.y + b.height + 4);
     const ehMsg = e => /^m\d+$/.test(String(e.id));
     const comum = s.e.de === t.e.de || s.e.para === t.e.para;
-    if ((ehMsg(s.e) || ehMsg(t.e) || !comum) && ([s.a, s.b].some(q => sobre(q, t.a, t.b) && !naForma(q)) || [t.a, t.b].some(q => sobre(q, s.a, s.b) && !naForma(q)))) { cruz++; marca(s.e, t.e); continue; }
+    const juncaoMsg = ehMsg(s.e) && ehMsg(t.e) && s.e.para === t.e.para;
+    if (!juncaoMsg && (ehMsg(s.e) || ehMsg(t.e) || !comum) && ([s.a, s.b].some(q => sobre(q, t.a, t.b) && !naForma(q)) || [t.a, t.b].some(q => sobre(q, s.a, s.b) && !naForma(q)))) { cruz++; marca(s.e, t.e); continue; }
     if (s.e.de === t.e.de || s.e.para === t.e.para) continue;
     const hs = s.a.y === s.b.y, ht = t.a.y === t.b.y, vs = s.a.x === s.b.x, vt = t.a.x === t.b.x;
     if (hs && ht && s.a.y === t.a.y && faixa(s.a.x, s.b.x, t.a.x, t.b.x) > 2) { sobre++; marca(s.e, t.e); }
@@ -413,7 +414,19 @@ function layoutOnce(pools, messageFlows, { poolBand = true, groups = [], compact
     // sobe (ou desce) por um corredor próximo e entra no alvo pelo lado de baixo (ou de cima), por um canal junto ao alvo.
     // Vários pontos de entrada na borda: duas mensagens para o mesmo alvo chegam em linhas independentes.
     const L2 = down ? t.y - 16 : t.y + t.height + 16, yBorda = down ? t.y : t.y + t.height;
-    const offs = t.width <= 40 ? [0, -9, 9] : [0, -22, 22, -40, 40];
+    // várias mensagens para o mesmo alvo: juntam-se num trecho final comum e entram pelo centro (uma só ponta)
+    const juntas = messageFlows.filter(([x, y]) => y === b && !blackbox.has(x)).length > 1;
+    const offs = juntas ? [0] : t.width <= 40 ? [0, -9, 9] : [0, -22, 22, -40, 40];
+    if (juntas) {
+      const Lj = down ? t.y - 22 : t.y + t.height + 22, yb = down ? t.y : t.y + t.height;
+      cands.length = 0;
+      cands.push([P(sc.x, sy), P(sc.x, Lj), P(tc.x, Lj), P(tc.x, yb)]);
+      for (let k = col.get(b) - 3; k <= col.get(b) + 2; k++) if (gaps[k]) for (const x of corridorXs(gaps[k])) for (const L of ctx.levels) {
+        if (down ? !(L > sy && L < Lj) : !(L < sy && L > Lj)) continue;
+        cands.push([P(sc.x, sy), P(sc.x, L), P(x, L), P(x, Lj), P(tc.x, Lj), P(tc.x, yb)]);
+      }
+      return pick(cands, obstacles, [a, b], used, { de: a, para: b, msg: true, junta: true });
+    }
     for (const [io, o] of offs.entries()) {
       const tx = tc.x + o;
       const L2 = (down ? t.y - 16 : t.y + t.height + 16) + (down ? -1 : 1) * io * 14;   // cada ponto de entrada no seu nível
@@ -618,7 +631,7 @@ function pick(candidates, shapes, skip, used, meta = {}) {
     if (pts2.length < 2) return;
     let len = 0;
     for (let k = 0; k < pts2.length - 1; k++) len += Math.abs(pts2[k].x - pts2[k + 1].x) + Math.abs(pts2[k].y - pts2[k + 1].y);
-    const cost = (hits(pts2, shapes, skip) ? 1e7 : 0) + (crossings(pts2, used) + toques(pts2, used, shapes, meta)) * 1e4 + overlapCount(pts2, used) * 1e4
+    const cost = (hits(pts2, shapes, skip) ? 1e7 : 0) + (crossings(pts2, used) + toques(pts2, used, shapes, meta)) * 1e4 + overlapCount(pts2, used, meta) * 1e4
       + (pts2.length - 2) * 60 + len * 0.05 + i * 0.01;
     if (cost < bestCost) { bestCost = cost; best = pts2; }
   });
@@ -649,7 +662,7 @@ function toques(points, used, shapes, meta = {}) {
   const sobre = (q, u, v) => (u.x === v.x && Math.abs(q.x - u.x) < 1 && q.y >= Math.min(u.y, v.y) - 1 && q.y <= Math.max(u.y, v.y) + 1)
     || (u.y === v.y && Math.abs(q.y - u.y) < 1 && q.x >= Math.min(u.x, v.x) - 1 && q.x <= Math.max(u.x, v.x) + 1);
   // divisão/junção de setas de sequência (mesma origem ou mesmo destino) pode compartilhar o trecho junto ao nó
-  const relevante = m => !m || meta.msg || m.msg || (m.de !== meta.de && m.para !== meta.para);
+  const relevante = m => !m || (meta.junta && m.junta && m.para === meta.para) ? !m : (meta.msg || m.msg || (m.de !== meta.de && m.para !== meta.para));
   let n = 0;
   for (let i = 0; i < points.length; i++) {
     const q = points[i];
@@ -663,9 +676,10 @@ function toques(points, used, shapes, meta = {}) {
   return n;
 }
 
-function overlapCount(points, used) {
+function overlapCount(points, used, meta = {}) {
   let n = 0;
-  for (let i = 0; i < points.length - 1; i++) n += overlaps([points[i], points[i + 1]], used) ? 1 : 0;
+  const outros = meta.junta ? used.filter(([, , m]) => !(m?.junta && m.para === meta.para)) : used;
+  for (let i = 0; i < points.length - 1; i++) n += overlaps([points[i], points[i + 1]], outros) ? 1 : 0;
   return n;
 }
 

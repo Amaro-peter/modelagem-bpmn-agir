@@ -77,11 +77,13 @@ export async function analisar(xml) {
       if (cruza(s, t)) { if (!vistos.has('c' + par)) { vistos.add('c' + par); resultado.cruzamentos.push(par); } }
       else if (toca(s, t)) {
         // setas de sequência com a mesma origem ou o mesmo destino que compartilham o trecho junto ao nó
-        // (divisão/junção) são aviso; toque de mensagem, ou entre setas sem nada em comum, é erro
+        // (divisão/junção), e mensagens que se juntam antes do mesmo destino, são aviso;
+        // toque de mensagem com outra seta, ou entre setas sem nada em comum, é erro
         const es = els[s.id], et = els[t.id];
         const msg = es.$type === 'bpmn:MessageFlow' || et.$type === 'bpmn:MessageFlow';
         const comum = es.sourceRef?.id === et.sourceRef?.id || es.targetRef?.id === et.targetRef?.id;
-        if (!msg && comum) { if (!vistos.has('j' + par)) { vistos.add('j' + par); resultado.compartilhados.push(par); } }
+        const juncaoMsg = es.$type === 'bpmn:MessageFlow' && et.$type === 'bpmn:MessageFlow' && es.targetRef?.id === et.targetRef?.id;
+        if ((!msg && comum) || juncaoMsg) { if (!vistos.has('j' + par)) { vistos.add('j' + par); resultado.compartilhados.push(par); } }
         else if (!vistos.has('c' + par)) { vistos.add('c' + par); resultado.cruzamentos.push(par); }
       }
       else if (sobre(s, t) && !mesmoNo(s, t)) { if (!vistos.has('s' + par)) { vistos.add('s' + par); resultado.sobreposicoes.push(par); } }
