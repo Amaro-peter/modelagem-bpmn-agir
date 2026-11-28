@@ -15,12 +15,42 @@ const python = ['python3', 'python', 'py'].find(cmd => spawnSync(cmd, ['--versio
 if (!python) { console.error('Python 3 não encontrado (necessário para gerar etapas e documentação).'); process.exit(1); }
 const py = script => execFileSync(python, ['-I', path.join(P, 'scripts', script)], { cwd: root, stdio: 'inherit' });
 
-py('gerar_etapas.py');                                    // fontes/etapas/*.json a partir do AS-IS
-node(tool('build.js'), path.join(P, 'fontes', 'registro-software-asis.json'), path.join(P, 'as-is', 'registro-software-asis.bpmn'));
-node(tool('build.js'), path.join(P, 'fontes', 'etapas', '00-macro.json'), path.join(P, 'macro', '00-macro.bpmn'));
-for (const f of fs.readdirSync(path.join(P, 'fontes', 'etapas')).filter(f => /^0[1-7]-.*\.json$/.test(f))) {
-  node(tool('build.js'), path.join(P, 'fontes', 'etapas', f), path.join(P, 'etapas', f.replace(/\.json$/, '.bpmn')));
+// Gera um diagrama a partir da fonte. Se o arquivo atual tem o MESMO conteúdo (elementos, nomes, ligações, raias),
+// ele é mantido: preserva os ajustes de layout feitos à mão no editor. Se o conteúdo mudou, o arquivo é gerado
+// de novo e a versão anterior vai para .historico/ (os ajustes de conteúdo devem ser levados à fonte JSON).
+const { mesmoConteudo } = await import(pathToFileURL(tool('conteudo.mjs')).href);
+const historico = path.join(root, '.historico');
+const pendentes = [];
+function gerar(fonte, destino) {
+  fs.mkdirSync(historico, { recursive: true });
+  const novo = path.join(historico, `gerado-${path.basename(destino)}`);
+  node(tool('build.js'), fonte, novo);
+  pendentes.push({ novo, destino });
 }
+async function concluir() {
+  for (const { novo, destino } of pendentes.splice(0)) {
+    const rel = path.relative(root, destino);
+    if (fs.existsSync(destino) && await mesmoConteudo(fs.readFileSync(destino, 'utf8'), fs.readFileSync(novo, 'utf8'))) {
+      if (fs.readFileSync(destino, 'utf8') !== fs.readFileSync(novo, 'utf8')) console.log(`${rel}: conteúdo igual ao da fonte, layout ajustado à mão mantido`);
+      fs.rmSync(novo);
+    } else {
+      if (fs.existsSync(destino)) {
+        const bak = path.join(historico, `layout-anterior-${Date.now()}-${path.basename(destino)}`);
+        fs.copyFileSync(destino, bak);
+        console.log(`${rel}: conteúdo mudou; gerado de novo (versão anterior em ${path.relative(root, bak)})`);
+      }
+      fs.renameSync(novo, destino);
+    }
+  }
+}
+
+py('gerar_etapas.py');                                    // fontes/etapas/*.json a partir do AS-IS
+gerar(path.join(P, 'fontes', 'registro-software-asis.json'), path.join(P, 'as-is', 'registro-software-asis.bpmn'));
+gerar(path.join(P, 'fontes', 'etapas', '00-macro.json'), path.join(P, 'macro', '00-macro.bpmn'));
+for (const f of fs.readdirSync(path.join(P, 'fontes', 'etapas')).filter(f => /^0[1-7]-.*\.json$/.test(f))) {
+  gerar(path.join(P, 'fontes', 'etapas', f), path.join(P, 'etapas', f.replace(/\.json$/, '.bpmn')));
+}
+await concluir();
 for (const dir of ['as-is', 'macro', 'etapas']) {
   for (const f of fs.readdirSync(path.join(P, dir)).filter(f => f.endsWith('.bpmn'))) {
     execFileSync(process.execPath, [tool('render.js'), path.join(P, dir, f)], { cwd: root, stdio: 'ignore' });
@@ -32,31 +62,12 @@ py('gerar_doc.py');                                       // docs/macroprocesso-
 const TB = path.join(P, 'to-be');
 execFileSync(python, ['-I', tool('dividir_etapas.py'), path.join(TB, 'fontes', 'registro-software-tobe.json'),
   path.join(TB, 'fontes', 'etapas')], { cwd: root, stdio: 'inherit' });
-// O TO-BE completo é gerado da fonte (o layout automático evita cruzamentos e sobreposições). Se o arquivo atual
-// tem o MESMO conteúdo da fonte, ele é mantido: preserva os ajustes de layout feitos à mão no editor.
-// Se o conteúdo mudou, o arquivo é gerado de novo e a versão anterior vai para .historico/.
-{
-  const destino = path.join(TB, 'registro-software-tobe.bpmn');
-  const novo = path.join(root, '.historico', 'tobe-gerado-tmp.bpmn');
-  fs.mkdirSync(path.dirname(novo), { recursive: true });
-  node(tool('build.js'), path.join(TB, 'fontes', 'registro-software-tobe.json'), novo);
-  const { mesmoConteudo } = await import(pathToFileURL(tool('conteudo.mjs')).href);
-  if (fs.existsSync(destino) && await mesmoConteudo(fs.readFileSync(destino, 'utf8'), fs.readFileSync(novo, 'utf8'))) {
-    console.log('TO-BE completo: conteúdo igual ao da fonte, layout ajustado à mão mantido');
-    fs.rmSync(novo);
-  } else {
-    if (fs.existsSync(destino)) {
-      const bak = path.join(root, '.historico', `tobe-layout-anterior-${Date.now()}.bpmn`);
-      fs.copyFileSync(destino, bak);
-      console.log(`TO-BE completo: conteúdo mudou; gerado de novo (layout anterior guardado em ${path.relative(root, bak)})`);
-    }
-    fs.renameSync(novo, destino);
-  }
-}
+gerar(path.join(TB, 'fontes', 'registro-software-tobe.json'), path.join(TB, 'registro-software-tobe.bpmn'));
 for (const f of fs.readdirSync(path.join(TB, 'fontes', 'etapas')).filter(f => f.endsWith('.json'))) {
   const dest = f.startsWith('00-') ? 'macro' : 'etapas';
-  node(tool('build.js'), path.join(TB, 'fontes', 'etapas', f), path.join(TB, dest, f.replace(/\.json$/, '.bpmn')));
+  gerar(path.join(TB, 'fontes', 'etapas', f), path.join(TB, dest, f.replace(/\.json$/, '.bpmn')));
 }
+await concluir();
 for (const dir of ['.', 'macro', 'etapas']) {
   for (const f of fs.readdirSync(path.join(TB, dir)).filter(f => f.endsWith('.bpmn'))) {
     execFileSync(process.execPath, [tool('render.js'), path.join(TB, dir, f)], { cwd: root, stdio: 'ignore' });

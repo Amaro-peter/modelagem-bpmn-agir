@@ -39,8 +39,7 @@
           "type": "user",
           "lane": "L_INT",
           "name": "Preencher o formulário de registro e anexar os documentos",
-          "status": "nova",
-          "note": "Autores, titulares, datas, linguagens, campo de aplicação e tipo de programa"
+          "status": "nova"
         },
         {
           "id": "t_valida",
@@ -83,8 +82,7 @@
           "type": "user",
           "lane": "L_INT",
           "name": "Revisar os dados e dar o aceite eletrônico",
-          "status": "nova",
-          "note": "Mesmos lembretes e prazo de inatividade do formulário"
+          "status": "nova"
         },
         {
           "id": "g_aceite",

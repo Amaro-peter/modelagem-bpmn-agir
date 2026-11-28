@@ -21,7 +21,6 @@
         <bpmn:flowNodeRef>t_sol</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>e1_fim</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_esc</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>e2_fim</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>j_form</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_form</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_aceite</bpmn:flowNodeRef>
@@ -30,6 +29,7 @@
         <bpmn:flowNodeRef>i3_30</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>i3_fim</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>e6_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>e2_fim</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="L_AGIR" name="AGIR (servidores e bolsistas)">
         <bpmn:flowNodeRef>t_reg_man</bpmn:flowNodeRef>
@@ -197,9 +197,6 @@
       <bpmn:incoming>ToBe_Registro_Software_f24</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_f13</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="e2_fim" name="Encerrado: avaliação negativa (interessado notificado)">
-      <bpmn:incoming>ToBe_Registro_Software_f13</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:serviceTask id="t_lib" name="Liberar o formulário de registro ao interessado">
       <bpmn:incoming>ToBe_Registro_Software_f25</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_f26</bpmn:outgoing>
@@ -492,18 +489,13 @@
     <bpmn:sequenceFlow id="ToBe_Registro_Software_f76" sourceRef="t_envcert" targetRef="t_desp_encam" />
     <bpmn:sequenceFlow id="ToBe_Registro_Software_f77" sourceRef="t_desp_encam" targetRef="t_e7" />
     <bpmn:sequenceFlow id="ToBe_Registro_Software_f78" sourceRef="t_e7" targetRef="e7_fim" />
+    <bpmn:endEvent id="e2_fim" name="Encerrado: avaliação negativa (interessado notificado)">
+      <bpmn:incoming>ToBe_Registro_Software_f13</bpmn:incoming>
+    </bpmn:endEvent>
     <bpmn:textAnnotation id="t_reg_note">
       <bpmn:text>Web Services do SEI: dependem de aprovação da STI/UFF</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="t_reg_assoc" sourceRef="t_reg" targetRef="t_reg_note" />
-    <bpmn:textAnnotation id="t_form_note">
-      <bpmn:text>Autores, titulares, datas, linguagens, campo de aplicação e tipo de programa</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="t_form_assoc" sourceRef="t_form" targetRef="t_form_note" />
-    <bpmn:textAnnotation id="t_aceite_note">
-      <bpmn:text>Mesmos lembretes e prazo de inatividade do formulário</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="t_aceite_assoc" sourceRef="t_aceite" targetRef="t_aceite_note" />
     <bpmn:textAnnotation id="t_dv_note">
       <bpmn:text>Representante da AGIR que utiliza e-CNPJ da UFF com procuração.</bpmn:text>
     </bpmn:textAnnotation>
@@ -613,12 +605,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_not2_di" bpmnElement="t_not2">
         <dc:Bounds x="2768" y="891" width="120" height="110" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="e2_fim_di" bpmnElement="e2_fim">
-        <dc:Bounds x="3044" y="189" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2985" y="143" width="130" height="40" />
-        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_lib_di" bpmnElement="t_lib">
         <dc:Bounds x="2768" y="1041" width="120" height="110" />
@@ -734,7 +720,7 @@
       <bpmndi:BPMNShape id="c_email_di" bpmnElement="c_email">
         <dc:Bounds x="6802" y="1228" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="6755" y="1268" width="130" height="28" />
+          <dc:Bounds x="6695" y="1275" width="130" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="c_rpi_di" bpmnElement="c_rpi">
@@ -803,14 +789,14 @@
           <dc:Bounds x="8191" y="531" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e2_fim_di" bpmnElement="e2_fim">
+        <dc:Bounds x="2922" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2875" y="140" width="130" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_reg_note_di" bpmnElement="t_reg_note">
         <dc:Bounds x="411" y="784" width="150" height="57" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_form_note_di" bpmnElement="t_form_note">
-        <dc:Bounds x="3255" y="30" width="150" height="72" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_aceite_note_di" bpmnElement="t_aceite_note">
-        <dc:Bounds x="4457" y="30" width="150" height="57" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_dv_note_di" bpmnElement="t_dv_note">
         <dc:Bounds x="5467" y="332" width="150" height="72" />
@@ -904,8 +890,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f13_di" bpmnElement="ToBe_Registro_Software_f13">
         <di:waypoint x="2888" y="946" />
-        <di:waypoint x="3062" y="946" />
-        <di:waypoint x="3062" y="225" />
+        <di:waypoint x="2940" y="946" />
+        <di:waypoint x="2940" y="225" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f14_di" bpmnElement="ToBe_Registro_Software_f14">
         <di:waypoint x="1357" y="684" />
@@ -1002,11 +988,11 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f33_di" bpmnElement="ToBe_Registro_Software_f33">
         <di:waypoint x="4236" y="484" />
-        <di:waypoint x="4236" y="12" />
-        <di:waypoint x="3165" y="12" />
+        <di:waypoint x="4236" y="60" />
+        <di:waypoint x="3165" y="60" />
         <di:waypoint x="3165" y="182" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3663" y="-34" width="75" height="27" />
+          <dc:Bounds x="4239" y="96" width="75" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f34_di" bpmnElement="ToBe_Registro_Software_f34">
@@ -1024,9 +1010,12 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f37_di" bpmnElement="ToBe_Registro_Software_f37">
         <di:waypoint x="4657" y="182" />
-        <di:waypoint x="4657" y="12" />
-        <di:waypoint x="3165" y="12" />
+        <di:waypoint x="4657" y="60" />
+        <di:waypoint x="3165" y="60" />
         <di:waypoint x="3165" y="182" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4680" y="93" width="60" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f38_di" bpmnElement="ToBe_Registro_Software_f38">
         <di:waypoint x="4682" y="207" />
@@ -1066,10 +1055,13 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f45_di" bpmnElement="ToBe_Registro_Software_f45">
         <di:waypoint x="3670" y="484" />
-        <di:waypoint x="3670" y="12" />
-        <di:waypoint x="3110" y="12" />
+        <di:waypoint x="3670" y="60" />
+        <di:waypoint x="3110" y="60" />
         <di:waypoint x="3110" y="207" />
         <di:waypoint x="3140" y="207" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3684" y="103" width="72" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f46_di" bpmnElement="ToBe_Registro_Software_f46">
         <di:waypoint x="4862" y="946" />
@@ -1225,14 +1217,6 @@
       <bpmndi:BPMNEdge id="t_reg_assoc_di" bpmnElement="t_reg_assoc">
         <di:waypoint x="441" y="841" />
         <di:waypoint x="441" y="876" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="t_form_assoc_di" bpmnElement="t_form_assoc">
-        <di:waypoint x="3285" y="102" />
-        <di:waypoint x="3285" y="145" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="t_aceite_assoc_di" bpmnElement="t_aceite_assoc">
-        <di:waypoint x="4487" y="87" />
-        <di:waypoint x="4487" y="152" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="t_dv_assoc_di" bpmnElement="t_dv_assoc">
         <di:waypoint x="5497" y="404" />
