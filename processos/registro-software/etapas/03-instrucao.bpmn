@@ -209,11 +209,17 @@
       <bpmndi:BPMNEdge id="Etapa3_Instrucao_f6_di" bpmnElement="Etapa3_Instrucao_f6">
         <di:waypoint x="1265" y="207" />
         <di:waypoint x="1360" y="207" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1275" y="189" width="102" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa3_Instrucao_f7_di" bpmnElement="Etapa3_Instrucao_f7">
         <di:waypoint x="1240" y="232" />
         <di:waypoint x="1240" y="357" />
         <di:waypoint x="1360" y="357" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1245" y="242" width="83" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa3_Instrucao_f8_di" bpmnElement="Etapa3_Instrucao_f8">
         <di:waypoint x="1480" y="207" />
@@ -242,6 +248,9 @@
         <di:waypoint x="2140" y="612" />
         <di:waypoint x="340" y="612" />
         <di:waypoint x="340" y="572" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2145" y="582" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa3_Instrucao_f14_di" bpmnElement="Etapa3_Instrucao_f14">
         <di:waypoint x="178" y="547" />
@@ -250,6 +259,9 @@
       <bpmndi:BPMNEdge id="Etapa3_Instrucao_f15_di" bpmnElement="Etapa3_Instrucao_f15">
         <di:waypoint x="2165" y="547" />
         <di:waypoint x="2302" y="547" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2175" y="529" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

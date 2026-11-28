@@ -200,10 +200,16 @@
         <di:waypoint x="997" y="690" />
         <di:waypoint x="251" y="690" />
         <di:waypoint x="251" y="650" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1002" y="350" width="130" height="28" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa2_f9_di" bpmnElement="ToBe_Registro_Software_Etapa2_f9">
         <di:waypoint x="1022" y="285" />
         <di:waypoint x="1082" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1032" y="267" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa2_f10_di" bpmnElement="ToBe_Registro_Software_Etapa2_f10">
         <di:waypoint x="1202" y="285" />
@@ -212,6 +218,9 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa2_f11_di" bpmnElement="ToBe_Registro_Software_Etapa2_f11">
         <di:waypoint x="1312" y="285" />
         <di:waypoint x="1372" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1322" y="267" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa2_f12_di" bpmnElement="ToBe_Registro_Software_Etapa2_f12">
         <di:waypoint x="1492" y="285" />
@@ -222,6 +231,9 @@
         <di:waypoint x="1287" y="310" />
         <di:waypoint x="1287" y="435" />
         <di:waypoint x="1414" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1292" y="320" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

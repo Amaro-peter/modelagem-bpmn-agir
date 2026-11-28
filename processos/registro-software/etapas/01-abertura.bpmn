@@ -109,11 +109,17 @@
       <bpmndi:BPMNEdge id="Etapa1_Abertura_f3_di" bpmnElement="Etapa1_Abertura_f3">
         <di:waypoint x="545" y="95" />
         <di:waypoint x="640" y="95" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="555" y="77" width="102" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa1_Abertura_f4_di" bpmnElement="Etapa1_Abertura_f4">
         <di:waypoint x="520" y="120" />
         <di:waypoint x="520" y="245" />
         <di:waypoint x="640" y="245" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="525" y="130" width="83" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa1_Abertura_f5_di" bpmnElement="Etapa1_Abertura_f5">
         <di:waypoint x="760" y="95" />

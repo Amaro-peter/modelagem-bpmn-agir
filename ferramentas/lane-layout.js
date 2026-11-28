@@ -166,6 +166,13 @@ function custoVisual(L) {
     const s = segs[i], t = segs[j];
     if (s.e === t.e) continue;
     if (lado(s.a, s.b, t.a) * lado(s.a, s.b, t.b) < 0 && lado(t.a, t.b, s.a) * lado(t.a, t.b, s.b) < 0) { cruz++; marca(s.e, t.e); continue; }
+    // toque: ponta de um trecho sobre o outro, fora da borda dos nós
+    const sobre = (q, u, v) => (u.x === v.x && Math.abs(q.x - u.x) < 1 && q.y >= Math.min(u.y, v.y) - 1 && q.y <= Math.max(u.y, v.y) + 1)
+      || (u.y === v.y && Math.abs(q.y - u.y) < 1 && q.x >= Math.min(u.x, v.x) - 1 && q.x <= Math.max(u.x, v.x) + 1);
+    const naForma = q => Object.values(L.__formas).some(b => q.x >= b.x - 4 && q.x <= b.x + b.width + 4 && q.y >= b.y - 4 && q.y <= b.y + b.height + 4);
+    const ehMsg = e => /^m\d+$/.test(String(e.id));
+    const comum = s.e.de === t.e.de || s.e.para === t.e.para;
+    if ((ehMsg(s.e) || ehMsg(t.e) || !comum) && ([s.a, s.b].some(q => sobre(q, t.a, t.b) && !naForma(q)) || [t.a, t.b].some(q => sobre(q, s.a, s.b) && !naForma(q)))) { cruz++; marca(s.e, t.e); continue; }
     if (s.e.de === t.e.de || s.e.para === t.e.para) continue;
     const hs = s.a.y === s.b.y, ht = t.a.y === t.b.y, vs = s.a.x === s.b.x, vt = t.a.x === t.b.x;
     if (hs && ht && s.a.y === t.a.y && faixa(s.a.x, s.b.x, t.a.x, t.b.x) > 2) { sobre++; marca(s.e, t.e); }
@@ -366,7 +373,7 @@ function layoutOnce(pools, messageFlows, { poolBand = true, groups = [], compact
     return cb < ca ? 1000 + ca - cb : (cb - ca) + (Math.abs(c(shapes[e.a]).y - c(shapes[e.b]).y) > 1 ? 0.5 : 0);
   };
   todas.sort((x, y) => span(x) - span(y));
-  for (const e of todas.filter(e => span(e) < 1000)) edges[e.key] = pick(route(e.a, e.b, byId, obstacles, ctx), obstacles, [e.a, e.b], used);
+  for (const e of todas.filter(e => span(e) < 1000)) edges[e.key] = pick(route(e.a, e.b, byId, obstacles, ctx), obstacles, [e.a, e.b], used, { de: e.a, para: e.b });
   const msgLabels = {};
   const msgEdges = messageFlows.map(([a, b], i) => {
     // mensagem de/para pool caixa-preta: sai/chega na vertical junto ao elemento do outro lado,
@@ -390,7 +397,7 @@ function layoutOnce(pools, messageFlows, { poolBand = true, groups = [], compact
           cands.push([P(side > 0 ? el.x + el.width : el.x, cy + off), P(x, cy + off), P(x, yPool)]);
         }
       }
-      const pts = pick(cands.map(c => toPool ? c : [...c].reverse()), obstacles, [id], used);
+      const pts = pick(cands.map(c => toPool ? c : [...c].reverse()), obstacles, [id], used, { de: a, para: b, msg: true });
       const pe = toPool ? pts[pts.length - 1] : pts[0];   // ponta na pool: rótulo logo ao lado
       msgLabels[i] = { x: pe.x + 6, y: below ? pe.y - 34 : pe.y + 6, width: 110, height: 28 };
       return pts;
@@ -403,16 +410,47 @@ function layoutOnce(pools, messageFlows, { poolBand = true, groups = [], compact
       if (down ? !(L > sy && L < t.y) : !(L < sy && L > t.y + t.height)) continue;
       cands.push([P(sc.x, sy), P(sc.x, L), P(x, L), P(x, tc.y), P(lado === 'esq' ? t.x : t.x + t.width, tc.y)]);
     }
-    // sobe (ou desce) por um corredor próximo e entra no alvo pelo lado de baixo (ou de cima), por um canal junto ao alvo
-    const L2 = down ? t.y - 16 : t.y + t.height + 16, tBorda = P(tc.x, down ? t.y : t.y + t.height);
-    for (let k = col.get(b) - 3; k <= col.get(b) + 2; k++) if (gaps[k]) for (const x of corridorXs(gaps[k])) for (const L of ctx.levels) {
-      if (down ? !(L > sy && L < L2) : !(L < sy && L > L2)) continue;
-      cands.push([P(sc.x, sy), P(sc.x, L), P(x, L), P(x, L2), P(tc.x, L2), tBorda]);
+    // sobe (ou desce) por um corredor próximo e entra no alvo pelo lado de baixo (ou de cima), por um canal junto ao alvo.
+    // Vários pontos de entrada na borda: duas mensagens para o mesmo alvo chegam em linhas independentes.
+    const L2 = down ? t.y - 16 : t.y + t.height + 16, yBorda = down ? t.y : t.y + t.height;
+    const offs = t.width <= 40 ? [0, -9, 9] : [0, -22, 22, -40, 40];
+    for (const [io, o] of offs.entries()) {
+      const tx = tc.x + o;
+      const L2 = (down ? t.y - 16 : t.y + t.height + 16) + (down ? -1 : 1) * io * 14;   // cada ponto de entrada no seu nível
+      const yb = t.width <= 40 ? (down ? tc.y - Math.sqrt(Math.max(0, 18 * 18 - o * o)) : tc.y + Math.sqrt(Math.max(0, 18 * 18 - o * o))) : yBorda;
+      cands.push([P(sc.x, sy), P(sc.x, L2), P(tx, L2), P(tx, yb)]);
+      for (let k = col.get(b) - 3; k <= col.get(b) + 2; k++) if (gaps[k]) for (const x of corridorXs(gaps[k])) for (const L of ctx.levels) {
+        if (down ? !(L > sy && L < L2) : !(L < sy && L > L2)) continue;
+        cands.push([P(sc.x, sy), P(sc.x, L), P(x, L), P(x, L2), P(tx, L2), P(tx, yb)]);
+      }
     }
-    return pick(cands, obstacles, [a, b], used);
+    return pick(cands, obstacles, [a, b], used, { de: a, para: b, msg: true });
   });
-  for (const e of todas.filter(e => span(e) >= 1000)) edges[e.key] = pick(route(e.a, e.b, byId, obstacles, ctx), obstacles, [e.a, e.b], used);
+  for (const e of todas.filter(e => span(e) >= 1000)) edges[e.key] = pick(route(e.a, e.b, byId, obstacles, ctx), obstacles, [e.a, e.b], used, { de: e.a, para: e.b });
+  // rótulos das mensagens de/para pools recolhidas: ao lado da ponta na pool, no lado que não encosta em setas
+  {
+    const segsTodos = [];
+    for (const pts of [...Object.values(edges), ...msgEdges, ...Object.values(assoc)]) for (let i = 0; i < pts.length - 1; i++) segsTodos.push([pts[i], pts[i + 1]]);
+    const encosta = r => segsTodos.filter(([u, v]) => Math.max(u.x, v.x) >= r.x - 2 && Math.min(u.x, v.x) <= r.x + r.width + 2
+      && Math.max(u.y, v.y) >= r.y - 2 && Math.min(u.y, v.y) <= r.y + r.height + 2).length;
+    for (const [k, r0] of Object.entries(msgLabels)) {
+      const pts = msgEdges[k];
+      const [a, b] = messageFlows[k];
+      const pe = blackbox.has(b) ? pts[pts.length - 1] : pts[0];
+      const acima = r0.y < pe.y;
+      const cands = [r0, { ...r0, x: pe.x - 6 - r0.width }, { ...r0, y: acima ? pe.y - 70 : pe.y + 40 }, { ...r0, x: pe.x - 6 - r0.width, y: acima ? pe.y - 70 : pe.y + 40 }];
+      msgLabels[k] = cands.reduce((m, r) => encosta(r) < encosta(m) ? r : m, cands[0]);
+    }
+  }
   const labels = placeLabels(allNodes, shapes, [...Object.values(edges), ...msgEdges]);
+  // mensagens entre pools expandidas com nome: rótulo ao lado do primeiro trecho, como nas setas de sequência
+  {
+    const msgPool = { id: '__msg', flows: messageFlows.map(([x, y, nome], i) => (!blackbox.has(x) && !blackbox.has(y) && nome) ? [x, y, nome] : [x, y]) };
+    const msgEdgesMap = Object.fromEntries(msgEdges.map((pts, i) => [`__msg|${i}`, pts]));
+    const rot = placeFlowLabels([msgPool], msgEdgesMap, shapes, notes, [...Object.values(labels), ...Object.values(msgLabels)], [...Object.values(edges), ...msgEdges, ...Object.values(assoc)]);
+    for (const [k, r] of Object.entries(rot)) msgLabels[Number(k.split('|')[1])] = r;
+  }
+  const flowLabels = placeFlowLabels(pools, edges, shapes, notes, [...Object.values(labels), ...Object.values(msgLabels)], [...Object.values(edges), ...msgEdges, ...Object.values(assoc)]);
   // dados para a otimização: pontas das setas, formas (inclui anotações) e linha de cada nó
   const __ends = {};
   for (const p of pools) (p.flows || []).forEach(([a, b], i) => { __ends[`${p.id}|${i}`] = [a, b]; });
@@ -420,7 +458,7 @@ function layoutOnce(pools, messageFlows, { poolBand = true, groups = [], compact
   const __assoc = Object.entries(assoc).map(([id, pts]) => ({ id: `assoc|${id}`, pts, de: id, para: `nota|${id}` }));
   const __formas = { ...shapes };
   for (const [id, nb] of Object.entries(notes)) __formas[`nota|${id}`] = nb;
-  return { shapes, lanes, pools: poolBounds, notes, assoc, groups: groupBounds, edges, msgEdges, msgLabels, labels, width, height: y - POOL_GAP,
+  return { shapes, lanes, pools: poolBounds, notes, assoc, groups: groupBounds, edges, msgEdges, msgLabels, labels, flowLabels, width, height: y - POOL_GAP,
     __ends, __msgEnds, __formas, __rows, __assoc, __cols: col };
 }
 
@@ -570,7 +608,7 @@ function route(a, b, byId, shapes, ctx) {
 }
 
 // Escolhe o candidato de menor custo: atravessar formas ≫ cruzar/sobrepor setas já traçadas ≫ dobras ≫ comprimento.
-function pick(candidates, shapes, skip, used) {
+function pick(candidates, shapes, skip, used, meta = {}) {
   let best = null, bestCost = Infinity;
   const limite = candidates.basicos ?? candidates.length;
   candidates.forEach((pts, i) => {
@@ -580,12 +618,12 @@ function pick(candidates, shapes, skip, used) {
     if (pts2.length < 2) return;
     let len = 0;
     for (let k = 0; k < pts2.length - 1; k++) len += Math.abs(pts2[k].x - pts2[k + 1].x) + Math.abs(pts2[k].y - pts2[k + 1].y);
-    const cost = (hits(pts2, shapes, skip) ? 1e7 : 0) + crossings(pts2, used) * 1e4 + overlapCount(pts2, used) * 1e4
+    const cost = (hits(pts2, shapes, skip) ? 1e7 : 0) + (crossings(pts2, used) + toques(pts2, used, shapes, meta)) * 1e4 + overlapCount(pts2, used) * 1e4
       + (pts2.length - 2) * 60 + len * 0.05 + i * 0.01;
     if (cost < bestCost) { bestCost = cost; best = pts2; }
   });
   best = best || candidates[0];
-  for (let i = 0; i < best.length - 1; i++) used.push([best[i], best[i + 1]]);
+  for (let i = 0; i < best.length - 1; i++) used.push([best[i], best[i + 1], meta]);
   return best;
 }
 
@@ -598,6 +636,29 @@ function crossings(points, used) {
     for (const [u, v] of used) {
       if (lado(p, q, u) * lado(p, q, v) < 0 && lado(u, v, p) * lado(u, v, q) < 0) n++;
     }
+  }
+  return n;
+}
+
+// toques: uma seta encosta em outra (ponta sobre o meio da outra, ou trechos colineares que se emendam)
+// fora da borda de um nó. Encontros na borda de um nó (ex.: várias setas chegando a uma junção) são normais.
+function toques(points, used, shapes, meta = {}) {
+  let lista = cacheFormas.get(shapes);
+  if (!lista) { lista = Object.entries(shapes).map(([id, v]) => [id, v.x - 4, v.y - 4, v.x + v.width + 4, v.y + v.height + 4]); cacheFormas.set(shapes, lista); }
+  const naForma = q => lista.some(f => q.x >= f[1] && q.x <= f[3] && q.y >= f[2] && q.y <= f[4]);
+  const sobre = (q, u, v) => (u.x === v.x && Math.abs(q.x - u.x) < 1 && q.y >= Math.min(u.y, v.y) - 1 && q.y <= Math.max(u.y, v.y) + 1)
+    || (u.y === v.y && Math.abs(q.y - u.y) < 1 && q.x >= Math.min(u.x, v.x) - 1 && q.x <= Math.max(u.x, v.x) + 1);
+  // divisão/junção de setas de sequência (mesma origem ou mesmo destino) pode compartilhar o trecho junto ao nó
+  const relevante = m => !m || meta.msg || m.msg || (m.de !== meta.de && m.para !== meta.para);
+  let n = 0;
+  for (let i = 0; i < points.length; i++) {
+    const q = points[i];
+    for (const [u, v, m] of used) {
+      if (relevante(m) && sobre(q, u, v) && !naForma(q)) n++;
+    }
+  }
+  for (const [u, v, m] of used) if (relevante(m)) for (const q of [u, v]) {
+    for (let i = 0; i < points.length - 1; i++) if (sobre(q, points[i], points[i + 1]) && !naForma(q)) { n++; break; }
   }
   return n;
 }
@@ -655,6 +716,53 @@ function routeMessage(s, t) {
     }
   }
   return candidates;
+}
+
+// Rótulos das setas de sequência (ex.: "Sim", "Servidor UFF"): ao lado do primeiro trecho, perto da origem,
+// na posição que não encosta em setas, formas nem outros rótulos.
+export function placeFlowLabels(pools, edges, shapes, notes, outrosRotulos, todasSetas) {
+  const out = {};
+  const caixas = [...Object.values(shapes), ...Object.values(notes)];
+  const ocupados = [...outrosRotulos];
+  const segs = [];
+  for (const pts of todasSetas) for (let i = 0; i < pts.length - 1; i++) segs.push([pts[i], pts[i + 1]]);
+  const cruzaSeg = (r, [u, v]) => {
+    const x1 = Math.min(u.x, v.x), x2 = Math.max(u.x, v.x), y1 = Math.min(u.y, v.y), y2 = Math.max(u.y, v.y);
+    return x2 >= r.x - 2 && x1 <= r.x + r.width + 2 && y2 >= r.y - 2 && y1 <= r.y + r.height + 2;
+  };
+  const inter = (a, b) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+  for (const p of pools) (p.flows || []).forEach(([, , texto], j) => {
+    if (!texto) return;
+    const pts = edges[`${p.id}|${j}`];
+    if (!pts || pts.length < 2) return;
+    const CH = 6.4;
+    const w = Math.min(130, Math.max(24, texto.length * CH + 6));
+    const h = Math.ceil((texto.length * CH + 6) / w) * 14;
+    const cands = [];
+    for (let k = 0; k < Math.min(2, pts.length - 1); k++) {
+      const a = pts[k], b = pts[k + 1];
+      const dx = Math.sign(b.x - a.x), dy = Math.sign(b.y - a.y);
+      const len = Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
+      for (const t of [10, 24, 40]) {
+        if (t > len - 8) continue;
+        if (dy === 0) {          // trecho horizontal: acima ou abaixo da linha
+          const x = dx > 0 ? a.x + t : a.x - t - w;
+          cands.push({ x, y: a.y - h - 4, width: w, height: h }, { x, y: a.y + 4, width: w, height: h });
+        } else {                 // trecho vertical: à direita ou à esquerda da linha
+          const y = dy > 0 ? a.y + t : a.y - t - h;
+          cands.push({ x: a.x + 5, y, width: w, height: h }, { x: a.x - w - 5, y, width: w, height: h });
+        }
+      }
+    }
+    let melhor = null, menor = Infinity;
+    cands.forEach((r, i) => {
+      const custo = segs.filter(sg => cruzaSeg(r, sg)).length * 100 + caixas.filter(c => inter(r, c)).length * 100
+        + ocupados.filter(c => inter(r, c)).length * 50 + i;
+      if (custo < menor) { menor = custo; melhor = r; }
+    });
+    if (melhor) { out[`${p.id}|${j}`] = melhor; ocupados.push(melhor); }
+  });
+  return out;
 }
 
 // Rótulos externos (eventos e gateways): abaixo; se houver seta chegando/saindo por baixo, acima;

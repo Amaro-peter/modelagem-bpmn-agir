@@ -896,9 +896,11 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f14_di" bpmnElement="ToBe_Registro_Software_f14">
         <di:waypoint x="1357" y="684" />
         <di:waypoint x="1357" y="1010" />
-        <di:waypoint x="1592" y="1010" />
-        <di:waypoint x="1592" y="946" />
-        <di:waypoint x="1622" y="946" />
+        <di:waypoint x="1647" y="1010" />
+        <di:waypoint x="1647" y="971" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1362" y="694" width="24" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_f15_di" bpmnElement="ToBe_Registro_Software_f15">
         <di:waypoint x="1672" y="946" />

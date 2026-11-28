@@ -60,7 +60,7 @@ npm run validar             # confere todos os modelos (regras BPMN + consistên
 npm run registro-software   # regera AS-IS, macro, etapas, imagens e documentação a partir das fontes JSON
 ```
 
-O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Google Chrome ou o Microsoft Edge instalados. Se não houver nenhum dos dois, rode `npx playwright install chromium`.
+Os diagramas ajustados à mão no editor são preservados quando o conteúdo da fonte não muda (o registro dos arquivos gerados fica em `processos/registro-software/.gerados.json`). O `registro-software` precisa do Python 3. Para gerar as imagens, ele usa o Google Chrome ou o Microsoft Edge instalados. Se não houver nenhum dos dois, rode `npx playwright install chromium`.
 
 ## Apresentação
 
@@ -119,7 +119,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npm run apresentacao-asis` | Gera a apresentação do AS-IS remodelado (HTML e PDF, 7 slides) em `apresentacao/as-is/` |
 | `npm run aula` | Gera a apresentação da aula (HTML e PDF, 14 slides) em `apresentacao/aula/` |
 | `npm run apresentacao` | Gera a apresentação em HTML (interativa) e em PDF (imagens estáticas) com os diagramas atuais; o layout fica em `apresentacao/recursos/` |
-| `npm run visual -- <arquivo.bpmn>...` | Qualidade visual: aponta setas que se cruzam, se sobrepõem ou atravessam formas, elementos soltos (sem entrada/saída, mensagens sem fluxo de mensagem, anotações sem associação) e cores. Faz parte do `npm run validar` |
+| `npm run visual -- <arquivo.bpmn>...` | Qualidade visual: aponta setas que se cruzam, se tocam fora dos nós, se sobrepõem ou atravessam formas, rótulos de seta em cima de outra seta, elementos soltos (sem entrada/saída, mensagens sem fluxo de mensagem, anotações sem associação) e cores. Divisões/junções que compartilham o trecho junto ao nó aparecem como aviso. Faz parte do `npm run validar` |
 | `npm run comparar -- <antes.bpmn> <depois.bpmn>` | Mostra o que mudou entre duas versões de um diagrama (elementos, nomes, ligações, raias e posições) |
 | `python3 -I ferramentas/dividir_etapas.py <fonte.json> <pasta>` | Gera os diagramas por etapa e o macroprocesso a partir de uma fonte com `"etapa"` em cada nó |
 

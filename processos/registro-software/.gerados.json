@@ -1,0 +1,20 @@
+{
+  "processos/registro-software/to-be/registro-software-tobe.bpmn": "editado-no-editor",
+  "processos/registro-software/as-is/registro-software-asis.bpmn": "56387771270a1bfcc05f674ff0ae5f83385e8db1",
+  "processos/registro-software/macro/00-macro.bpmn": "76c06bb0890cc8bd21f60e1cd4e93ae025c9d6cf",
+  "processos/registro-software/etapas/01-abertura.bpmn": "bd14ea36e6b8301f1dec57a142b33f959c185cf9",
+  "processos/registro-software/etapas/02-avaliacao.bpmn": "6f65f7d3d5d69b0764945b45c0879f579478bcca",
+  "processos/registro-software/etapas/03-instrucao.bpmn": "31af386b1bfcd12ced897bd16b82869a0f7055eb",
+  "processos/registro-software/etapas/04-pagamento.bpmn": "17a4a1bfc55bcbdd498ddfca209f0224e5adb61d",
+  "processos/registro-software/etapas/05-deposito.bpmn": "e673016daf095390dc5f1adb8631184624a718c9",
+  "processos/registro-software/etapas/06-resultado.bpmn": "c3875698c8a26549111a237298cc584f06a66962",
+  "processos/registro-software/etapas/07-registros.bpmn": "c479ae1a6d9e20e5e739b97306d8a53e30809671",
+  "processos/registro-software/to-be/macro/00-macro.bpmn": "fcb42343e32ba823d310a3db0adb29345632fc42",
+  "processos/registro-software/to-be/etapas/01-solicitacao-triagem.bpmn": "7678dc07b6604561a84d83ce574a72e8d437fa7c",
+  "processos/registro-software/to-be/etapas/02-reuniao-avaliacao.bpmn": "a11795646a6d1b630bbfc0ba0c3bc1cfaf4a64f1",
+  "processos/registro-software/to-be/etapas/03-coleta-validacao.bpmn": "8a9a3165b68846d8d41e69353cb764b5950a5f24",
+  "processos/registro-software/to-be/etapas/04-pagamento.bpmn": "c4f9c8dbff45aa3cd58b19f5bc9a9dfcb9f72edc",
+  "processos/registro-software/to-be/etapas/05-protocolo.bpmn": "402825c0d3eec9cf4e206076103960be8bbbe5ff",
+  "processos/registro-software/to-be/etapas/06-acompanhamento-certificado.bpmn": "d653e6e9a44605af4669978b120f3d1d9a03806c",
+  "processos/registro-software/to-be/etapas/07-registros-encerramento.bpmn": "697116cf92a2dfa0d97ed260a857333902112d72"
+}

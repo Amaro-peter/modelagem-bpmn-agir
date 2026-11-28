@@ -190,10 +190,16 @@
         <di:waypoint x="700" y="460" />
         <di:waypoint x="700" y="585" />
         <di:waypoint x="820" y="585" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="705" y="470" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f4_di" bpmnElement="Etapa2_Avaliacao_f4">
         <di:waypoint x="725" y="435" />
         <di:waypoint x="820" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="735" y="417" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f5_di" bpmnElement="Etapa2_Avaliacao_f5">
         <di:waypoint x="880" y="395" />
@@ -226,6 +232,9 @@
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f11_di" bpmnElement="Etapa2_Avaliacao_f11">
         <di:waypoint x="1445" y="585" />
         <di:waypoint x="1540" y="585" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1455" y="567" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f12_di" bpmnElement="Etapa2_Avaliacao_f12">
         <di:waypoint x="1660" y="585" />
@@ -239,6 +248,9 @@
         <di:waypoint x="1420" y="610" />
         <di:waypoint x="1420" y="735" />
         <di:waypoint x="1582" y="735" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1425" y="620" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

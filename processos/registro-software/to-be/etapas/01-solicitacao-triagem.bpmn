@@ -248,6 +248,9 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa1_f11_di" bpmnElement="ToBe_Registro_Software_Etapa1_f11">
         <di:waypoint x="1106" y="285" />
         <di:waypoint x="1166" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1116" y="267" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa1_f12_di" bpmnElement="ToBe_Registro_Software_Etapa1_f12">
         <di:waypoint x="1286" y="285" />
@@ -258,6 +261,9 @@
         <di:waypoint x="1081" y="310" />
         <di:waypoint x="1081" y="435" />
         <di:waypoint x="1208" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1086" y="320" width="25" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Pool_SEI_di" bpmnElement="Pool_SEI" isHorizontal="true">
         <dc:Bounds x="0" y="877" width="1612" height="80" />
@@ -266,7 +272,7 @@
         <di:waypoint x="446" y="792" />
         <di:waypoint x="446" y="877" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="452" y="843" width="110" height="28" />
+          <dc:Bounds x="330" y="843" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

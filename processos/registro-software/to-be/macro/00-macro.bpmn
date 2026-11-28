@@ -229,11 +229,17 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f3_di" bpmnElement="ToBe_Registro_Software_Macro_f3">
         <di:waypoint x="456" y="285" />
         <di:waypoint x="558" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="466" y="267" width="64" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f4_di" bpmnElement="ToBe_Registro_Software_Macro_f4">
         <di:waypoint x="431" y="310" />
         <di:waypoint x="431" y="435" />
         <di:waypoint x="516" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="436" y="350" width="130" height="28" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f5_di" bpmnElement="ToBe_Registro_Software_Macro_f5">
         <di:waypoint x="636" y="435" />
@@ -242,11 +248,17 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f6_di" bpmnElement="ToBe_Registro_Software_Macro_f6">
         <di:waypoint x="746" y="435" />
         <di:waypoint x="848" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="756" y="417" width="64" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f7_di" bpmnElement="ToBe_Registro_Software_Macro_f7">
         <di:waypoint x="721" y="410" />
         <di:waypoint x="721" y="95" />
         <di:waypoint x="806" y="95" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="726" y="386" width="96" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f8_di" bpmnElement="ToBe_Registro_Software_Macro_f8">
         <di:waypoint x="926" y="95" />
@@ -255,20 +267,32 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f9_di" bpmnElement="ToBe_Registro_Software_Macro_f9">
         <di:waypoint x="1036" y="95" />
         <di:waypoint x="1138" y="95" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046" y="77" width="64" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f10_di" bpmnElement="ToBe_Registro_Software_Macro_f10">
         <di:waypoint x="1011" y="120" />
         <di:waypoint x="1011" y="285" />
         <di:waypoint x="1096" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1016" y="130" width="130" height="28" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f11_di" bpmnElement="ToBe_Registro_Software_Macro_f11">
         <di:waypoint x="1216" y="285" />
         <di:waypoint x="1276" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1226" y="267" width="57" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f12_di" bpmnElement="ToBe_Registro_Software_Macro_f12">
         <di:waypoint x="1396" y="285" />
         <di:waypoint x="1472" y="285" />
         <di:waypoint x="1472" y="555" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1406" y="253" width="130" height="28" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f13_di" bpmnElement="ToBe_Registro_Software_Macro_f13">
         <di:waypoint x="1576" y="625" />
@@ -277,11 +301,17 @@
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f14_di" bpmnElement="ToBe_Registro_Software_Macro_f14">
         <di:waypoint x="1686" y="625" />
         <di:waypoint x="1788" y="625" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1696" y="607" width="64" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f15_di" bpmnElement="ToBe_Registro_Software_Macro_f15">
         <di:waypoint x="1661" y="600" />
         <di:waypoint x="1661" y="285" />
         <di:waypoint x="1746" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1666" y="562" width="130" height="28" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Macro_f16_di" bpmnElement="ToBe_Registro_Software_Macro_f16">
         <di:waypoint x="1866" y="285" />

@@ -191,7 +191,10 @@ async function buildWithLanes() {
       }
       (p.flows || []).forEach((f, j) => {
         const fid = `${processes[i].id}_f${j + 1}`;
-        pe.push(edge(fid, els[fid], L.edges[`${p.id}|${j}`]));
+        const e = edge(fid, els[fid], L.edges[`${p.id}|${j}`]);
+        const lb = L.flowLabels?.[`${p.id}|${j}`];
+        if (lb) e.label = moddle.create('bpmndi:BPMNLabel', { bounds: bounds(lb) });
+        pe.push(e);
       });
     });
     (def.messageFlows || []).forEach((_, i) => {

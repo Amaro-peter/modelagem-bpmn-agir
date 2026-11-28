@@ -15,11 +15,17 @@ const python = ['python3', 'python', 'py'].find(cmd => spawnSync(cmd, ['--versio
 if (!python) { console.error('Python 3 não encontrado (necessário para gerar etapas e documentação).'); process.exit(1); }
 const py = script => execFileSync(python, ['-I', path.join(P, 'scripts', script)], { cwd: root, stdio: 'inherit' });
 
-// Gera um diagrama a partir da fonte. Se o arquivo atual tem o MESMO conteúdo (elementos, nomes, ligações, raias),
-// ele é mantido: preserva os ajustes de layout feitos à mão no editor. Se o conteúdo mudou, o arquivo é gerado
-// de novo e a versão anterior vai para .historico/ (os ajustes de conteúdo devem ser levados à fonte JSON).
+// Gera um diagrama a partir da fonte, preservando ajustes feitos à mão no editor:
+//  - arquivo nunca editado (igual ao que o gerador produziu da última vez; hash em .gerados.json): é atualizado;
+//  - arquivo editado à mão com o MESMO conteúdo da fonte (só layout mudou): é mantido;
+//  - conteúdo diferente da fonte: é gerado de novo e a versão anterior vai para .historico/
+//    (ajustes de conteúdo feitos no editor devem ser levados à fonte JSON antes).
 const { mesmoConteudo } = await import(pathToFileURL(tool('conteudo.mjs')).href);
+const { createHash } = await import('node:crypto');
 const historico = path.join(root, '.historico');
+const registro = path.join(P, '.gerados.json');
+const gerados = fs.existsSync(registro) ? JSON.parse(fs.readFileSync(registro, 'utf8')) : {};
+const hash = t => createHash('sha1').update(t).digest('hex');
 const pendentes = [];
 function gerar(fonte, destino) {
   fs.mkdirSync(historico, { recursive: true });
@@ -29,22 +35,26 @@ function gerar(fonte, destino) {
 }
 async function concluir() {
   for (const { novo, destino } of pendentes.splice(0)) {
-    const rel = path.relative(root, destino);
-    if (fs.existsSync(destino) && await mesmoConteudo(fs.readFileSync(destino, 'utf8'), fs.readFileSync(novo, 'utf8'))) {
-      if (fs.readFileSync(destino, 'utf8') !== fs.readFileSync(novo, 'utf8')) console.log(`${rel}: conteúdo igual ao da fonte, layout ajustado à mão mantido`);
+    const rel = path.relative(root, destino).split(path.sep).join('/');
+    const atual = fs.existsSync(destino) ? fs.readFileSync(destino, 'utf8') : null;
+    const gerado = fs.readFileSync(novo, 'utf8');
+    const editadoAMao = atual !== null && gerados[rel] && hash(atual) !== gerados[rel];
+    if (editadoAMao && await mesmoConteudo(atual, gerado)) {
+      console.log(`${rel}: ajustado à mão no editor, conteúdo igual ao da fonte; layout manual mantido`);
       fs.rmSync(novo);
-    } else {
-      if (fs.existsSync(destino)) {
-        const bak = path.join(historico, `layout-anterior-${Date.now()}-${path.basename(destino)}`);
-        fs.copyFileSync(destino, bak);
-        console.log(`${rel}: conteúdo mudou; gerado de novo (versão anterior em ${path.relative(root, bak)})`);
-      }
-      fs.renameSync(novo, destino);
+      continue;
     }
+    if (editadoAMao) {
+      const bak = path.join(historico, `layout-anterior-${Date.now()}-${path.basename(destino)}`);
+      fs.copyFileSync(destino, bak);
+      console.log(`${rel}: conteúdo mudou; gerado de novo (versão anterior em ${path.relative(root, bak)})`);
+    }
+    fs.renameSync(novo, destino);
+    gerados[rel] = hash(gerado);
   }
+  fs.writeFileSync(registro, JSON.stringify(gerados, null, 2) + '\n');
 }
 
-py('gerar_etapas.py');                                    // fontes/etapas/*.json a partir do AS-IS
 gerar(path.join(P, 'fontes', 'registro-software-asis.json'), path.join(P, 'as-is', 'registro-software-asis.bpmn'));
 gerar(path.join(P, 'fontes', 'etapas', '00-macro.json'), path.join(P, 'macro', '00-macro.bpmn'));
 for (const f of fs.readdirSync(path.join(P, 'fontes', 'etapas')).filter(f => /^0[1-7]-.*\.json$/.test(f))) {
