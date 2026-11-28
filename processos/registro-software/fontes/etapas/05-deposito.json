@@ -66,13 +66,13 @@
         {
           "id": "e5_ini",
           "type": "start",
-          "name": "Pagamento comprovado (Etapa 4)",
+          "name": "Entrada ← Etapa 4: Pagamento comprovado",
           "lane": "L_AGIR"
         },
         {
           "id": "e5_fim",
           "type": "end",
-          "name": "Pedido depositado → Etapa 6",
+          "name": "Saída → Etapa 6: Pedido depositado",
           "lane": "L_AGIR"
         }
       ],
@@ -128,11 +128,7 @@
     {
       "id": "Pool_INPI",
       "name": "INPI – Instituto Nacional da Propriedade Industrial",
-      "blackbox": true,
-      "color": {
-        "fill": "#e3f0fb",
-        "stroke": "#1565c0"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

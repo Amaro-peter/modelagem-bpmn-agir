@@ -34,12 +34,12 @@ w = L.append
 w('# TO-BE – Registro de Programa de Computador (Software) – AGIR/UFF\n')
 w('Modelo do **estado futuro** do processo, elaborado a partir do diagnóstico AS-IS e das entrevistas com o dono e os sponsors '
   'do processo (26/11/2026). Ele usa o investimento previsto do **Novo PAC** em tecnologia **sem substituir o SEI** e **sem ampliar a equipe**.\n')
-w('**Legenda:**')
-w('- 🟩 verde = atividade nova ou alterada em relação ao AS-IS;')
-w('- sem cor = mantida igual ao AS-IS;')
-w('- raia lilás = **Plataforma de Gestão de PI** (atividades automáticas);')
-w('- eventos com envelope = notificações automáticas ao interessado ou à equipe;')
-w('- pool azul = INPI; pool cinza = SEI (registro oficial).\n')
+w('**Representação:**')
+w('- diagramas em preto e branco; as atividades novas ou alteradas em relação ao AS-IS estão marcadas como "nova" na fonte;')
+w('- raia **Plataforma de Gestão de PI** = atividades automáticas;')
+w('- notificações = tarefa "Notificar o interessado (…)" ligada ao fim na raia de quem recebe;')
+w('- cada etapa termina numa única saída ("Saída → Etapa N: resultado") e a seguinte começa pela entrada de mesmo nome;')
+w('- pools recolhidas: INPI e SEI (registro oficial).\n')
 
 w('## 1. Diagramas\n')
 w('| Vista | Arquivo |')

@@ -7,37 +7,43 @@
       "n": 1,
       "nome": "Solicitação e triagem",
       "slug": "solicitacao-triagem",
-      "dono": "L_AGIR"
+      "dono": "L_AGIR",
+      "saida": "Solicitação aprovada na triagem"
     },
     {
       "n": 2,
       "nome": "Reunião inicial e avaliação",
       "slug": "reuniao-avaliacao",
-      "dono": "L_AGIR"
+      "dono": "L_AGIR",
+      "saida": "Ativo aprovado"
     },
     {
       "n": 3,
       "nome": "Coleta estruturada e validação",
       "slug": "coleta-validacao",
-      "dono": "L_INT"
+      "dono": "L_INT",
+      "saida": "Dados aprovados e congelados"
     },
     {
       "n": 4,
       "nome": "Pagamento da GRU",
       "slug": "pagamento",
-      "dono": "L_AGIR"
+      "dono": "L_AGIR",
+      "saida": "GRU paga"
     },
     {
       "n": 5,
       "nome": "Protocolo assistido no INPI",
       "slug": "protocolo",
-      "dono": "L_AGIR"
+      "dono": "L_AGIR",
+      "saida": "Pedido protocolado no INPI"
     },
     {
       "n": 6,
       "nome": "Acompanhamento do INPI e conferência do certificado",
       "slug": "acompanhamento-certificado",
-      "dono": "L_PLAT"
+      "dono": "L_PLAT",
+      "saida": "Certificado conferido e enviado"
     },
     {
       "n": 7,
@@ -63,11 +69,7 @@
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI",
-          "color": {
-            "fill": "#f3eefa",
-            "stroke": "#6a3d9a"
-          }
+          "name": "Plataforma de Gestão de PI"
         }
       ],
       "nodes": [
@@ -144,12 +146,19 @@
         },
         {
           "id": "t_tri_alerta",
-          "type": "end",
+          "type": "service",
           "lane": "L_PLAT",
           "etapa": 1,
+          "name": "Alertar a equipe e o servidor",
+          "status": "nova"
+        },
+        {
+          "id": "t_tri_alerta_fim",
+          "type": "end",
+          "lane": "L_AGIR",
+          "etapa": 1,
           "name": "Equipe e servidor alertados",
-          "status": "nova",
-          "event": "message"
+          "status": "nova"
         },
         {
           "id": "g_req",
@@ -169,13 +178,20 @@
           "papel": "servidor"
         },
         {
+          "id": "t_not1",
+          "type": "service",
+          "lane": "L_PLAT",
+          "etapa": 1,
+          "name": "Notificar o interessado do encerramento",
+          "status": "nova"
+        },
+        {
           "id": "e1_fim",
           "type": "end",
-          "lane": "L_PLAT",
+          "lane": "L_INT",
           "etapa": 1,
           "name": "Encerrado na triagem (interessado notificado)",
           "status": "nova",
-          "event": "message",
           "desfecho": true
         },
         {
@@ -187,7 +203,7 @@
         },
         {
           "id": "t_hor",
-          "type": "send",
+          "type": "service",
           "lane": "L_PLAT",
           "etapa": 2,
           "name": "Oferecer ao interessado os horários livres da equipe",
@@ -253,36 +269,25 @@
           "papel": "servidor"
         },
         {
+          "id": "t_not2",
+          "type": "service",
+          "lane": "L_PLAT",
+          "etapa": 2,
+          "name": "Notificar o interessado da avaliação negativa",
+          "status": "nova"
+        },
+        {
           "id": "e2_fim",
           "type": "end",
-          "lane": "L_PLAT",
+          "lane": "L_INT",
           "etapa": 2,
           "name": "Encerrado: avaliação negativa (interessado notificado)",
           "status": "nova",
-          "event": "message",
           "desfecho": true
         },
         {
-          "id": "lk_hor_out",
-          "type": "throw",
-          "lane": "L_AGIR",
-          "etapa": 2,
-          "name": "Oferecer novos horários",
-          "status": "nova",
-          "event": "link"
-        },
-        {
-          "id": "lk_hor_in",
-          "type": "catch",
-          "lane": "L_PLAT",
-          "etapa": 2,
-          "name": "Oferecer novos horários",
-          "status": "nova",
-          "event": "link"
-        },
-        {
           "id": "t_lib",
-          "type": "send",
+          "type": "service",
           "lane": "L_PLAT",
           "etapa": 3,
           "name": "Liberar o formulário de registro ao interessado",
@@ -382,13 +387,20 @@
           "timer": "P5D"
         },
         {
+          "id": "i3_lem_t",
+          "type": "service",
+          "lane": "L_PLAT",
+          "etapa": 3,
+          "name": "Enviar lembrete ao interessado",
+          "status": "nova"
+        },
+        {
           "id": "i3_lem_fim",
           "type": "end",
           "lane": "L_PLAT",
           "etapa": 3,
-          "name": "Lembrete enviado",
-          "status": "nova",
-          "event": "message"
+          "name": "Lembrete enviado ao interessado",
+          "status": "nova"
         },
         {
           "id": "i3_30",
@@ -419,13 +431,20 @@
           "status": "nova"
         },
         {
+          "id": "i3_not",
+          "type": "service",
+          "lane": "L_PLAT",
+          "etapa": 3,
+          "name": "Notificar o interessado do arquivamento",
+          "status": "nova"
+        },
+        {
           "id": "i3_fim",
           "type": "end",
-          "lane": "L_PLAT",
+          "lane": "L_INT",
           "etapa": 3,
           "name": "Arquivado por falta de resposta (interessado notificado)",
           "status": "nova",
-          "event": "message",
           "desfecho": true
         },
         {
@@ -613,13 +632,20 @@
           "papel": "servidor"
         },
         {
+          "id": "t_not742",
+          "type": "service",
+          "lane": "L_PLAT",
+          "etapa": 6,
+          "name": "Notificar o interessado do não conhecimento",
+          "status": "nova"
+        },
+        {
           "id": "e6_742",
           "type": "end",
-          "lane": "L_PLAT",
+          "lane": "L_INT",
           "etapa": 6,
           "name": "Encerrado: pedido não conhecido (interessado notificado)",
           "status": "nova",
-          "event": "message",
           "desfecho": true
         },
         {
@@ -667,6 +693,14 @@
       ],
       "flows": [
         [
+          "t_tri_alerta",
+          "t_tri_alerta_fim"
+        ],
+        [
+          "t_not1",
+          "e1_fim"
+        ],
+        [
           "e1_ini",
           "t_sol"
         ],
@@ -705,7 +739,11 @@
         ],
         [
           "t_enc1",
-          "e1_fim"
+          "t_not1"
+        ],
+        [
+          "t_not2",
+          "e2_fim"
         ],
         [
           "g_req",
@@ -734,12 +772,8 @@
         ],
         [
           "g_comp",
-          "lk_hor_out",
-          "Não"
-        ],
-        [
-          "lk_hor_in",
-          "j_hor"
+          "j_hor",
+          "Não: oferecer novos horários"
         ],
         [
           "g_comp",
@@ -757,7 +791,7 @@
         ],
         [
           "t_enc2",
-          "e2_fim"
+          "t_not2"
         ],
         [
           "g_aval",
@@ -823,8 +857,16 @@
           "Sim"
         ],
         [
-          "i3_lem",
+          "i3_lem_t",
           "i3_lem_fim"
+        ],
+        [
+          "i3_lem",
+          "i3_lem_t"
+        ],
+        [
+          "i3_not",
+          "i3_fim"
         ],
         [
           "i3_30",
@@ -836,7 +878,7 @@
         ],
         [
           "i3_gw",
-          "i3_fim",
+          "i3_not",
           "Sim"
         ],
         [
@@ -889,6 +931,10 @@
         [
           "t_envia",
           "t_monit"
+        ],
+        [
+          "t_not742",
+          "e6_742"
         ],
         [
           "t_monit",
@@ -955,7 +1001,7 @@
         ],
         [
           "t_enc742",
-          "e6_742"
+          "t_not742"
         ],
         [
           "g_desp",
@@ -995,20 +1041,12 @@
     {
       "id": "Pool_INPI",
       "name": "INPI – Instituto Nacional da Propriedade Industrial",
-      "blackbox": true,
-      "color": {
-        "fill": "#e3f0fb",
-        "stroke": "#1565c0"
-      }
+      "blackbox": true
     },
     {
       "id": "Pool_SEI",
       "name": "SEI – registro oficial da UFF",
-      "blackbox": true,
-      "color": {
-        "fill": "#f1f1f1",
-        "stroke": "#616161"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

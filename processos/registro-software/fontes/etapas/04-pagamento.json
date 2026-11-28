@@ -78,13 +78,13 @@
         {
           "id": "e4_ini",
           "type": "start",
-          "name": "Documentação aprovada (Etapa 3)",
+          "name": "Entrada ← Etapa 3: Documentação aprovada",
           "lane": "L_AGIR"
         },
         {
           "id": "e4_fim",
           "type": "end",
-          "name": "Pagamento comprovado → Etapa 5",
+          "name": "Saída → Etapa 5: Pagamento comprovado",
           "lane": "L_AGIR"
         }
       ],

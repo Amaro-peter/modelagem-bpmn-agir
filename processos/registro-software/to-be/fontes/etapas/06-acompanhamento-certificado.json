@@ -8,16 +8,16 @@
       "processId": "ToBe_Registro_Software_Etapa6",
       "lanes": [
         {
+          "id": "L_INT",
+          "name": "INTERESSADO (portal)"
+        },
+        {
           "id": "L_AGIR",
           "name": "AGIR (servidores e bolsistas)"
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI",
-          "color": {
-            "fill": "#f3eefa",
-            "stroke": "#6a3d9a"
-          }
+          "name": "Plataforma de Gestão de PI"
         }
       ],
       "nodes": [
@@ -109,12 +109,18 @@
           "papel": "servidor"
         },
         {
+          "id": "t_not742",
+          "type": "service",
+          "lane": "L_PLAT",
+          "name": "Notificar o interessado do não conhecimento",
+          "status": "nova"
+        },
+        {
           "id": "e6_742",
           "type": "end",
-          "lane": "L_PLAT",
+          "lane": "L_INT",
           "name": "Encerrado: pedido não conhecido (interessado notificado)",
-          "status": "nova",
-          "event": "message"
+          "status": "nova"
         },
         {
           "id": "t_cert",
@@ -139,21 +145,25 @@
           "papel": "servidor"
         },
         {
-          "id": "ini_j_mon_e5",
+          "id": "entrada_e6_de_e5",
           "type": "start",
-          "name": "(Etapa 5 – Protocolo assistido no INPI)",
+          "name": "Entrada ← Etapa 5: Pedido protocolado no INPI",
           "lane": "L_PLAT"
         },
         {
-          "id": "fim_t_desp_encam_e7",
+          "id": "saida_e6_para_e7",
           "type": "end",
-          "name": "→ Etapa 7 – Registros internos, cotitularidade e encerramento",
+          "name": "Saída → Etapa 7: Certificado conferido e enviado",
           "lane": "L_AGIR"
         }
       ],
       "flows": [
         [
-          "ini_j_mon_e5",
+          "t_not742",
+          "e6_742"
+        ],
+        [
+          "entrada_e6_de_e5",
           "j_mon"
         ],
         [
@@ -217,7 +227,7 @@
         ],
         [
           "t_enc742",
-          "e6_742"
+          "t_not742"
         ],
         [
           "g_desp",
@@ -234,27 +244,19 @@
         ],
         [
           "t_desp_encam",
-          "fim_t_desp_encam_e7"
+          "saida_e6_para_e7"
         ]
       ]
     },
     {
       "id": "Pool_INPI",
       "name": "INPI – Instituto Nacional da Propriedade Industrial",
-      "blackbox": true,
-      "color": {
-        "fill": "#e3f0fb",
-        "stroke": "#1565c0"
-      }
+      "blackbox": true
     },
     {
       "id": "Pool_SEI",
       "name": "SEI – registro oficial da UFF",
-      "blackbox": true,
-      "color": {
-        "fill": "#f1f1f1",
-        "stroke": "#616161"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

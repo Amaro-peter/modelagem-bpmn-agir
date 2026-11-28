@@ -2,7 +2,7 @@
 
 **Escopo:** estado atual (AS-IS), sem TO-BE e sem melhorias. Os diagramas e este documento derivam do mesmo modelo (`fontes/registro-software-asis.json`) e das respostas da entrevista de 26/11/2026.
 
-**Legenda dos diagramas:** sem cor = atividade do modelo original (PROPPI v08) • 🟩 verde = atividade nova, confirmada • pool azul = INPI (participante externo em destaque).
+**Representação:** diagramas em preto e branco. Cada etapa termina numa única saída de continuidade ("Saída → Etapa N: resultado"), e a etapa seguinte começa pela entrada de mesmo nome ("Entrada ← Etapa M: resultado"). As atividades novas em relação ao modelo original (PROPPI v08) estão marcadas como "nova" na fonte.
 
 ## 1. Arquitetura de processos
 
@@ -33,8 +33,10 @@ Os demais tipos de ativo do Nível 2 (patentes, marcas e desenhos industriais) e
 - Acessar o processo no SEI e baixar o requerimento — *AGIR* 🟩
 - Analisar o ativo — *AGIR*
 - Enviar e-mail ao interessado informando a decisão — *AGIR*
+- Receber a decisão por e-mail — *INTERESSADO* 🟩
 - Elaborar despacho de encerramento — *AGIR*
 - Enviar e-mail ao interessado agendando reunião — *AGIR*
+- Receber o convite da reunião — *INTERESSADO* 🟩
 - Elaborar despacho de encerramento — *AGIR*
 
 **Etapa 3 – Instrução documental**
@@ -90,13 +92,13 @@ Os demais tipos de ativo do Nível 2 (patentes, marcas e desenhos industriais) e
 
 | Etapa | Objetivo | Evento de início | Eventos de fim | Participantes | Diagrama |
 |---|---|---|---|---|---|
-| Etapa 1 – Abertura do pedido | Formalizar o interesse e abrir o processo com o Requerimento de Avaliação do ativo. | Interesse em registrar o software | Requerimento enviado → Etapa 2 | INTERESSADO | [01-abertura.bpmn](../etapas/01-abertura.bpmn) |
-| Etapa 2 – Avaliação do ativo | Decidir se o ativo atende aos requisitos e se o processo continua. | Requerimento recebido (Etapa 1) | Encerrado: requisitos não atendidos; Encerrado: avaliação negativa; Ativo aprovado → Etapa 3 | AGIR | [02-avaliacao.bpmn](../etapas/02-avaliacao.bpmn) |
-| Etapa 3 – Instrução documental | Reunir e validar a documentação do software (pacote, hash e dados exigidos pelo INPI). | Ativo aprovado (Etapa 2) | Documentação aprovada → Etapa 4 | INTERESSADO, AGIR | [03-instrucao.bpmn](../etapas/03-instrucao.bpmn) |
-| Etapa 4 – Pagamento da GRU | Emitir e pagar a GRU do serviço 730 e comprovar o pagamento no processo. | Documentação aprovada (Etapa 3) | Pagamento comprovado → Etapa 5 | AGIR | [04-pagamento.bpmn](../etapas/04-pagamento.bpmn) |
-| Etapa 5 – Depósito do pedido no INPI | Preparar a DV e o formulário e-Software e depositar o pedido de registro no INPI. | Pagamento comprovado (Etapa 4) | Pedido depositado → Etapa 6 | AGIR, INPI – Instituto Nacional da Propriedade Industrial | [05-deposito.bpmn](../etapas/05-deposito.bpmn) |
-| Etapa 6 – Resultado do INPI | Obter o resultado do INPI (730 ou 742), registrá-lo no SEI e comunicar o interessado. | Pedido depositado (Etapa 5) | Interessado ciente do registro; Pedido não conhecido pelo INPI; Registro concedido → Etapa 7 | INTERESSADO, AGIR, INPI – Instituto Nacional da Propriedade Industrial | [06-resultado.bpmn](../etapas/06-resultado.bpmn) |
-| Etapa 7 – Registros internos e formalização da cotitularidade | Fazer os registros patrimonial e contábil e, havendo cotitularidade, formalizar o Contrato de Ajuste. | Processo encaminhado pela AGIR (Etapa 6) | Encerrado: registro concluído; Encerrado: contrato disponibilizado | AGIR, Outras unidades da UFF, Cotitulares externos | [07-registros.bpmn](../etapas/07-registros.bpmn) |
+| Etapa 1 – Abertura do pedido | Formalizar o interesse e abrir o processo com o Requerimento de Avaliação do ativo. | Interesse em registrar o software | Saída → Etapa 2: Requerimento enviado | INTERESSADO | [01-abertura.bpmn](../etapas/01-abertura.bpmn) |
+| Etapa 2 – Avaliação do ativo | Decidir se o ativo atende aos requisitos e se o processo continua. | Entrada ← Etapa 1: Requerimento enviado | Encerrado: requisitos não atendidos; Encerrado: avaliação negativa; Saída → Etapa 3: Ativo aprovado | INTERESSADO, AGIR | [02-avaliacao.bpmn](../etapas/02-avaliacao.bpmn) |
+| Etapa 3 – Instrução documental | Reunir e validar a documentação do software (pacote, hash e dados exigidos pelo INPI). | Entrada ← Etapa 2: Ativo aprovado | Saída → Etapa 4: Documentação aprovada | INTERESSADO, AGIR | [03-instrucao.bpmn](../etapas/03-instrucao.bpmn) |
+| Etapa 4 – Pagamento da GRU | Emitir e pagar a GRU do serviço 730 e comprovar o pagamento no processo. | Entrada ← Etapa 3: Documentação aprovada | Saída → Etapa 5: Pagamento comprovado | AGIR | [04-pagamento.bpmn](../etapas/04-pagamento.bpmn) |
+| Etapa 5 – Depósito do pedido no INPI | Preparar a DV e o formulário e-Software e depositar o pedido de registro no INPI. | Entrada ← Etapa 4: Pagamento comprovado | Saída → Etapa 6: Pedido depositado | AGIR, INPI – Instituto Nacional da Propriedade Industrial | [05-deposito.bpmn](../etapas/05-deposito.bpmn) |
+| Etapa 6 – Resultado do INPI | Obter o resultado do INPI (730 ou 742), registrá-lo no SEI e comunicar o interessado. | Entrada ← Etapa 5: Pedido depositado | Interessado ciente do registro; Pedido não conhecido pelo INPI; Saída → Etapa 7: Registro concedido | INTERESSADO, AGIR, INPI – Instituto Nacional da Propriedade Industrial | [06-resultado.bpmn](../etapas/06-resultado.bpmn) |
+| Etapa 7 – Registros internos e formalização da cotitularidade | Fazer os registros patrimonial e contábil e, havendo cotitularidade, formalizar o Contrato de Ajuste. | Entrada ← Etapa 6: Registro concedido | Encerrado: registro concluído; Encerrado: contrato disponibilizado | AGIR, Outras unidades da UFF, Cotitulares externos | [07-registros.bpmn](../etapas/07-registros.bpmn) |
 
 No **macroprocesso** ([00-macro.bpmn](../macro/00-macro.bpmn)), cada etapa é uma *call activity* que chama o processo da etapa. Há dois pontos de decisão: **"Ativo apto?"** após a Etapa 2 (encerramento na avaliação) e **"Resultado do INPI"** após a Etapa 6 (730 segue para a Etapa 7; 742 encerra o processo). O INPI aparece como pool caixa-preta, que recebe o pedido (Etapa 5) e publica o resultado na RPI (Etapa 6).
 
@@ -112,7 +114,7 @@ No **macroprocesso** ([00-macro.bpmn](../macro/00-macro.bpmn)), cada etapa é um
 
 | S – Fornecedores | I – Entradas | P – Atividades principais | O – Saídas | C – Clientes |
 |---|---|---|---|---|
-| Interessado | Requerimento de Avaliação do ativo (SEI) | 1. Acessar o processo no SEI e baixar o requerimento<br>2. Analisar o ativo<br>3. Enviar e-mail ao interessado informando a decisão<br>4. Elaborar despacho de encerramento<br>5. Enviar e-mail ao interessado agendando reunião<br>6. Elaborar despacho de encerramento | Ativo aprovado para continuidade **ou** processo encerrado com despacho e e-mail ao interessado | AGIR (Etapa 3); Interessado |
+| Interessado | Requerimento de Avaliação do ativo (SEI) | 1. Acessar o processo no SEI e baixar o requerimento<br>2. Analisar o ativo<br>3. Enviar e-mail ao interessado informando a decisão<br>4. Receber a decisão por e-mail<br>5. Elaborar despacho de encerramento<br>6. Enviar e-mail ao interessado agendando reunião<br>7. Receber o convite da reunião<br>8. Elaborar despacho de encerramento | Ativo aprovado para continuidade **ou** processo encerrado com despacho e e-mail ao interessado | AGIR (Etapa 3); Interessado |
 
 ### Etapa 3 – Instrução documental
 
@@ -166,7 +168,7 @@ R = executa • A = aprova/responde pelo resultado (sempre a AGIR, conforme a en
 
 ## 5. Decisões da entrevista (26/11/2026)
 
-- Formato: um diagrama por etapa (7) + diagrama macro com raias por responsável e INPI em destaque.
+- Formato: um diagrama por etapa (7) + diagrama macro com raias por responsável e o INPI como participante externo.
 - Arquitetura: Gestão da PI → Registro de PI → Registro de programa de computador → etapas → atividades.
 - Aprovação (A) dos despachos e decisões: a própria AGIR.
 - Pagamento da GRU: feito internamente pela própria AGIR (definido em 26/11, após a entrevista; antes estava como caixa-preta).

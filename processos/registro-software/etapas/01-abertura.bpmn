@@ -45,7 +45,7 @@
       <bpmn:incoming>Etapa1_Abertura_f7</bpmn:incoming>
       <bpmn:outgoing>Etapa1_Abertura_f8</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="e1_fim" name="Requerimento enviado → Etapa 2">
+    <bpmn:endEvent id="e1_fim" name="Saída → Etapa 2: Requerimento enviado">
       <bpmn:incoming>Etapa1_Abertura_f8</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Etapa1_Abertura_f1" sourceRef="i_inicio" targetRef="i_identificar" />
@@ -95,7 +95,7 @@
       <bpmndi:BPMNShape id="e1_fim_di" bpmnElement="e1_fim">
         <dc:Bounds x="1222" y="77" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1175" y="117" width="130" height="28" />
+          <dc:Bounds x="1175" y="117" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Etapa1_Abertura_f1_di" bpmnElement="Etapa1_Abertura_f1">

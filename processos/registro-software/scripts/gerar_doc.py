@@ -82,8 +82,9 @@ w = L.append
 w('# Macroprocesso – Registro de Programa de Computador (Software) – AGIR/UFF (AS-IS)\n')
 w('**Escopo:** estado atual (AS-IS), sem TO-BE e sem melhorias. Os diagramas e este documento derivam do mesmo '
   'modelo (`fontes/registro-software-asis.json`) e das respostas da entrevista de 26/11/2026.\n')
-w('**Legenda dos diagramas:** sem cor = atividade do modelo original (PROPPI v08) • 🟩 verde = atividade nova, '
-  'confirmada • pool azul = INPI (participante externo em destaque).\n')
+w('**Representação:** diagramas em preto e branco. Cada etapa termina numa única saída de continuidade '
+  '("Saída → Etapa N: resultado"), e a etapa seguinte começa pela entrada de mesmo nome ("Entrada ← Etapa M: resultado"). '
+  'As atividades novas em relação ao modelo original (PROPPI v08) estão marcadas como "nova" na fonte.\n')
 
 w('## 1. Arquitetura de processos\n')
 w('```')
@@ -137,7 +138,7 @@ w('- Etapa 7: "Outras unidades da UFF" reúne CAP/SAEP e DAC/CCONT (registros), 
 
 w('## 5. Decisões da entrevista (26/11/2026)\n')
 for item in [
-    'Formato: um diagrama por etapa (7) + diagrama macro com raias por responsável e INPI em destaque.',
+    'Formato: um diagrama por etapa (7) + diagrama macro com raias por responsável e o INPI como participante externo.',
     'Arquitetura: Gestão da PI → Registro de PI → Registro de programa de computador → etapas → atividades.',
     'Aprovação (A) dos despachos e decisões: a própria AGIR.',
     'Pagamento da GRU: feito internamente pela própria AGIR (definido em 26/11, após a entrevista; antes estava como caixa-preta).',

@@ -8,7 +8,7 @@
       <bpmn:lane id="L_AGIR" name="AGIR (servidores e bolsistas)">
         <bpmn:flowNodeRef>t_e7</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>e7_fim</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ini_t_e7_e6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>entrada_e7_de_e6</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:callActivity id="t_e7" name="Registros internos, cotitularidade e encerramento (AS-IS, Etapa 7)" calledElement="Etapa7_Registros">
@@ -18,10 +18,10 @@
     <bpmn:endEvent id="e7_fim" name="Processo concluído">
       <bpmn:incoming>ToBe_Registro_Software_Etapa7_f2</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:startEvent id="ini_t_e7_e6" name="(Etapa 6 – Acompanhamento do INPI e conferência do certificado)">
+    <bpmn:startEvent id="entrada_e7_de_e6" name="Entrada ← Etapa 6: Certificado conferido e enviado">
       <bpmn:outgoing>ToBe_Registro_Software_Etapa7_f1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa7_f1" sourceRef="ini_t_e7_e6" targetRef="t_e7" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa7_f1" sourceRef="entrada_e7_de_e6" targetRef="t_e7" />
     <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa7_f2" sourceRef="t_e7" targetRef="e7_fim" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_ToBe_Registro_Software_Etapa7">
@@ -41,10 +41,10 @@
           <dc:Bounds x="359" y="117" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ini_t_e7_e6_di" bpmnElement="ini_t_e7_e6">
+      <bpmndi:BPMNShape id="entrada_e7_de_e6_di" bpmnElement="entrada_e7_de_e6">
         <dc:Bounds x="130" y="77" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="83" y="117" width="130" height="56" />
+          <dc:Bounds x="83" y="117" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa7_f1_di" bpmnElement="ToBe_Registro_Software_Etapa7_f1">

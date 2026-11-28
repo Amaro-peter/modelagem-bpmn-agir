@@ -131,7 +131,7 @@
         {
           "id": "e7_ini",
           "type": "start",
-          "name": "Processo encaminhado pela AGIR (Etapa 6)",
+          "name": "Entrada ← Etapa 6: Registro concedido",
           "lane": "L_UFF"
         }
       ],

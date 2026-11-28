@@ -110,7 +110,8 @@
         ],
         [
           "m_e1",
-          "m_e2"
+          "m_e2",
+          "Requerimento enviado"
         ],
         [
           "m_e2",
@@ -124,19 +125,22 @@
         [
           "m_gw_apto",
           "m_e3",
-          "Sim"
+          "Sim: ativo aprovado"
         ],
         [
           "m_e3",
-          "m_e4"
+          "m_e4",
+          "Documentação aprovada"
         ],
         [
           "m_e4",
-          "m_e5"
+          "m_e5",
+          "Pagamento comprovado"
         ],
         [
           "m_e5",
-          "m_e6"
+          "m_e6",
+          "Pedido depositado"
         ],
         [
           "m_e6",
@@ -150,7 +154,7 @@
         [
           "m_gw_inpi",
           "m_e7",
-          "730 – concedido"
+          "730: registro concedido"
         ],
         [
           "m_e7",
@@ -161,11 +165,7 @@
     {
       "id": "Pool_INPI",
       "name": "INPI – Instituto Nacional da Propriedade Industrial",
-      "blackbox": true,
-      "color": {
-        "fill": "#e3f0fb",
-        "stroke": "#1565c0"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

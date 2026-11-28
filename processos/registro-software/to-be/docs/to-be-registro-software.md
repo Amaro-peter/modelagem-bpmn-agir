@@ -2,12 +2,12 @@
 
 Modelo do **estado futuro** do processo, elaborado a partir do diagnóstico AS-IS e das entrevistas com o dono e os sponsors do processo (26/11/2026). Ele usa o investimento previsto do **Novo PAC** em tecnologia **sem substituir o SEI** e **sem ampliar a equipe**.
 
-**Legenda:**
-- 🟩 verde = atividade nova ou alterada em relação ao AS-IS;
-- sem cor = mantida igual ao AS-IS;
-- raia lilás = **Plataforma de Gestão de PI** (atividades automáticas);
-- eventos com envelope = notificações automáticas ao interessado ou à equipe;
-- pool azul = INPI; pool cinza = SEI (registro oficial).
+**Representação:**
+- diagramas em preto e branco; as atividades novas ou alteradas em relação ao AS-IS estão marcadas como "nova" na fonte;
+- raia **Plataforma de Gestão de PI** = atividades automáticas;
+- notificações = tarefa "Notificar o interessado (…)" ligada ao fim na raia de quem recebe;
+- cada etapa termina numa única saída ("Saída → Etapa N: resultado") e a seguinte começa pela entrada de mesmo nome;
+- pools recolhidas: INPI e SEI (registro oficial).
 
 ## 1. Diagramas
 
@@ -82,22 +82,28 @@ Para manter o TO-BE enxuto, o diagrama **detalha só as melhorias prioritárias*
 
 ## 4. Automação × atividades humanas
 
-O TO-BE tem **33 atividades**: **12 automáticas** (Plataforma) e **21 humanas**.
+O TO-BE tem **39 atividades**: **18 automáticas** (Plataforma) e **21 humanas**.
 
 ### Atividades automatizadas (raia da Plataforma)
 | Etapa | Atividade | Tipo |
 |---|---|---|
 | 1 | Registrar a solicitação, abrir o processo no SEI e notificar o interessado | serviço (service) |
-| 2 | Oferecer ao interessado os horários livres da equipe | envio (send) |
+| 1 | Alertar a equipe e o servidor | serviço (service) |
+| 1 | Notificar o interessado do encerramento | serviço (service) |
+| 2 | Oferecer ao interessado os horários livres da equipe | serviço (service) |
 | 2 | Confirmar a reunião (convite e lembrete na véspera) | serviço (service) |
-| 3 | Liberar o formulário de registro ao interessado | envio (send) |
+| 2 | Notificar o interessado da avaliação negativa | serviço (service) |
+| 3 | Liberar o formulário de registro ao interessado | serviço (service) |
 | 3 | Calcular o hash SHA-512 no navegador e validar os dados | serviço (service) |
 | 3 | Incluir o formulário no SEI e pedir o aceite ao interessado | serviço (service) |
 | 3 | Congelar a versão aprovada dos dados e notificar | serviço (service) |
+| 3 | Enviar lembrete ao interessado | serviço (service) |
+| 3 | Notificar o interessado do arquivamento | serviço (service) |
 | 4 | Anexar o comprovante de pagamento ao SEI | serviço (service) |
 | 5 | Gerar a ficha de preenchimento do e-Software | serviço (service) |
 | 5 | Anexar o recibo ao SEI, iniciar o acompanhamento e notificar | serviço (service) |
 | 6 | Ler a RPI ou o e-mail e registrar o despacho | serviço (service) |
+| 6 | Notificar o interessado do não conhecimento | serviço (service) |
 | 6 | Anexar o certificado ao SEI e enviá-lo ao interessado | serviço (service) |
 
 **Por que essas atividades foram automatizadas:**
@@ -167,17 +173,17 @@ O TO-BE tem **33 atividades**: **12 automáticas** (Plataforma) e **21 humanas**
 
 | Etapa TO-BE | Etapa AS-IS correspondente | Atividades AS-IS | Atividades TO-BE | Automáticas no TO-BE |
 |---|---|---|---|---|
-| 1. Solicitação e triagem | 1. Abertura do pedido | 4 | 5 | 1 |
-| 2. Reunião inicial e avaliação | 2. Avaliação do ativo | 6 | 5 | 2 |
-| 3. Coleta estruturada e validação | 3. Instrução documental | 8 | 8 | 4 |
+| 1. Solicitação e triagem | 1. Abertura do pedido | 4 | 7 | 3 |
+| 2. Reunião inicial e avaliação | 2. Avaliação do ativo | 8 | 6 | 3 |
+| 3. Coleta estruturada e validação | 3. Instrução documental | 8 | 10 | 6 |
 | 4. Pagamento da GRU | 4. Pagamento da GRU | 4 | 2 | 1 |
 | 5. Protocolo assistido no INPI | 5. Depósito do pedido no INPI | 7 | 6 | 2 |
-| 6. Acompanhamento do INPI e conferência do certificado | 6. Resultado do INPI | 9 | 6 | 2 |
+| 6. Acompanhamento do INPI e conferência do certificado | 6. Resultado do INPI | 9 | 7 | 3 |
 | 7. Registros internos, cotitularidade e encerramento | 7. Registros internos e cotitularidade | 11 | 1 | 0 |
 
 A Etapa 7 **reaproveita o AS-IS** por uma *call activity*: as 11 atividades dela continuam valendo e não foram redesenhadas.
 
-**Total das Etapas 1 a 6:** 38 atividades no AS-IS, todas manuais, contra 32 no TO-BE, das quais **20 humanas** e **12 automáticas**. As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. Com menos atividades, o TO-BE ganha controles que hoje não existem: prazos, lembretes, validação automática, aceite do interessado, conferência do certificado e acompanhamento do INPI. Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, e em ter menos retrabalho (correções de dados e de certificados).
+**Total das Etapas 1 a 6:** 40 atividades no AS-IS, todas manuais, contra 38 no TO-BE, das quais **20 humanas** e **18 automáticas**. As notificações automáticas aparecem como eventos de mensagem e não entram na contagem. Com menos atividades, o TO-BE ganha controles que hoje não existem: prazos, lembretes, validação automática, aceite do interessado, conferência do certificado e acompanhamento do INPI. Para a equipe, o ganho está em deixar de controlar prazos, e-mails e consultas manualmente, e em ter menos retrabalho (correções de dados e de certificados).
 
 ## 8. Indicadores de desempenho (sem metas)
 

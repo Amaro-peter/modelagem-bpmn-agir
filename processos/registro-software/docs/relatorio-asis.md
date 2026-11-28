@@ -14,17 +14,11 @@
 
 Os ajustes que o solicitante fez no editor (25 e 26/11) foram incorporados à fonte JSON.
 
-**Legenda de cores:**
-
-| Cor | Significado |
-|---|---|
-| Sem cor | Atividade do modelo original, preservada |
-| 🟩 Verde | **Nova**, fundamentada na solicitação, nas respostas do solicitante ou em norma do INPI |
-| 🟧 Laranja | **Nova – a confirmar** (nenhuma restante após a entrevista de 26/11) |
+**Representação:** os diagramas são em preto e branco (revisão de 27/11, por orientação do professor). As atividades **novas** em relação ao modelo original, fundamentadas na solicitação, nas respostas do solicitante ou em norma do INPI, estão marcadas como `"status": "nova"` na fonte JSON e descritas neste relatório.
 
 **Estrutura (v2, 26/11):**
 - Pool **PROPPI**, com as raias **INTERESSADO**, **AGIR** e **Outras unidades da UFF**. A última é um ator genérico, logo abaixo da AGIR, que substitui as raias CAP/SAEP, DAC/CCONT e PROGER do original.
-- Pool **INPI – Instituto Nacional da Propriedade Industrial**, separada e destacada em azul, porque o INPI é um participante externo.
+- Pool **INPI – Instituto Nacional da Propriedade Industrial**, separada, porque o INPI é um participante externo.
 - As duas pools se comunicam por fluxos de mensagem.
 - O eixo principal é INTERESSADO → AGIR → INPI → AGIR → INTERESSADO, com desfecho positivo (concessão) ou negativo (petição não conhecida).
 
@@ -65,7 +59,7 @@ As atividades, gateways, eventos e rótulos do recorte original foram mantidos c
 | 12 | Anexar a DV assinada e revisar o pedido | AGIR | Nova | Itens 3.2-E e 3.2-F; guia e-Software, passo 8 |
 | 13 | Enviar o pedido de registro ao INPI (mensagem para o INPI) | AGIR | Nova | Item 3.2-F (protocolo) |
 | 14 | Anexar ao SEI o recibo com o número do pedido | AGIR | Nova | Item 3.2-F (obter e armazenar o protocolo) |
-| 15 | Gateway de eventos "Acompanhar publicação na RPI", com "Concessão publicada (despacho 730)" e "Petição não conhecida (despacho 742)" | AGIR | Nova | Item 3.2-F. Despachos conforme o Manual do INPI, Anexo II. |
+| 15 | Evento "Acompanhar a publicação na RPI (despacho publicado)", que recebe as mensagens do INPI, seguido da decisão "Despacho publicado?" (730 – concessão / 742 – petição não conhecida) | AGIR | Nova | Item 3.2-F. Despachos conforme o Manual do INPI, Anexo II. Na revisão de 27/11, o gateway de eventos com dois eventos de mensagem virou um evento único + decisão: mesmo significado, sem cruzamento de setas. |
 | 16 | Baixar o certificado de registro no portal do INPI | AGIR | Nova | Itens 3.1.8 e 3.2-F. O certificado é baixado pela Busca Web do INPI. |
 | 17 | Gateway paralelo + Enviar ao interessado o certificado de registro + Receber o certificado (fim "Interessado ciente do registro") | AGIR / INTERESSADO | Nova | Confirmado na entrevista (26/11): a AGIR comunica o interessado nos dois desfechos. |
 | 18 | Anexar ao SEI a publicação do não conhecimento | AGIR | Nova | Desfecho negativo (item 4.5), confirmado na entrevista |

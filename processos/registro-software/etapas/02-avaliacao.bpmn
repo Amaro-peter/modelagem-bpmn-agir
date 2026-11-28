@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:collaboration id="Collab_Etapa2_Avaliacao">
     <bpmn:participant id="Pool_PROPPI" name="PROPPI – Etapa 2: Avaliação do ativo" processRef="Etapa2_Avaliacao" />
   </bpmn:collaboration>
   <bpmn:process id="Etapa2_Avaliacao" name="PROPPI – Etapa 2: Avaliação do ativo" isExecutable="false">
     <bpmn:laneSet id="Etapa2_Avaliacao_lanes">
+      <bpmn:lane id="L_INT" name="INTERESSADO">
+        <bpmn:flowNodeRef>i_receber_decisao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>i_receber_convite</bpmn:flowNodeRef>
+      </bpmn:lane>
       <bpmn:lane id="L_AGIR" name="AGIR">
         <bpmn:flowNodeRef>a_sei_req</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>a_analisar_ativo</bpmn:flowNodeRef>
@@ -22,7 +26,7 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:userTask id="a_sei_req" name="Acessar o processo no SEI e baixar o requerimento">
-      <bpmn:incoming>Etapa2_Avaliacao_f11</bpmn:incoming>
+      <bpmn:incoming>Etapa2_Avaliacao_f13</bpmn:incoming>
       <bpmn:outgoing>Etapa2_Avaliacao_f1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:task id="a_analisar_ativo" name="Analisar o ativo">
@@ -34,176 +38,207 @@
       <bpmn:outgoing>Etapa2_Avaliacao_f3</bpmn:outgoing>
       <bpmn:outgoing>Etapa2_Avaliacao_f4</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sendTask id="a_email_decisao" name="Enviar e-mail ao interessado informando a decisão">
+    <bpmn:task id="a_email_decisao" name="Enviar e-mail ao interessado informando a decisão">
       <bpmn:incoming>Etapa2_Avaliacao_f4</bpmn:incoming>
       <bpmn:outgoing>Etapa2_Avaliacao_f5</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:task id="a_desp_enc_req" name="Elaborar despacho de encerramento">
+    </bpmn:task>
+    <bpmn:task id="i_receber_decisao" name="Receber a decisão por e-mail">
       <bpmn:incoming>Etapa2_Avaliacao_f5</bpmn:incoming>
       <bpmn:outgoing>Etapa2_Avaliacao_f6</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="a_fim_req" name="Encerrado: requisitos não atendidos">
+    <bpmn:task id="a_desp_enc_req" name="Elaborar despacho de encerramento">
       <bpmn:incoming>Etapa2_Avaliacao_f6</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sendTask id="a_email_reuniao" name="Enviar e-mail ao interessado agendando reunião">
-      <bpmn:incoming>Etapa2_Avaliacao_f3</bpmn:incoming>
       <bpmn:outgoing>Etapa2_Avaliacao_f7</bpmn:outgoing>
-    </bpmn:sendTask>
-    <bpmn:intermediateCatchEvent id="a_aguarda_reuniao" name="Aguarda a realização da reunião">
+    </bpmn:task>
+    <bpmn:endEvent id="a_fim_req" name="Encerrado: requisitos não atendidos">
       <bpmn:incoming>Etapa2_Avaliacao_f7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="a_email_reuniao" name="Enviar e-mail ao interessado agendando reunião">
+      <bpmn:incoming>Etapa2_Avaliacao_f3</bpmn:incoming>
       <bpmn:outgoing>Etapa2_Avaliacao_f8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="i_receber_convite" name="Receber o convite da reunião">
+      <bpmn:incoming>Etapa2_Avaliacao_f8</bpmn:incoming>
+      <bpmn:outgoing>Etapa2_Avaliacao_f9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="a_aguarda_reuniao" name="Aguarda a realização da reunião">
+      <bpmn:incoming>Etapa2_Avaliacao_f9</bpmn:incoming>
+      <bpmn:outgoing>Etapa2_Avaliacao_f10</bpmn:outgoing>
       <bpmn:conditionalEventDefinition id="a_aguarda_reuniao_ed">
         <bpmn:condition xsi:type="bpmn:tFormalExpression">Aguarda a realização da reunião</bpmn:condition>
       </bpmn:conditionalEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:exclusiveGateway id="a_gw_avaliacao" name="Avaliação positiva para a continuidade do processo?">
-      <bpmn:incoming>Etapa2_Avaliacao_f8</bpmn:incoming>
-      <bpmn:outgoing>Etapa2_Avaliacao_f9</bpmn:outgoing>
-      <bpmn:outgoing>Etapa2_Avaliacao_f12</bpmn:outgoing>
+      <bpmn:incoming>Etapa2_Avaliacao_f10</bpmn:incoming>
+      <bpmn:outgoing>Etapa2_Avaliacao_f11</bpmn:outgoing>
+      <bpmn:outgoing>Etapa2_Avaliacao_f14</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="a_desp_enc_aval" name="Elaborar despacho de encerramento">
-      <bpmn:incoming>Etapa2_Avaliacao_f9</bpmn:incoming>
-      <bpmn:outgoing>Etapa2_Avaliacao_f10</bpmn:outgoing>
+      <bpmn:incoming>Etapa2_Avaliacao_f11</bpmn:incoming>
+      <bpmn:outgoing>Etapa2_Avaliacao_f12</bpmn:outgoing>
     </bpmn:task>
     <bpmn:endEvent id="a_fim_aval" name="Encerrado: avaliação negativa">
-      <bpmn:incoming>Etapa2_Avaliacao_f10</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:startEvent id="e2_ini" name="Requerimento recebido (Etapa 1)">
-      <bpmn:outgoing>Etapa2_Avaliacao_f11</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:endEvent id="e2_fim" name="Ativo aprovado → Etapa 3">
       <bpmn:incoming>Etapa2_Avaliacao_f12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="e2_ini" name="Entrada ← Etapa 1: Requerimento enviado">
+      <bpmn:outgoing>Etapa2_Avaliacao_f13</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="e2_fim" name="Saída → Etapa 3: Ativo aprovado">
+      <bpmn:incoming>Etapa2_Avaliacao_f14</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Etapa2_Avaliacao_f1" sourceRef="a_sei_req" targetRef="a_analisar_ativo" />
     <bpmn:sequenceFlow id="Etapa2_Avaliacao_f2" sourceRef="a_analisar_ativo" targetRef="a_gw_requisitos" />
     <bpmn:sequenceFlow id="Etapa2_Avaliacao_f3" name="Sim" sourceRef="a_gw_requisitos" targetRef="a_email_reuniao" />
     <bpmn:sequenceFlow id="Etapa2_Avaliacao_f4" name="Não" sourceRef="a_gw_requisitos" targetRef="a_email_decisao" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f5" sourceRef="a_email_decisao" targetRef="a_desp_enc_req" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f6" sourceRef="a_desp_enc_req" targetRef="a_fim_req" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f7" sourceRef="a_email_reuniao" targetRef="a_aguarda_reuniao" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f8" sourceRef="a_aguarda_reuniao" targetRef="a_gw_avaliacao" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f9" name="Não" sourceRef="a_gw_avaliacao" targetRef="a_desp_enc_aval" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f10" sourceRef="a_desp_enc_aval" targetRef="a_fim_aval" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f11" sourceRef="e2_ini" targetRef="a_sei_req" />
-    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f12" name="Sim" sourceRef="a_gw_avaliacao" targetRef="e2_fim" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f5" sourceRef="a_email_decisao" targetRef="i_receber_decisao" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f6" sourceRef="i_receber_decisao" targetRef="a_desp_enc_req" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f7" sourceRef="a_desp_enc_req" targetRef="a_fim_req" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f8" sourceRef="a_email_reuniao" targetRef="i_receber_convite" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f9" sourceRef="i_receber_convite" targetRef="a_aguarda_reuniao" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f10" sourceRef="a_aguarda_reuniao" targetRef="a_gw_avaliacao" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f11" name="Não" sourceRef="a_gw_avaliacao" targetRef="a_desp_enc_aval" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f12" sourceRef="a_desp_enc_aval" targetRef="a_fim_aval" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f13" sourceRef="e2_ini" targetRef="a_sei_req" />
+    <bpmn:sequenceFlow id="Etapa2_Avaliacao_f14" name="Sim" sourceRef="a_gw_avaliacao" targetRef="e2_fim" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_Etapa2_Avaliacao">
     <bpmndi:BPMNPlane id="BPMNPlane_Collab_Etapa2_Avaliacao" bpmnElement="Collab_Etapa2_Avaliacao">
       <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
-        <dc:Bounds x="0" y="0" width="1740" height="490" />
+        <dc:Bounds x="0" y="0" width="1920" height="830" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_INT_di" bpmnElement="L_INT" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1890" height="340" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
-        <dc:Bounds x="30" y="0" width="1710" height="490" />
+        <dc:Bounds x="30" y="340" width="1890" height="490" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="a_sei_req_di" bpmnElement="a_sei_req" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="280" y="40" width="120" height="110" />
+      <bpmndi:BPMNShape id="a_sei_req_di" bpmnElement="a_sei_req">
+        <dc:Bounds x="280" y="380" width="120" height="110" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_analisar_ativo_di" bpmnElement="a_analisar_ativo">
-        <dc:Bounds x="460" y="55" width="120" height="80" />
+        <dc:Bounds x="460" y="395" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_gw_requisitos_di" bpmnElement="a_gw_requisitos" isMarkerVisible="true">
-        <dc:Bounds x="675" y="70" width="50" height="50" />
+        <dc:Bounds x="675" y="410" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="635" y="38" width="130" height="28" />
+          <dc:Bounds x="635" y="378" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_email_decisao_di" bpmnElement="a_email_decisao">
-        <dc:Bounds x="820" y="40" width="120" height="110" />
+        <dc:Bounds x="820" y="395" width="120" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="a_desp_enc_req_di" bpmnElement="a_desp_enc_req">
+      <bpmndi:BPMNShape id="i_receber_decisao_di" bpmnElement="i_receber_decisao">
         <dc:Bounds x="1000" y="55" width="120" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="a_desp_enc_req_di" bpmnElement="a_desp_enc_req">
+        <dc:Bounds x="1180" y="395" width="120" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_fim_req_di" bpmnElement="a_fim_req">
-        <dc:Bounds x="1222" y="77" width="36" height="36" />
+        <dc:Bounds x="1402" y="417" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1175" y="117" width="130" height="28" />
+          <dc:Bounds x="1355" y="457" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_email_reuniao_di" bpmnElement="a_email_reuniao">
-        <dc:Bounds x="820" y="190" width="120" height="110" />
+        <dc:Bounds x="820" y="545" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="i_receber_convite_di" bpmnElement="i_receber_convite">
+        <dc:Bounds x="1000" y="205" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_aguarda_reuniao_di" bpmnElement="a_aguarda_reuniao">
-        <dc:Bounds x="1042" y="227" width="36" height="36" />
+        <dc:Bounds x="1222" y="567" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="995" y="267" width="130" height="28" />
+          <dc:Bounds x="1175" y="607" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_gw_avaliacao_di" bpmnElement="a_gw_avaliacao" isMarkerVisible="true">
-        <dc:Bounds x="1215" y="220" width="50" height="50" />
+        <dc:Bounds x="1395" y="560" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1175" y="174" width="130" height="42" />
+          <dc:Bounds x="1355" y="514" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_desp_enc_aval_di" bpmnElement="a_desp_enc_aval">
-        <dc:Bounds x="1360" y="205" width="120" height="80" />
+        <dc:Bounds x="1540" y="545" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="a_fim_aval_di" bpmnElement="a_fim_aval">
-        <dc:Bounds x="1582" y="227" width="36" height="36" />
+        <dc:Bounds x="1762" y="567" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1535" y="267" width="130" height="28" />
+          <dc:Bounds x="1715" y="607" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="e2_ini_di" bpmnElement="e2_ini">
-        <dc:Bounds x="142" y="77" width="36" height="36" />
+        <dc:Bounds x="142" y="417" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="95" y="117" width="130" height="28" />
+          <dc:Bounds x="95" y="457" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="e2_fim_di" bpmnElement="e2_fim">
-        <dc:Bounds x="1402" y="377" width="36" height="36" />
+        <dc:Bounds x="1582" y="717" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1355" y="417" width="130" height="28" />
+          <dc:Bounds x="1535" y="757" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f1_di" bpmnElement="Etapa2_Avaliacao_f1">
-        <di:waypoint x="400" y="95" />
-        <di:waypoint x="460" y="95" />
+        <di:waypoint x="400" y="435" />
+        <di:waypoint x="460" y="435" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f2_di" bpmnElement="Etapa2_Avaliacao_f2">
-        <di:waypoint x="580" y="95" />
-        <di:waypoint x="675" y="95" />
+        <di:waypoint x="580" y="435" />
+        <di:waypoint x="675" y="435" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f3_di" bpmnElement="Etapa2_Avaliacao_f3">
-        <di:waypoint x="700" y="120" />
-        <di:waypoint x="700" y="245" />
-        <di:waypoint x="820" y="245" />
+        <di:waypoint x="700" y="460" />
+        <di:waypoint x="700" y="585" />
+        <di:waypoint x="820" y="585" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f4_di" bpmnElement="Etapa2_Avaliacao_f4">
-        <di:waypoint x="725" y="95" />
-        <di:waypoint x="820" y="95" />
+        <di:waypoint x="725" y="435" />
+        <di:waypoint x="820" y="435" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f5_di" bpmnElement="Etapa2_Avaliacao_f5">
-        <di:waypoint x="940" y="95" />
+        <di:waypoint x="880" y="395" />
+        <di:waypoint x="880" y="95" />
         <di:waypoint x="1000" y="95" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f6_di" bpmnElement="Etapa2_Avaliacao_f6">
         <di:waypoint x="1120" y="95" />
-        <di:waypoint x="1222" y="95" />
+        <di:waypoint x="1196" y="95" />
+        <di:waypoint x="1196" y="395" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f7_di" bpmnElement="Etapa2_Avaliacao_f7">
-        <di:waypoint x="940" y="245" />
-        <di:waypoint x="1042" y="245" />
+        <di:waypoint x="1300" y="435" />
+        <di:waypoint x="1402" y="435" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f8_di" bpmnElement="Etapa2_Avaliacao_f8">
-        <di:waypoint x="1078" y="245" />
-        <di:waypoint x="1215" y="245" />
+        <di:waypoint x="940" y="585" />
+        <di:waypoint x="1016" y="585" />
+        <di:waypoint x="1016" y="285" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f9_di" bpmnElement="Etapa2_Avaliacao_f9">
-        <di:waypoint x="1265" y="245" />
-        <di:waypoint x="1360" y="245" />
+        <di:waypoint x="1060" y="285" />
+        <di:waypoint x="1060" y="585" />
+        <di:waypoint x="1222" y="585" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f10_di" bpmnElement="Etapa2_Avaliacao_f10">
-        <di:waypoint x="1480" y="245" />
-        <di:waypoint x="1582" y="245" />
+        <di:waypoint x="1258" y="585" />
+        <di:waypoint x="1395" y="585" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f11_di" bpmnElement="Etapa2_Avaliacao_f11">
-        <di:waypoint x="178" y="95" />
-        <di:waypoint x="280" y="95" />
+        <di:waypoint x="1445" y="585" />
+        <di:waypoint x="1540" y="585" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f12_di" bpmnElement="Etapa2_Avaliacao_f12">
-        <di:waypoint x="1240" y="270" />
-        <di:waypoint x="1240" y="395" />
-        <di:waypoint x="1402" y="395" />
+        <di:waypoint x="1660" y="585" />
+        <di:waypoint x="1762" y="585" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f13_di" bpmnElement="Etapa2_Avaliacao_f13">
+        <di:waypoint x="178" y="435" />
+        <di:waypoint x="280" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Etapa2_Avaliacao_f14_di" bpmnElement="Etapa2_Avaliacao_f14">
+        <di:waypoint x="1420" y="610" />
+        <di:waypoint x="1420" y="735" />
+        <di:waypoint x="1582" y="735" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

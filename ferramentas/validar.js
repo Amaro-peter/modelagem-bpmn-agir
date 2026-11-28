@@ -1,4 +1,5 @@
-// Valida todos os modelos do repositório: bpmnlint em cada .bpmn e check.js em cada definição JSON.
+// Valida todos os modelos do repositório: bpmnlint em cada .bpmn, check.js em cada definição JSON e
+// qualidade visual (cruzamentos.mjs: sem setas cruzadas/sobrepostas, sem elementos soltos, só preto e branco).
 // Uso: npm run validar   (funciona em Windows, macOS e Linux)
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,5 +26,6 @@ const run = (args, label) => {
 };
 for (const f of bpmn) run([lint, f], `lint      ${path.relative(root, f)}`);
 for (const f of json) run([path.join(root, 'ferramentas', 'check.js'), f], `consist.  ${path.relative(root, f)}`);
+for (const f of bpmn) run([path.join(root, 'ferramentas', 'cruzamentos.mjs'), f], `visual    ${path.relative(root, f)}`);
 console.log(falhas ? `\n✖ ${falhas} falha(s)` : `\n✔ tudo válido (${bpmn.length} modelos BPMN, ${json.length} definições)`);
 process.exit(falhas ? 1 : 0);

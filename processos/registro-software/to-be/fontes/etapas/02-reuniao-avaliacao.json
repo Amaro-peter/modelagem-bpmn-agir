@@ -17,11 +17,7 @@
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI",
-          "color": {
-            "fill": "#f3eefa",
-            "stroke": "#6a3d9a"
-          }
+          "name": "Plataforma de Gestão de PI"
         }
       ],
       "nodes": [
@@ -33,7 +29,7 @@
         },
         {
           "id": "t_hor",
-          "type": "send",
+          "type": "service",
           "lane": "L_PLAT",
           "name": "Oferecer ao interessado os horários livres da equipe",
           "status": "nova"
@@ -91,45 +87,39 @@
           "papel": "servidor"
         },
         {
+          "id": "t_not2",
+          "type": "service",
+          "lane": "L_PLAT",
+          "name": "Notificar o interessado da avaliação negativa",
+          "status": "nova"
+        },
+        {
           "id": "e2_fim",
           "type": "end",
-          "lane": "L_PLAT",
+          "lane": "L_INT",
           "name": "Encerrado: avaliação negativa (interessado notificado)",
-          "status": "nova",
-          "event": "message"
+          "status": "nova"
         },
         {
-          "id": "lk_hor_out",
-          "type": "throw",
-          "lane": "L_AGIR",
-          "name": "Oferecer novos horários",
-          "status": "nova",
-          "event": "link"
-        },
-        {
-          "id": "lk_hor_in",
-          "type": "catch",
-          "lane": "L_PLAT",
-          "name": "Oferecer novos horários",
-          "status": "nova",
-          "event": "link"
-        },
-        {
-          "id": "ini_j_hor_e1",
+          "id": "entrada_e2_de_e1",
           "type": "start",
-          "name": "(Etapa 1 – Solicitação e triagem)",
+          "name": "Entrada ← Etapa 1: Solicitação aprovada na triagem",
           "lane": "L_PLAT"
         },
         {
-          "id": "fim_g_aval_e3",
+          "id": "saida_e2_para_e3",
           "type": "end",
-          "name": "→ Etapa 3 – Coleta estruturada e validação",
+          "name": "Saída → Etapa 3: Ativo aprovado",
           "lane": "L_AGIR"
         }
       ],
       "flows": [
         [
-          "ini_j_hor_e1",
+          "t_not2",
+          "e2_fim"
+        ],
+        [
+          "entrada_e2_de_e1",
           "j_hor"
         ],
         [
@@ -154,12 +144,8 @@
         ],
         [
           "g_comp",
-          "lk_hor_out",
-          "Não"
-        ],
-        [
-          "lk_hor_in",
-          "j_hor"
+          "j_hor",
+          "Não: oferecer novos horários"
         ],
         [
           "g_comp",
@@ -177,11 +163,11 @@
         ],
         [
           "t_enc2",
-          "e2_fim"
+          "t_not2"
         ],
         [
           "g_aval",
-          "fim_g_aval_e3",
+          "saida_e2_para_e3",
           "Sim"
         ]
       ]

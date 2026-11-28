@@ -2,13 +2,13 @@
 
 Estado **futuro** do processo, redesenhado para resolver os sete gargalos levantados com o dono e os sponsors do processo, usando investimento em tecnologia (Novo PAC). O SEI continua sendo o registro oficial e a equipe não aumenta.
 
-**Legenda:**
-- 🟩 verde = atividade nova ou alterada em relação ao [AS-IS](../);
-- sem cor = mantida igual;
+**Representação:**
+- diagramas em preto e branco;
 - raia **AGIR (servidores e bolsistas)**: o papel de cada tarefa está no documento;
-- raia lilás = **Plataforma de Gestão de PI** (atividades automáticas);
-- eventos com envelope = notificações automáticas;
-- pool azul = INPI; pool cinza = SEI.
+- raia **Plataforma de Gestão de PI** = atividades automáticas;
+- notificações = tarefa "Notificar o interessado (…)" ligada ao fim na raia de quem recebe;
+- cada etapa termina numa única saída nomeada, ligada à entrada de mesmo nome na etapa seguinte;
+- INPI e SEI = pools recolhidas.
 
 **Foco:** o diagrama detalha as melhorias prioritárias (atendimento e agenda, coleta e validação de dados, acompanhamento do INPI). O pagamento e a conferência do certificado aparecem simplificados, e a Etapa 7 reaproveita o AS-IS. Os detalhes estão no documento (seção "Escopo do diagrama").
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:collaboration id="Collab_ToBe_Registro_Software_Etapa6">
     <bpmn:participant id="Pool_PROPPI" name="PROPPI/AGIR – TO-BE – Etapa 6" processRef="ToBe_Registro_Software_Etapa6" />
     <bpmn:participant id="Pool_INPI" name="INPI – Instituto Nacional da Propriedade Industrial" />
@@ -10,12 +10,15 @@
   </bpmn:collaboration>
   <bpmn:process id="ToBe_Registro_Software_Etapa6" name="PROPPI/AGIR – TO-BE – Etapa 6" isExecutable="false">
     <bpmn:laneSet id="ToBe_Registro_Software_Etapa6_lanes">
+      <bpmn:lane id="L_INT" name="INTERESSADO (portal)">
+        <bpmn:flowNodeRef>e6_742</bpmn:flowNodeRef>
+      </bpmn:lane>
       <bpmn:lane id="L_AGIR" name="AGIR (servidores e bolsistas)">
         <bpmn:flowNodeRef>t_consulta</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_enc742</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_cert</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_desp_encam</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>fim_t_desp_encam_e7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>saida_e6_para_e7</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="L_PLAT" name="Plataforma de Gestão de PI">
         <bpmn:flowNodeRef>j_mon</bpmn:flowNodeRef>
@@ -28,325 +31,338 @@
         <bpmn:flowNodeRef>j_res</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>g_res</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>g_desp</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>e6_742</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>t_not742</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>t_envcert</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>ini_j_mon_e5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>entrada_e6_de_e5</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:exclusiveGateway id="j_mon">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f1</bpmn:incoming>
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f13</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f2</bpmn:outgoing>
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f2</bpmn:incoming>
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f14</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f3</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:eventBasedGateway id="g_mon" name="Aguardar novidade">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f2</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f3</bpmn:outgoing>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f5</bpmn:outgoing>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f9</bpmn:outgoing>
-    </bpmn:eventBasedGateway>
-    <bpmn:intermediateCatchEvent id="c_email" name="E-mail &#34;Meus Pedidos&#34;">
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f3</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f4</bpmn:outgoing>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f6</bpmn:outgoing>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f10</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="c_email" name="E-mail &#34;Meus Pedidos&#34;">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f4</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f5</bpmn:outgoing>
       <bpmn:messageEventDefinition id="c_email_ed" />
     </bpmn:intermediateCatchEvent>
     <bpmn:intermediateCatchEvent id="c_rpi" name="Terça: nova RPI">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f5</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f6</bpmn:outgoing>
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f6</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f7</bpmn:outgoing>
       <bpmn:timerEventDefinition id="c_rpi_ed">
         <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/P7D</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
     <bpmn:intermediateCatchEvent id="c_prazo" name="10 dias sem novidade">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f9</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f10</bpmn:outgoing>
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f10</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f11</bpmn:outgoing>
       <bpmn:timerEventDefinition id="c_prazo_ed" />
     </bpmn:intermediateCatchEvent>
     <bpmn:exclusiveGateway id="j_pub">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f4</bpmn:incoming>
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f6</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f7</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="t_rpi" name="Ler a RPI ou o e-mail e registrar o despacho">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f5</bpmn:incoming>
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f7</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="t_rpi" name="Ler a RPI ou o e-mail e registrar o despacho">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f8</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f9</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="t_consulta" name="Consultar o pedido no Busca Web e registrar">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f10</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f11</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:exclusiveGateway id="j_res">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f8</bpmn:incoming>
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f11</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f12</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="g_res" name="Há despacho?">
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="j_res">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f9</bpmn:incoming>
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f12</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f13</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="g_res" name="Há despacho?">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f13</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f14</bpmn:outgoing>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f15</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:exclusiveGateway id="g_desp" name="Despacho">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f14</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f15</bpmn:outgoing>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f17</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:userTask id="t_enc742" name="Assinar o despacho de encerramento (SEI)">
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f15</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f16</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:endEvent id="e6_742" name="Encerrado: pedido não conhecido (interessado notificado)">
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f18</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="t_enc742" name="Assinar o despacho de encerramento (SEI)">
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f16</bpmn:incoming>
-      <bpmn:messageEventDefinition id="e6_742_ed" />
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f17</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="t_not742" name="Notificar o interessado do não conhecimento">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f17</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="e6_742" name="Encerrado: pedido não conhecido (interessado notificado)">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f1</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:userTask id="t_cert" name="Baixar e conferir o certificado com os dados aprovados">
-      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f17</bpmn:incoming>
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f18</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="t_envcert" name="Anexar o certificado ao SEI e enviá-lo ao interessado">
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f18</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f19</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="t_desp_encam" name="Elaborar despacho de encaminhamento">
+    </bpmn:userTask>
+    <bpmn:serviceTask id="t_envcert" name="Anexar o certificado ao SEI e enviá-lo ao interessado">
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f19</bpmn:incoming>
       <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f20</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:startEvent id="ini_j_mon_e5" name="(Etapa 5 – Protocolo assistido no INPI)">
-      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f1</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:endEvent id="fim_t_desp_encam_e7" name="→ Etapa 7 – Registros internos, cotitularidade e encerramento">
+    </bpmn:serviceTask>
+    <bpmn:userTask id="t_desp_encam" name="Elaborar despacho de encaminhamento">
       <bpmn:incoming>ToBe_Registro_Software_Etapa6_f20</bpmn:incoming>
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f21</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="entrada_e6_de_e5" name="Entrada ← Etapa 5: Pedido protocolado no INPI">
+      <bpmn:outgoing>ToBe_Registro_Software_Etapa6_f2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="saida_e6_para_e7" name="Saída → Etapa 7: Certificado conferido e enviado">
+      <bpmn:incoming>ToBe_Registro_Software_Etapa6_f21</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f1" sourceRef="ini_j_mon_e5" targetRef="j_mon" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f2" sourceRef="j_mon" targetRef="g_mon" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f3" sourceRef="g_mon" targetRef="c_email" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f4" sourceRef="c_email" targetRef="j_pub" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f5" sourceRef="g_mon" targetRef="c_rpi" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f6" sourceRef="c_rpi" targetRef="j_pub" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f7" sourceRef="j_pub" targetRef="t_rpi" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f8" sourceRef="t_rpi" targetRef="j_res" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f9" sourceRef="g_mon" targetRef="c_prazo" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f10" sourceRef="c_prazo" targetRef="t_consulta" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f11" sourceRef="t_consulta" targetRef="j_res" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f12" sourceRef="j_res" targetRef="g_res" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f13" name="Não" sourceRef="g_res" targetRef="j_mon" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f14" name="Sim" sourceRef="g_res" targetRef="g_desp" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f15" name="742" sourceRef="g_desp" targetRef="t_enc742" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f16" sourceRef="t_enc742" targetRef="e6_742" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f17" name="730" sourceRef="g_desp" targetRef="t_cert" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f18" sourceRef="t_cert" targetRef="t_envcert" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f19" sourceRef="t_envcert" targetRef="t_desp_encam" />
-    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f20" sourceRef="t_desp_encam" targetRef="fim_t_desp_encam_e7" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f1" sourceRef="t_not742" targetRef="e6_742" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f2" sourceRef="entrada_e6_de_e5" targetRef="j_mon" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f3" sourceRef="j_mon" targetRef="g_mon" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f4" sourceRef="g_mon" targetRef="c_email" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f5" sourceRef="c_email" targetRef="j_pub" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f6" sourceRef="g_mon" targetRef="c_rpi" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f7" sourceRef="c_rpi" targetRef="j_pub" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f8" sourceRef="j_pub" targetRef="t_rpi" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f9" sourceRef="t_rpi" targetRef="j_res" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f10" sourceRef="g_mon" targetRef="c_prazo" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f11" sourceRef="c_prazo" targetRef="t_consulta" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f12" sourceRef="t_consulta" targetRef="j_res" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f13" sourceRef="j_res" targetRef="g_res" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f14" name="Não" sourceRef="g_res" targetRef="j_mon" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f15" name="Sim" sourceRef="g_res" targetRef="g_desp" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f16" name="742" sourceRef="g_desp" targetRef="t_enc742" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f17" sourceRef="t_enc742" targetRef="t_not742" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f18" name="730" sourceRef="g_desp" targetRef="t_cert" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f19" sourceRef="t_cert" targetRef="t_envcert" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f20" sourceRef="t_envcert" targetRef="t_desp_encam" />
+    <bpmn:sequenceFlow id="ToBe_Registro_Software_Etapa6_f21" sourceRef="t_desp_encam" targetRef="saida_e6_para_e7" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collab_ToBe_Registro_Software_Etapa6">
     <bpmndi:BPMNPlane id="BPMNPlane_Collab_ToBe_Registro_Software_Etapa6" bpmnElement="Collab_ToBe_Registro_Software_Etapa6">
       <bpmndi:BPMNShape id="Pool_PROPPI_di" bpmnElement="Pool_PROPPI" isHorizontal="true">
-        <dc:Bounds x="0" y="0" width="1858" height="830" />
+        <dc:Bounds x="0" y="0" width="1858" height="1020" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_INT_di" bpmnElement="L_INT" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1828" height="190" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="L_AGIR_di" bpmnElement="L_AGIR" isHorizontal="true">
-        <dc:Bounds x="30" y="0" width="1828" height="340" />
+        <dc:Bounds x="30" y="190" width="1828" height="340" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="L_PLAT_di" bpmnElement="L_PLAT" isHorizontal="true" bioc:stroke="#6a3d9a" bioc:fill="#f3eefa" color:background-color="#f3eefa" color:border-color="#6a3d9a">
-        <dc:Bounds x="30" y="340" width="1828" height="490" />
+      <bpmndi:BPMNShape id="L_PLAT_di" bpmnElement="L_PLAT" isHorizontal="true">
+        <dc:Bounds x="30" y="530" width="1828" height="490" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="j_mon_di" bpmnElement="j_mon" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="226" y="410" width="50" height="50" />
+      <bpmndi:BPMNShape id="j_mon_di" bpmnElement="j_mon" isMarkerVisible="true">
+        <dc:Bounds x="226" y="600" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="g_mon_di" bpmnElement="g_mon" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="336" y="410" width="50" height="50" />
+      <bpmndi:BPMNShape id="g_mon_di" bpmnElement="g_mon">
+        <dc:Bounds x="336" y="600" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="297" y="392" width="129" height="14" />
+          <dc:Bounds x="297" y="582" width="129" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="c_email_di" bpmnElement="c_email" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="446" y="417" width="36" height="36" />
+      <bpmndi:BPMNShape id="c_email_di" bpmnElement="c_email">
+        <dc:Bounds x="446" y="907" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="399" y="457" width="130" height="28" />
+          <dc:Bounds x="399" y="947" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="c_rpi_di" bpmnElement="c_rpi" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="446" y="567" width="36" height="36" />
+      <bpmndi:BPMNShape id="c_rpi_di" bpmnElement="c_rpi">
+        <dc:Bounds x="446" y="757" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="407" y="607" width="115" height="14" />
+          <dc:Bounds x="407" y="797" width="115" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="c_prazo_di" bpmnElement="c_prazo" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="446" y="717" width="36" height="36" />
+      <bpmndi:BPMNShape id="c_prazo_di" bpmnElement="c_prazo">
+        <dc:Bounds x="446" y="607" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="399" y="757" width="130" height="28" />
+          <dc:Bounds x="399" y="647" width="130" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="j_pub_di" bpmnElement="j_pub" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="577" y="410" width="50" height="50" />
+      <bpmndi:BPMNShape id="j_pub_di" bpmnElement="j_pub" isMarkerVisible="true">
+        <dc:Bounds x="577" y="900" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_rpi_di" bpmnElement="t_rpi" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="722" y="380" width="120" height="110" />
+      <bpmndi:BPMNShape id="t_rpi_di" bpmnElement="t_rpi">
+        <dc:Bounds x="722" y="870" width="120" height="110" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_consulta_di" bpmnElement="t_consulta" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="542" y="40" width="120" height="110" />
+      <bpmndi:BPMNShape id="t_consulta_di" bpmnElement="t_consulta">
+        <dc:Bounds x="542" y="230" width="120" height="110" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="j_res_di" bpmnElement="j_res" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="902" y="410" width="50" height="50" />
+      <bpmndi:BPMNShape id="j_res_di" bpmnElement="j_res" isMarkerVisible="true">
+        <dc:Bounds x="902" y="900" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="g_res_di" bpmnElement="g_res" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1012" y="410" width="50" height="50" />
+      <bpmndi:BPMNShape id="g_res_di" bpmnElement="g_res" isMarkerVisible="true">
+        <dc:Bounds x="1012" y="900" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="990" y="464" width="94" height="14" />
+          <dc:Bounds x="990" y="954" width="94" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="g_desp_di" bpmnElement="g_desp" isMarkerVisible="true" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1122" y="410" width="50" height="50" />
+      <bpmndi:BPMNShape id="g_desp_di" bpmnElement="g_desp" isMarkerVisible="true">
+        <dc:Bounds x="1122" y="900" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1114" y="464" width="66" height="14" />
+          <dc:Bounds x="1114" y="954" width="66" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_enc742_di" bpmnElement="t_enc742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1232" y="40" width="120" height="110" />
+      <bpmndi:BPMNShape id="t_enc742_di" bpmnElement="t_enc742">
+        <dc:Bounds x="1232" y="230" width="120" height="110" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="e6_742_di" bpmnElement="e6_742" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1454" y="417" width="36" height="36" />
+      <bpmndi:BPMNShape id="t_not742_di" bpmnElement="t_not742">
+        <dc:Bounds x="1412" y="570" width="120" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="e6_742_di" bpmnElement="e6_742">
+        <dc:Bounds x="1634" y="77" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1407" y="457" width="130" height="56" />
+          <dc:Bounds x="1587" y="117" width="130" height="56" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_cert_di" bpmnElement="t_cert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1232" y="183" width="120" height="125" />
+      <bpmndi:BPMNShape id="t_cert_di" bpmnElement="t_cert">
+        <dc:Bounds x="1232" y="373" width="120" height="125" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="t_envcert_di" bpmnElement="t_envcert" bioc:stroke="#2e7d32" bioc:fill="#dcf2dc" color:background-color="#dcf2dc" color:border-color="#2e7d32">
-        <dc:Bounds x="1412" y="523" width="120" height="125" />
+      <bpmndi:BPMNShape id="t_envcert_di" bpmnElement="t_envcert">
+        <dc:Bounds x="1412" y="713" width="120" height="125" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="t_desp_encam_di" bpmnElement="t_desp_encam">
-        <dc:Bounds x="1592" y="48" width="120" height="95" />
+        <dc:Bounds x="1592" y="238" width="120" height="95" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ini_j_mon_e5_di" bpmnElement="ini_j_mon_e5">
-        <dc:Bounds x="130" y="417" width="36" height="36" />
+      <bpmndi:BPMNShape id="entrada_e6_de_e5_di" bpmnElement="entrada_e6_de_e5">
+        <dc:Bounds x="130" y="607" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="83" y="457" width="130" height="42" />
+          <dc:Bounds x="83" y="647" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="fim_t_desp_encam_e7_di" bpmnElement="fim_t_desp_encam_e7">
-        <dc:Bounds x="1772" y="77" width="36" height="36" />
+      <bpmndi:BPMNShape id="saida_e6_para_e7_di" bpmnElement="saida_e6_para_e7">
+        <dc:Bounds x="1772" y="267" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1725" y="117" width="130" height="56" />
+          <dc:Bounds x="1725" y="307" width="130" height="42" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f1_di" bpmnElement="ToBe_Registro_Software_Etapa6_f1">
-        <di:waypoint x="166" y="435" />
-        <di:waypoint x="226" y="435" />
+        <di:waypoint x="1472" y="570" />
+        <di:waypoint x="1472" y="95" />
+        <di:waypoint x="1634" y="95" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f2_di" bpmnElement="ToBe_Registro_Software_Etapa6_f2">
-        <di:waypoint x="276" y="435" />
-        <di:waypoint x="336" y="435" />
+        <di:waypoint x="166" y="625" />
+        <di:waypoint x="226" y="625" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f3_di" bpmnElement="ToBe_Registro_Software_Etapa6_f3">
-        <di:waypoint x="386" y="435" />
-        <di:waypoint x="446" y="435" />
+        <di:waypoint x="276" y="625" />
+        <di:waypoint x="336" y="625" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f4_di" bpmnElement="ToBe_Registro_Software_Etapa6_f4">
-        <di:waypoint x="482" y="435" />
-        <di:waypoint x="577" y="435" />
+        <di:waypoint x="361" y="650" />
+        <di:waypoint x="361" y="925" />
+        <di:waypoint x="446" y="925" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f5_di" bpmnElement="ToBe_Registro_Software_Etapa6_f5">
-        <di:waypoint x="361" y="460" />
-        <di:waypoint x="361" y="585" />
-        <di:waypoint x="446" y="585" />
+        <di:waypoint x="482" y="925" />
+        <di:waypoint x="577" y="925" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f6_di" bpmnElement="ToBe_Registro_Software_Etapa6_f6">
-        <di:waypoint x="482" y="585" />
-        <di:waypoint x="602" y="585" />
-        <di:waypoint x="602" y="460" />
+        <di:waypoint x="361" y="650" />
+        <di:waypoint x="361" y="775" />
+        <di:waypoint x="446" y="775" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f7_di" bpmnElement="ToBe_Registro_Software_Etapa6_f7">
-        <di:waypoint x="627" y="435" />
-        <di:waypoint x="722" y="435" />
+        <di:waypoint x="482" y="775" />
+        <di:waypoint x="602" y="775" />
+        <di:waypoint x="602" y="900" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f8_di" bpmnElement="ToBe_Registro_Software_Etapa6_f8">
-        <di:waypoint x="842" y="435" />
-        <di:waypoint x="902" y="435" />
+        <di:waypoint x="627" y="925" />
+        <di:waypoint x="722" y="925" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f9_di" bpmnElement="ToBe_Registro_Software_Etapa6_f9">
-        <di:waypoint x="361" y="460" />
-        <di:waypoint x="361" y="735" />
-        <di:waypoint x="446" y="735" />
+        <di:waypoint x="842" y="925" />
+        <di:waypoint x="902" y="925" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f10_di" bpmnElement="ToBe_Registro_Software_Etapa6_f10">
-        <di:waypoint x="482" y="735" />
-        <di:waypoint x="507" y="735" />
-        <di:waypoint x="507" y="95" />
-        <di:waypoint x="542" y="95" />
+        <di:waypoint x="386" y="625" />
+        <di:waypoint x="446" y="625" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f11_di" bpmnElement="ToBe_Registro_Software_Etapa6_f11">
-        <di:waypoint x="662" y="95" />
-        <di:waypoint x="927" y="95" />
-        <di:waypoint x="927" y="410" />
+        <di:waypoint x="482" y="625" />
+        <di:waypoint x="558" y="625" />
+        <di:waypoint x="558" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f12_di" bpmnElement="ToBe_Registro_Software_Etapa6_f12">
-        <di:waypoint x="952" y="435" />
-        <di:waypoint x="1012" y="435" />
+        <di:waypoint x="662" y="285" />
+        <di:waypoint x="927" y="285" />
+        <di:waypoint x="927" y="900" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f13_di" bpmnElement="ToBe_Registro_Software_Etapa6_f13">
-        <di:waypoint x="1037" y="410" />
-        <di:waypoint x="1037" y="370" />
-        <di:waypoint x="251" y="370" />
-        <di:waypoint x="251" y="410" />
+        <di:waypoint x="952" y="925" />
+        <di:waypoint x="1012" y="925" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f14_di" bpmnElement="ToBe_Registro_Software_Etapa6_f14">
-        <di:waypoint x="1062" y="435" />
-        <di:waypoint x="1122" y="435" />
+        <di:waypoint x="1037" y="900" />
+        <di:waypoint x="1037" y="12" />
+        <di:waypoint x="251" y="12" />
+        <di:waypoint x="251" y="600" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f15_di" bpmnElement="ToBe_Registro_Software_Etapa6_f15">
-        <di:waypoint x="1147" y="410" />
-        <di:waypoint x="1147" y="95" />
-        <di:waypoint x="1232" y="95" />
+        <di:waypoint x="1062" y="925" />
+        <di:waypoint x="1122" y="925" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f16_di" bpmnElement="ToBe_Registro_Software_Etapa6_f16">
-        <di:waypoint x="1352" y="95" />
-        <di:waypoint x="1472" y="95" />
-        <di:waypoint x="1472" y="417" />
+        <di:waypoint x="1147" y="900" />
+        <di:waypoint x="1147" y="285" />
+        <di:waypoint x="1232" y="285" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f17_di" bpmnElement="ToBe_Registro_Software_Etapa6_f17">
-        <di:waypoint x="1172" y="435" />
-        <di:waypoint x="1292" y="435" />
-        <di:waypoint x="1292" y="308" />
+        <di:waypoint x="1352" y="285" />
+        <di:waypoint x="1428" y="285" />
+        <di:waypoint x="1428" y="570" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f18_di" bpmnElement="ToBe_Registro_Software_Etapa6_f18">
-        <di:waypoint x="1352" y="245" />
-        <di:waypoint x="1377" y="245" />
-        <di:waypoint x="1377" y="585" />
-        <di:waypoint x="1412" y="585" />
+        <di:waypoint x="1172" y="925" />
+        <di:waypoint x="1248" y="925" />
+        <di:waypoint x="1248" y="498" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f19_di" bpmnElement="ToBe_Registro_Software_Etapa6_f19">
-        <di:waypoint x="1532" y="585" />
-        <di:waypoint x="1652" y="585" />
-        <di:waypoint x="1652" y="143" />
+        <di:waypoint x="1292" y="498" />
+        <di:waypoint x="1292" y="775" />
+        <di:waypoint x="1412" y="775" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f20_di" bpmnElement="ToBe_Registro_Software_Etapa6_f20">
-        <di:waypoint x="1712" y="95" />
-        <di:waypoint x="1772" y="95" />
+        <di:waypoint x="1532" y="775" />
+        <di:waypoint x="1608" y="775" />
+        <di:waypoint x="1608" y="333" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Pool_INPI_di" bpmnElement="Pool_INPI" isHorizontal="true" bioc:stroke="#1565c0" bioc:fill="#e3f0fb" color:background-color="#e3f0fb" color:border-color="#1565c0">
-        <dc:Bounds x="0" y="890" width="1858" height="80" />
+      <bpmndi:BPMNEdge id="ToBe_Registro_Software_Etapa6_f21_di" bpmnElement="ToBe_Registro_Software_Etapa6_f21">
+        <di:waypoint x="1712" y="285" />
+        <di:waypoint x="1772" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Pool_INPI_di" bpmnElement="Pool_INPI" isHorizontal="true">
+        <dc:Bounds x="0" y="1080" width="1858" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Pool_SEI_di" bpmnElement="Pool_SEI" isHorizontal="true" bioc:stroke="#616161" bioc:fill="#f1f1f1" color:background-color="#f1f1f1" color:border-color="#616161">
-        <dc:Bounds x="0" y="1030" width="1858" height="80" />
+      <bpmndi:BPMNShape id="Pool_SEI_di" bpmnElement="Pool_SEI" isHorizontal="true">
+        <dc:Bounds x="0" y="1220" width="1858" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Msg_1_di" bpmnElement="Msg_1">
-        <di:waypoint x="1452" y="648" />
-        <di:waypoint x="1452" y="1030" />
+        <di:waypoint x="1452" y="838" />
+        <di:waypoint x="1452" y="1220" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1458" y="996" width="110" height="28" />
+          <dc:Bounds x="1458" y="1186" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_2_di" bpmnElement="Msg_2">
-        <di:waypoint x="489" y="890" />
-        <di:waypoint x="489" y="453" />
+        <di:waypoint x="476" y="1080" />
+        <di:waypoint x="476" y="943" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="495" y="856" width="110" height="28" />
+          <dc:Bounds x="482" y="1046" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Msg_3_di" bpmnElement="Msg_3">
-        <di:waypoint x="802" y="890" />
-        <di:waypoint x="802" y="490" />
+        <di:waypoint x="802" y="1080" />
+        <di:waypoint x="802" y="980" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="808" y="856" width="110" height="28" />
+          <dc:Bounds x="808" y="1046" width="110" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

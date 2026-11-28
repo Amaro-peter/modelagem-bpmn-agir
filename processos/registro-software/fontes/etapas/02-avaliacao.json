@@ -8,6 +8,10 @@
       "processId": "Etapa2_Avaliacao",
       "lanes": [
         {
+          "id": "L_INT",
+          "name": "INTERESSADO"
+        },
+        {
           "id": "L_AGIR",
           "name": "AGIR"
         }
@@ -34,9 +38,16 @@
         },
         {
           "id": "a_email_decisao",
-          "type": "send",
+          "type": "task",
           "name": "Enviar e-mail ao interessado informando a decisão",
           "lane": "L_AGIR"
+        },
+        {
+          "id": "i_receber_decisao",
+          "type": "task",
+          "name": "Receber a decisão por e-mail",
+          "lane": "L_INT",
+          "status": "nova"
         },
         {
           "id": "a_desp_enc_req",
@@ -52,9 +63,16 @@
         },
         {
           "id": "a_email_reuniao",
-          "type": "send",
+          "type": "task",
           "name": "Enviar e-mail ao interessado agendando reunião",
           "lane": "L_AGIR"
+        },
+        {
+          "id": "i_receber_convite",
+          "type": "task",
+          "name": "Receber o convite da reunião",
+          "lane": "L_INT",
+          "status": "nova"
         },
         {
           "id": "a_aguarda_reuniao",
@@ -84,13 +102,13 @@
         {
           "id": "e2_ini",
           "type": "start",
-          "name": "Requerimento recebido (Etapa 1)",
+          "name": "Entrada ← Etapa 1: Requerimento enviado",
           "lane": "L_AGIR"
         },
         {
           "id": "e2_fim",
           "type": "end",
-          "name": "Ativo aprovado → Etapa 3",
+          "name": "Saída → Etapa 3: Ativo aprovado",
           "lane": "L_AGIR"
         }
       ],
@@ -115,6 +133,10 @@
         ],
         [
           "a_email_decisao",
+          "i_receber_decisao"
+        ],
+        [
+          "i_receber_decisao",
           "a_desp_enc_req"
         ],
         [
@@ -123,6 +145,10 @@
         ],
         [
           "a_email_reuniao",
+          "i_receber_convite"
+        ],
+        [
+          "i_receber_convite",
           "a_aguarda_reuniao"
         ],
         [

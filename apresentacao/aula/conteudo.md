@@ -49,6 +49,7 @@ Justificativa comum: **impedir trocas de informação e movimentação de dados 
   - Enviar e-mail com orientações gerais
   - Enviar e-mail com orientações sobre o cadastro de usuários externos
   - Enviar e-mail informando o não conhecimento
+  - Receber a decisão por e-mail e o convite da reunião (recebimentos acrescentados na revisão de 27/11)
   - Receber a comunicação de não conhecimento
   - Espera: acompanhamento da RPI sem rotina definida (é um evento, não uma atividade)
 

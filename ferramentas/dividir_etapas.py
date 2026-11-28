@@ -3,14 +3,16 @@
 Uso: python3 -I ferramentas/dividir_etapas.py <fonte.json> <pasta-de-saida>
 
 A fonte precisa de:
-- "etapas": [{"n": 1, "nome": "...", "slug": "...", "dono": "<id da raia>"}, ...]
+- "etapas": [{"n": 1, "nome": "...", "slug": "...", "dono": "<id da raia>", "saida": "<resultado>"}, ...]
+  ("saida" é opcional: nomeia a saída de continuidade da etapa e a entrada da etapa seguinte)
 - "etapa": N em cada nó (eventos de borda herdam a etapa da atividade).
 - "desfecho": true nos eventos de fim que encerram o processo (vão para o macro).
 - (opcional) "nomeCurto" na pool principal: nas vistas por etapa, a pool se chama "<nomeCurto> – Etapa N".
 - (opcional) "compacto": true no topo: repassado às etapas e ao macro (colunas com largura adaptável).
 
 Saída: <pasta>/00-macro.json e <pasta>/NN-<slug>.json.
-- Fluxo que cruza etapas vira um fim "→ Etapa N – nome" na origem e um início "(Etapa M – nome)" no destino.
+- Modularização: os fluxos que saem para outra etapa convergem num único fim de continuidade
+  "Saída → Etapa N: <saida>" e a etapa de destino começa por um único início "Entrada ← Etapa M: <saida>".
 - Pools e raias externas só entram onde são usadas.
 - No macro, cada etapa é uma call activity. Depois das etapas com encerramentos próprios entra um gateway
   com os desfechos. As mensagens com participantes externos são agregadas por etapa.
@@ -36,6 +38,11 @@ title = lambda k: f'Etapa {k} – {etapas[k]["nome"]}'
 lane_of = lambda n: n.get('lane') or nodes[n['attachedTo']]['lane']
 
 
+def resultado(k, destino):
+    """Nome do resultado que a Etapa k entrega à etapa de destino."""
+    return etapas[k].get('saida') or title(destino)
+
+
 def proc_id(k):
     return f'{d["id"]}_Etapa{k}'
 
@@ -50,16 +57,18 @@ for k in sorted(etapas):
         sa, sb = stage_of[a], stage_of[b]
         if sa == k and sb == k:
             sflows.append(copy.deepcopy(f))
-        elif sa == k:                                  # sai da etapa
-            eid = f'fim_{a}_e{sb}'
+        elif sa == k:                                  # sai da etapa: uma única saída por etapa de destino
+            eid = f'saida_e{k}_para_e{sb}'
             if eid not in extra:
-                extra[eid] = {'id': eid, 'type': 'end', 'name': f'→ {title(sb)}', 'lane': lane_of(nodes[a])}
+                extra[eid] = {'id': eid, 'type': 'end', 'name': f'Saída → Etapa {sb}: {resultado(k, sb)}', 'lane': lane_of(nodes[a])}
             sflows.append([a, eid] + f[2:])
-        elif sb == k:                                  # entra na etapa
-            sid = f'ini_{b}_e{sa}'
+        elif sb == k:                                  # entra na etapa: uma única entrada por etapa de origem
+            sid = f'entrada_e{k}_de_e{sa}'
             if sid not in extra:
-                extra[sid] = {'id': sid, 'type': 'start', 'name': f'({title(sa)})', 'lane': lane_of(nodes[b])}
+                extra[sid] = {'id': sid, 'type': 'start', 'name': f'Entrada ← Etapa {sa}: {resultado(sa, k)}', 'lane': lane_of(nodes[b])}
                 sflows.append([sid, b])
+            elif not any(x[0] == sid and x[1] == b for x in sflows):
+                raise SystemExit(f'Etapa {k}: mais de um ponto de entrada vindo da Etapa {sa}; una os fluxos num gateway')
     snodes += list(extra.values())
     for n in snodes:
         n.pop('etapa', None)
@@ -109,16 +118,13 @@ for k in sorted(etapas):
             mnodes.append({'id': eid, 'type': 'end', 'name': o, 'lane': etapas[k]['dono']})
             mflows.append([gid, eid, o.split()[0].rstrip(':')])   # rótulo curto; o evento de fim traz o nome completo
         prev = gid
-        mflows.append([None, None, 'Segue'])          # marcador: o próximo fluxo sai do gateway com rótulo
-# aplica o rótulo "Segue" no fluxo que sai de cada gateway para a etapa seguinte
+# a seta que leva à etapa seguinte tem o nome da saída da etapa anterior
 fixed = []
 for f in mflows:
-    if f[0] is None:
-        continue
+    if f[1].startswith('m_e') and f[0] != 'm_ini':
+        k_ant = int(f[0].replace('m_gw', '').replace('m_e', ''))
+        f.append(etapas[k_ant].get('saida') or 'Segue')
     fixed.append(f)
-for f in fixed:
-    if f[0].startswith('m_gw') and f[1].startswith('m_e'):
-        f.append('Segue')
 mlanes = []
 for n in mnodes:
     if n['lane'] not in mlanes:

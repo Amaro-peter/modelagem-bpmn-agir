@@ -8,10 +8,7 @@ Modelagem do registro de software conduzido pela AGIR junto ao INPI, do interess
 - **Base:** recorte do modelo "PROPPI – Registro de Patentes, Marcas, Desenhos Industriais e Programas de Computador" (v08), complementado com as atividades da AGIR, do interessado e do INPI.
 - **Fontes:** normas oficiais do INPI e entrevista com o solicitante (25–26/11/2026).
 
-**Legenda:**
-- sem cor = atividade do modelo original;
-- 🟩 verde = atividade nova, confirmada;
-- pool azul = INPI (participante externo em destaque).
+**Representação:** diagramas em preto e branco. Cada etapa tem uma única saída nomeada ("Saída → Etapa N: resultado"), ligada à entrada de mesmo nome na etapa seguinte. As atividades novas em relação ao modelo original estão descritas no [relatório](docs/relatorio-asis.md).
 
 ## Documentos
 

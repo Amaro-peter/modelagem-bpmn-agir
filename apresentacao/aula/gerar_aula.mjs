@@ -22,7 +22,8 @@ const problemas = [
 ];
 // análise de valor agregado: atividades do AS-IS (sem as do INPI); o que não é VA nem NVA é BVA
 const VA = ['a_analisar_ativo', 'i_zip', 'i_dados', 'a_esoft_form', 'a_enviar', 'a_certificado', 'a_email_cert', 'i_receber_cert'];
-const NVA = ['i_identificar', 'a_sei_req', 'a_sei_docs', 'a_email_decisao', 'a_email_reuniao', 'a_email_orient', 'a_email_cadastro', 'a_email_742', 'i_receber_742'];
+const NVA = ['i_identificar', 'a_sei_req', 'a_sei_docs', 'a_email_decisao', 'a_email_reuniao', 'a_email_orient', 'a_email_cadastro', 'a_email_742',
+  'i_receber_decisao', 'i_receber_convite', 'i_receber_742'];
 const ishikawa = {
   efeito: 'Registro de software demorado e sujeito a erros',
   cima: [

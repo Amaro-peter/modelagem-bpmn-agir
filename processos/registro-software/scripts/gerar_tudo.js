@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const P = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const root = path.resolve(P, '..', '..');
@@ -32,10 +32,27 @@ py('gerar_doc.py');                                       // docs/macroprocesso-
 const TB = path.join(P, 'to-be');
 execFileSync(python, ['-I', tool('dividir_etapas.py'), path.join(TB, 'fontes', 'registro-software-tobe.json'),
   path.join(TB, 'fontes', 'etapas')], { cwd: root, stdio: 'inherit' });
-// O TO-BE completo tem ajustes de layout feitos à mão no editor: se já existe, não é reconstruído (só as imagens).
-// Para regerá-lo do zero: npm run build -- <fonte> <saida> (e reaplicar os ajustes no editor).
-const tobeCompleto = path.join(TB, 'registro-software-tobe.bpmn');
-if (!fs.existsSync(tobeCompleto)) node(tool('build.js'), path.join(TB, 'fontes', 'registro-software-tobe.json'), tobeCompleto);
+// O TO-BE completo é gerado da fonte (o layout automático evita cruzamentos e sobreposições). Se o arquivo atual
+// tem o MESMO conteúdo da fonte, ele é mantido: preserva os ajustes de layout feitos à mão no editor.
+// Se o conteúdo mudou, o arquivo é gerado de novo e a versão anterior vai para .historico/.
+{
+  const destino = path.join(TB, 'registro-software-tobe.bpmn');
+  const novo = path.join(root, '.historico', 'tobe-gerado-tmp.bpmn');
+  fs.mkdirSync(path.dirname(novo), { recursive: true });
+  node(tool('build.js'), path.join(TB, 'fontes', 'registro-software-tobe.json'), novo);
+  const { mesmoConteudo } = await import(pathToFileURL(tool('conteudo.mjs')).href);
+  if (fs.existsSync(destino) && await mesmoConteudo(fs.readFileSync(destino, 'utf8'), fs.readFileSync(novo, 'utf8'))) {
+    console.log('TO-BE completo: conteúdo igual ao da fonte, layout ajustado à mão mantido');
+    fs.rmSync(novo);
+  } else {
+    if (fs.existsSync(destino)) {
+      const bak = path.join(root, '.historico', `tobe-layout-anterior-${Date.now()}.bpmn`);
+      fs.copyFileSync(destino, bak);
+      console.log(`TO-BE completo: conteúdo mudou; gerado de novo (layout anterior guardado em ${path.relative(root, bak)})`);
+    }
+    fs.renameSync(novo, destino);
+  }
+}
 for (const f of fs.readdirSync(path.join(TB, 'fontes', 'etapas')).filter(f => f.endsWith('.json'))) {
   const dest = f.startsWith('00-') ? 'macro' : 'etapas';
   node(tool('build.js'), path.join(TB, 'fontes', 'etapas', f), path.join(TB, dest, f.replace(/\.json$/, '.bpmn')));

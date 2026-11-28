@@ -16,11 +16,8 @@ const TYPES = {
   subprocess: 'bpmn:SubProcess', call: 'bpmn:CallActivity', boundary: 'bpmn:BoundaryEvent'
 };
 
-// Cores por status (original = sem cor). Gravadas em bioc: (bpmn.io) e color: (BPMN in Color).
-const STATUS_COLORS = {
-  nova: { fill: '#dcf2dc', stroke: '#2e7d32' },
-  confirmar: { fill: '#ffe3c2', stroke: '#d35400' }
-};
+// Os diagramas são só preto e branco (critério de revisão): status ("nova", "confirmar") e destaques de
+// pool/raia ("color") continuam nas fontes como informação, mas não são pintados.
 const COLOR_PKG = {
   name: 'BPMN in Color', uri: 'http://www.omg.org/spec/BPMN/non-normative/color/1.0', prefix: 'color',
   types: [{ name: 'ColoredLabel', extends: ['bpmndi:BPMNLabel'], properties: [{ name: 'color', isAttr: true, type: 'String' }] },
@@ -129,11 +126,6 @@ async function buildWithLanes() {
   const shape = (id, el, b, extra = {}, labelBounds = null) => {
     const s = moddle.create('bpmndi:BPMNShape', { id: `${id}_di`, bpmnElement: el, bounds: bounds(b), ...extra });
     if (labelBounds) s.label = moddle.create('bpmndi:BPMNLabel', { bounds: bounds(labelBounds) });
-    const c = STATUS_COLORS[specOf[id]?.status];
-    if (c) {
-      s.set('bioc:fill', c.fill); s.set('bioc:stroke', c.stroke);
-      s.set('color:background-color', c.fill); s.set('color:border-color', c.stroke);
-    }
     return s;
   };
   const edge = (id, el, pts) => moddle.create('bpmndi:BPMNEdge', {
@@ -183,20 +175,10 @@ async function buildWithLanes() {
     const pe = [];
     pools.forEach((p, i) => {
       if (multi) {
-        const ps = shape(participants[i].id, participants[i], L.pools[p.id], { isHorizontal: true });
-        if (p.color) {   // destaque da pool inteira (ex.: participante externo)
-          ps.set('bioc:fill', p.color.fill); ps.set('bioc:stroke', p.color.stroke);
-          ps.set('color:background-color', p.color.fill); ps.set('color:border-color', p.color.stroke);
-        }
-        pe.push(ps);
+        pe.push(shape(participants[i].id, participants[i], L.pools[p.id], { isHorizontal: true }));
       }
       for (const l of p.lanes || []) {
-        const ls = shape(l.id, els[l.id], L.lanes[l.id], { isHorizontal: true });
-        if (l.color) {   // destaque da raia (ex.: raia de sistema)
-          ls.set('bioc:fill', l.color.fill); ls.set('bioc:stroke', l.color.stroke);
-          ls.set('color:background-color', l.color.fill); ls.set('color:border-color', l.color.stroke);
-        }
-        pe.push(ls);
+        pe.push(shape(l.id, els[l.id], L.lanes[l.id], { isHorizontal: true }));
       }
       for (const g of p.groups || []) pe.push(shape(g.id, els[g.id], L.groups[g.id]));
       for (const n of p.nodes || []) {

@@ -17,11 +17,7 @@
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI",
-          "color": {
-            "fill": "#f3eefa",
-            "stroke": "#6a3d9a"
-          }
+          "name": "Plataforma de Gestão de PI"
         }
       ],
       "nodes": [
@@ -90,11 +86,17 @@
         },
         {
           "id": "t_tri_alerta",
-          "type": "end",
+          "type": "service",
           "lane": "L_PLAT",
+          "name": "Alertar a equipe e o servidor",
+          "status": "nova"
+        },
+        {
+          "id": "t_tri_alerta_fim",
+          "type": "end",
+          "lane": "L_AGIR",
           "name": "Equipe e servidor alertados",
-          "status": "nova",
-          "event": "message"
+          "status": "nova"
         },
         {
           "id": "g_req",
@@ -112,21 +114,35 @@
           "papel": "servidor"
         },
         {
-          "id": "e1_fim",
-          "type": "end",
+          "id": "t_not1",
+          "type": "service",
           "lane": "L_PLAT",
-          "name": "Encerrado na triagem (interessado notificado)",
-          "status": "nova",
-          "event": "message"
+          "name": "Notificar o interessado do encerramento",
+          "status": "nova"
         },
         {
-          "id": "fim_g_req_e2",
+          "id": "e1_fim",
           "type": "end",
-          "name": "→ Etapa 2 – Reunião inicial e avaliação",
+          "lane": "L_INT",
+          "name": "Encerrado na triagem (interessado notificado)",
+          "status": "nova"
+        },
+        {
+          "id": "saida_e1_para_e2",
+          "type": "end",
+          "name": "Saída → Etapa 2: Solicitação aprovada na triagem",
           "lane": "L_AGIR"
         }
       ],
       "flows": [
+        [
+          "t_tri_alerta",
+          "t_tri_alerta_fim"
+        ],
+        [
+          "t_not1",
+          "e1_fim"
+        ],
         [
           "e1_ini",
           "t_sol"
@@ -166,11 +182,11 @@
         ],
         [
           "t_enc1",
-          "e1_fim"
+          "t_not1"
         ],
         [
           "g_req",
-          "fim_g_req_e2",
+          "saida_e1_para_e2",
           "Sim"
         ]
       ]
@@ -178,11 +194,7 @@
     {
       "id": "Pool_SEI",
       "name": "SEI – registro oficial da UFF",
-      "blackbox": true,
-      "color": {
-        "fill": "#f1f1f1",
-        "stroke": "#616161"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

@@ -28,15 +28,15 @@
           "name": "Processo concluído"
         },
         {
-          "id": "ini_t_e7_e6",
+          "id": "entrada_e7_de_e6",
           "type": "start",
-          "name": "(Etapa 6 – Acompanhamento do INPI e conferência do certificado)",
+          "name": "Entrada ← Etapa 6: Certificado conferido e enviado",
           "lane": "L_AGIR"
         }
       ],
       "flows": [
         [
-          "ini_t_e7_e6",
+          "entrada_e7_de_e6",
           "t_e7"
         ],
         [

@@ -17,17 +17,13 @@
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI",
-          "color": {
-            "fill": "#f3eefa",
-            "stroke": "#6a3d9a"
-          }
+          "name": "Plataforma de Gestão de PI"
         }
       ],
       "nodes": [
         {
           "id": "t_lib",
-          "type": "send",
+          "type": "service",
           "lane": "L_PLAT",
           "name": "Liberar o formulário de registro ao interessado",
           "status": "nova"
@@ -115,12 +111,18 @@
           "timer": "P5D"
         },
         {
+          "id": "i3_lem_t",
+          "type": "service",
+          "lane": "L_PLAT",
+          "name": "Enviar lembrete ao interessado",
+          "status": "nova"
+        },
+        {
           "id": "i3_lem_fim",
           "type": "end",
           "lane": "L_PLAT",
-          "name": "Lembrete enviado",
-          "status": "nova",
-          "event": "message"
+          "name": "Lembrete enviado ao interessado",
+          "status": "nova"
         },
         {
           "id": "i3_30",
@@ -148,29 +150,35 @@
           "status": "nova"
         },
         {
-          "id": "i3_fim",
-          "type": "end",
+          "id": "i3_not",
+          "type": "service",
           "lane": "L_PLAT",
-          "name": "Arquivado por falta de resposta (interessado notificado)",
-          "status": "nova",
-          "event": "message"
+          "name": "Notificar o interessado do arquivamento",
+          "status": "nova"
         },
         {
-          "id": "ini_t_lib_e2",
+          "id": "i3_fim",
+          "type": "end",
+          "lane": "L_INT",
+          "name": "Arquivado por falta de resposta (interessado notificado)",
+          "status": "nova"
+        },
+        {
+          "id": "entrada_e3_de_e2",
           "type": "start",
-          "name": "(Etapa 2 – Reunião inicial e avaliação)",
+          "name": "Entrada ← Etapa 2: Ativo aprovado",
           "lane": "L_PLAT"
         },
         {
-          "id": "fim_t_congela_e4",
+          "id": "saida_e3_para_e4",
           "type": "end",
-          "name": "→ Etapa 4 – Pagamento da GRU",
+          "name": "Saída → Etapa 4: Dados aprovados e congelados",
           "lane": "L_PLAT"
         }
       ],
       "flows": [
         [
-          "ini_t_lib_e2",
+          "entrada_e3_de_e2",
           "t_lib"
         ],
         [
@@ -232,8 +240,16 @@
           "Sim"
         ],
         [
-          "i3_lem",
+          "i3_lem_t",
           "i3_lem_fim"
+        ],
+        [
+          "i3_lem",
+          "i3_lem_t"
+        ],
+        [
+          "i3_not",
+          "i3_fim"
         ],
         [
           "i3_30",
@@ -245,7 +261,7 @@
         ],
         [
           "i3_gw",
-          "i3_fim",
+          "i3_not",
           "Sim"
         ],
         [
@@ -255,18 +271,14 @@
         ],
         [
           "t_congela",
-          "fim_t_congela_e4"
+          "saida_e3_para_e4"
         ]
       ]
     },
     {
       "id": "Pool_SEI",
       "name": "SEI – registro oficial da UFF",
-      "blackbox": true,
-      "color": {
-        "fill": "#f1f1f1",
-        "stroke": "#616161"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

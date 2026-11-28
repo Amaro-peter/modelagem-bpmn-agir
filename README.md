@@ -119,6 +119,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 | `npm run apresentacao-asis` | Gera a apresentação do AS-IS remodelado (HTML e PDF, 7 slides) em `apresentacao/as-is/` |
 | `npm run aula` | Gera a apresentação da aula (HTML e PDF, 14 slides) em `apresentacao/aula/` |
 | `npm run apresentacao` | Gera a apresentação em HTML (interativa) e em PDF (imagens estáticas) com os diagramas atuais; o layout fica em `apresentacao/recursos/` |
+| `npm run visual -- <arquivo.bpmn>...` | Qualidade visual: aponta setas que se cruzam, se sobrepõem ou atravessam formas, elementos soltos (sem entrada/saída, mensagens sem fluxo de mensagem, anotações sem associação) e cores. Faz parte do `npm run validar` |
 | `npm run comparar -- <antes.bpmn> <depois.bpmn>` | Mostra o que mudou entre duas versões de um diagrama (elementos, nomes, ligações, raias e posições) |
 | `python3 -I ferramentas/dividir_etapas.py <fonte.json> <pasta>` | Gera os diagramas por etapa e o macroprocesso a partir de uma fonte com `"etapa"` em cada nó |
 
@@ -145,7 +146,7 @@ Feitas sobre a pilha [bpmn.io](https://bpmn.io): bpmn-js, bpmn-moddle, bpmn-auto
 
 - **Tipos de nó:** `start`, `end`, `task`, `user`, `service`, `script`, `manual`, `send`, `receive`, `business`, `xor`, `and`, `or`, `event` (gateway baseado em eventos), `catch`, `throw`, `subprocess` e `call` (call activity, com `"calls": "<processId>"`).
 - **Eventos:** `"event"` pode ser `message`, `timer`, `conditional`, `link`, `terminate` ou `signal`. `"link"` dá o nome do par de links.
-- **Marcação:** `"status"` pode ser `nova` (verde) ou `confirmar` (laranja). Sem status, a atividade é a original. `"note"` cria uma anotação ligada ao nó.
+- **Marcação:** `"status"` pode ser `nova` ou `confirmar` (registro na fonte; os diagramas são em preto e branco). Sem status, a atividade é a original. `"note"` cria uma anotação ligada ao nó.
 - **Dicas de layout:** `"under": "<id>"` coloca o nó logo abaixo de outro; `"shift": n` empurra o nó n colunas para a direita.
 - **Subprocessos:** um `subprocess` com `nodes` vira etapa recolhida com drill-down; sem `nodes`, fica recolhido sem conteúdo.
 - **Eventos de borda:** `{"type": "boundary", "attachedTo": "<id>", "event": "timer", "interrupting": false, "timer": "P5D"}` (prazos, lembretes e exceções).

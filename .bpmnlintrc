@@ -1,1 +1,6 @@
-{ "extends": "bpmnlint:recommended" }
+{
+  "extends": "bpmnlint:recommended",
+  "rules": {
+    "superfluous-label": "off"
+  }
+}

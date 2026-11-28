@@ -13,11 +13,7 @@
         },
         {
           "id": "L_PLAT",
-          "name": "Plataforma de Gestão de PI",
-          "color": {
-            "fill": "#f3eefa",
-            "stroke": "#6a3d9a"
-          }
+          "name": "Plataforma de Gestão de PI"
         }
       ],
       "nodes": [
@@ -82,21 +78,21 @@
           "status": "nova"
         },
         {
-          "id": "ini_t_ficha_e4",
+          "id": "entrada_e5_de_e4",
           "type": "start",
-          "name": "(Etapa 4 – Pagamento da GRU)",
+          "name": "Entrada ← Etapa 4: GRU paga",
           "lane": "L_PLAT"
         },
         {
-          "id": "fim_t_monit_e6",
+          "id": "saida_e5_para_e6",
           "type": "end",
-          "name": "→ Etapa 6 – Acompanhamento do INPI e conferência do certificado",
+          "name": "Saída → Etapa 6: Pedido protocolado no INPI",
           "lane": "L_PLAT"
         }
       ],
       "flows": [
         [
-          "ini_t_ficha_e4",
+          "entrada_e5_de_e4",
           "t_ficha"
         ],
         [
@@ -135,7 +131,7 @@
         ],
         [
           "t_monit",
-          "fim_t_monit_e6"
+          "saida_e5_para_e6"
         ]
       ],
       "groups": [
@@ -154,20 +150,12 @@
     {
       "id": "Pool_INPI",
       "name": "INPI – Instituto Nacional da Propriedade Industrial",
-      "blackbox": true,
-      "color": {
-        "fill": "#e3f0fb",
-        "stroke": "#1565c0"
-      }
+      "blackbox": true
     },
     {
       "id": "Pool_SEI",
       "name": "SEI – registro oficial da UFF",
-      "blackbox": true,
-      "color": {
-        "fill": "#f1f1f1",
-        "stroke": "#616161"
-      }
+      "blackbox": true
     }
   ],
   "messageFlows": [

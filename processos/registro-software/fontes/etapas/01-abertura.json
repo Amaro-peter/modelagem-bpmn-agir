@@ -57,7 +57,7 @@
         {
           "id": "e1_fim",
           "type": "end",
-          "name": "Requerimento enviado → Etapa 2",
+          "name": "Saída → Etapa 2: Requerimento enviado",
           "lane": "L_INT"
         }
       ],
