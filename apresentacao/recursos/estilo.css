@@ -97,9 +97,6 @@ body{ margin:0; height:100%; background:var(--surround); color:var(--ink); font-
 .rmini i{ position:absolute; border:2px solid var(--teal); background:rgba(29,143,185,.28); border-radius:2px; }
 .rpart{ font-size:.6em; font-weight:600; color:var(--grey-h); letter-spacing:0; }
 .dinner.rec .rimg{ position:absolute; background-repeat:no-repeat; }
-.dinner.rec .rimg.c-esq::before, .dinner.rec .rimg.c-dir::after{ content:""; position:absolute; top:0; bottom:0; width:48px; }
-.dinner.rec .rimg.c-esq::before{ left:0; background:linear-gradient(90deg,#fff,rgba(255,255,255,0)); }
-.dinner.rec .rimg.c-dir::after{ right:0; background:linear-gradient(270deg,#fff,rgba(255,255,255,0)); }
 .rfaixa{ position:absolute; width:104px; display:flex; align-items:center; justify-content:center; padding:2px 6px; background:#EEF8FD; border:1px solid #b9dcea; border-radius:4px; overflow:hidden; }
 .rfaixa span{ font-size:12px; line-height:14px; font-weight:600; text-align:center; }
 /* versão em PDF: o diagrama é uma imagem estática enquadrada no painel */

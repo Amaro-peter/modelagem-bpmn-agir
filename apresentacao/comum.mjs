@@ -124,7 +124,7 @@ export function criarApresentacao() {
   <header class="dhead rhead"><span class="tag ${d.modelo === 'TO-BE' ? 'tobe' : ''}">${d.modelo}</span>
     <div class="rtit"><h2>${titulo} <span class="rpart">· parte ${k + 1} de ${partes.length}</span></h2><p>${esc(sub)}</p></div>
     <div class="rmini" style="width:${MINI_W}px;height:${px(vh * mini)};background-image:var(${nomeVar})" title="Posição no modelo completo"><i style="left:${px((x - vx) * mini)};top:${px((y - vy) * mini)};width:${px(w * mini)};height:${px(h * mini)}"></i></div></header>
-  <div class="dpanel"><div class="dinner rec">${faixas}<div class="rimg${pt.continua.esq ? ' c-esq' : ''}${pt.continua.dir ? ' c-dir' : ''}" style="left:${px(left)};top:${px(top)};width:${px(bw)};height:${px(bh)};background-image:var(${nomeVar});background-size:${px(vw * s)} ${px(vh * s)};background-position:${px(-(x - vx) * s)} ${px(-(y - vy) * s)}"></div></div></div>`;
+  <div class="dpanel"><div class="dinner rec">${faixas}<div class="rimg" style="left:${px(left)};top:${px(top)};width:${px(bw)};height:${px(bh)};background-image:var(${nomeVar});background-size:${px(vw * s)} ${px(vh * s)};background-position:${px(-(x - vx) * s)} ${px(-(y - vy) * s)}"></div></div></div>`;
       add(`${d.modelo} · Modelo completo · Parte ${k + 1} de ${partes.length}`, html);
     });
   }
